@@ -2,57 +2,77 @@
 	font-family: 'Roboto', sans-serif;
 }
 
-.light-text {
-	font-weight:100;
+hr {
+	border-style: solid;
+	border-width: 1px;
 }
-.menu-icon {
-	margin-top:-20px;
-	color:#49E389;
-	position:relative;
-	top:-3px;
-  }
 
-.navbar-nav > li{
-	padding-left:0px;
-	padding-right:0px;
+.light-text {
+	font-weight: 100!important;
+}
+
+body, html {
+	height: 100%;
+	margin: 0;
+}
+
+.menu-icon {
+	margin-top: -20px;
+	color: #49E389;
+	position: relative;
+	top: -3px;
+}
+
+.big-icon {
+	font-size: 3rem;
+	line-height: 1rem;
+}
+
+.navbar-nav>li {
+	padding-left: 0.7rem !important;
+	padding-right: 0.7rem !important;
 }
 
 .bg-dark {
 	background-color: #3A3131!important;
 }
+
 .bg-secondary {
 	background-color: #D4D7DC!important;
 }
+
 .circle-buttons-list {
 	text-align: right;
 }
 
-.circle-buttons-list ul{
+.circle-buttons-list ul {
 	display: table-cell;
 	vertical-align: middle;
 	margin: 0px;
 	padding: 0px;
 }
+
 .circle-buttons-list ul ::after {
 	content: "";
 	flex: auto;
 }
-.circle-buttons-list li{
+
+.circle-buttons-list li {
 	list-style: none;
-	display:inline;
+	display: inline;
 }
 
 .circle-buttons-list li a {
 	text-decoration: none;
 	background: white;
 	line-height: 35px;
-	color:#3A3131;
+	color: #3A3131;
 	text-align: center;
 	vertical-align: middle;
 	border-radius: 100%;
 	min-width: 35px;
 	min-height: 35px;
-	display:inline-block;
+	display: inline-block;
 	margin: 5px;
 	margin-bottom: 10px;
 	margin-top: 10px;
@@ -61,33 +81,35 @@
 #options-strip {
 	min-height: 80px;
 }
-#footer-links ul{
+
+#footer-links ul {
 	margin: 0px;
 	padding: 0px;
 	width: 100%;
 }
 
-#footer-links li{
+#footer-links li {
 	list-style: none;
-	display:inline;
-	margin-left:auto;
+	display: inline;
+	margin-left: auto;
 	width: calc(100% / 3);
 	text-align: center;
 }
+
 #footer-links li a {
 	list-style: none;
-	display:inline;
+	display: inline;
 	text-decoration: none;
-	color:#3A3131;
+	color: #3A3131;
 	text-align: center;
 	vertical-align: middle;
-
 }
+
 .custom-cake-form-background {
-	background-image: url("../images/top-view-flour-with-baking-tools-table.jpg");
+	background-image: url("../images/blurredBackground.jpg");
 	background-attachment: fixed;
-    height: 500vh;
-    background-size: cover;
+	height: 900vh;
+	background-size: cover;
 }
 
 #editor-3d {
@@ -96,73 +118,91 @@
 
 .card {
 	background: #0CC08A;
-	color:white;
+	color: white;
 	border-radius: 30px;
 	margin: 50px 30px 50px 0px;
 }
+
 .card-header {
 	padding: 5px 30px 0px 30px;
 }
+
 .card-header h4 {
 	display: inline;
-	margin:0px;
-	padding:0px;
+	margin: 0px;
+	padding: 0px;
 	vertical-align: middle;
 	line-height: 60px;
 }
+
 .card-header p {
 	display: inline;
-	font-weight:100;
+	font-weight: 100;
 	font-size: 60px;
 	line-height: 60px;
-	margin:0px;
-	padding:0px;
+	margin: 0px;
+	padding: 0px;
 	vertical-align: middle;
-	float:right;
+	float: right;
 }
+
 .card-body {
 	background: linear-gradient(90deg, #92FE9D 0%, #00C9FF 100%);
 	box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.5);
-	margin-right: -1px;
-	margin-left: -1px;
-	margin-bottom: -1px;
+	margin: -1px;
 	border-radius: 0px 0px 30px 30px;
 	padding: 20px 30px 20px 30px;
+}
 
+.card-body.green-background {
+	background: linear-gradient(90deg, #4CD478 0%, #0d967d 100%);
 }
 
 .card-body button {
-	margin-top:10px;
-	margin-bottom:10px;
+	margin-top: 10px;
+	margin-bottom: 10px;
 	border-radius: 20px;
 	color: white;
 	border: none;
 	padding: 5px 20px 5px 20px;
 	margin-left: 20px;
-	background: linear-gradient(90deg, #F77062 0%, #FE5196 100%);
 	box-shadow: 0px 5px 4px rgba(0, 0, 0, 0.25);
-	float:right;
+	float: right;
 }
-.card-body button:hover {
+
+.card-body button.pink-background {
+	background: linear-gradient(90deg, #F77062 0%, #FE5196 100%);
+}
+
+.card-body button.green-background {
+	background: #0CC08A;
+}
+
+.card-body button.blue-background {
+	background: #2F87FF;
+}
+
+.card-body button.pink-background:hover {
 	background: #DF4646;
 }
 
 #editor-3d {
 	position: fixed;
-	top:0px;
+	top: 0px;
 	height: 100%;
 	width: 50%;
 	background: #e7eaf0;
-
 }
 
 #editor-buttons {
-	position:fixed;
-	bottom:50px;
+	position: fixed;
+	bottom: 40px;
 }
+
 #editor-buttons button:first-child {
-	margin-left: 30px
+	margin-left: 20px
 }
+
 #editor-buttons button {
 	border-radius: 20px;
 	background: white;
@@ -175,47 +215,54 @@
 .grid-buttons {
 	padding-top: 20px;
 	display: grid;
-	grid-template-columns: repeat(auto-fill, 100px);
+	grid-template-columns: repeat(auto-fill, 20%);
 	grid-gap: 1rem;
 	justify-content: space-between;
 }
 
-.grid-buttons a{
+@media only screen and (max-width: 768px) {
+	.grid-buttons {
+		grid-template-columns: repeat(auto-fill, 50%);
+	}
+}
+
+.grid-buttons a {
 	display: inline-block;
 	text-align: center;
-	width: 100px;
+	width: 100%;
 	text-decoration: none;
 	color: black;
 }
 
-.grid-buttons a:hover{
-	position:relative;
+.grid-buttons a:hover {
+	position: relative;
 	top: -3px;
 	left: -1px;
 }
+
 .grid-buttons a:hover img {
 	box-shadow: 1px 6px 10px rgba(0, 0, 0, 0.35), 1px 4px 10px rgba(0, 0, 0, 0.4);
 }
 
-.grid-buttons a img{
-	box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.5), 0px 1px 6px rgba(0, 0, 0, 0.5);
-
+.grid-buttons a img {
+	box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.3), 0px 1px 6px rgba(0, 0, 0, 0.3);
+	width: 100%;
 }
 
 .grid-buttons a p {
-	padding-top:5px;
+	padding-top: 5px;
 }
 
 .grid-colors {
 	padding-top: 20px;
-	padding-bottom:30px;
+	padding-bottom: 30px;
 	display: grid;
 	grid-template-columns: repeat(auto-fill, 70px);
 	grid-gap: 1rem;
 	justify-content: space-between;
 }
 
-.grid-colors a{
+.grid-colors a {
 	display: inline-block;
 	width: 60px;
 	height: 60px;
@@ -224,45 +271,159 @@
 	box-shadow: 0px 3px 4px rgba(0, 0, 0, 0.3), 0px 1px 4px rgba(0, 0, 0, 0.3);
 }
 
-.grid-colors a:hover{
-	position:relative;
+.grid-colors a:hover {
+	position: relative;
 	top: -3px;
 	left: -1px;
 	box-shadow: 1px 6px 10px rgba(0, 0, 0, 0.35), 1px 4px 10px rgba(0, 0, 0, 0.4);
 }
+
 .grid-colors .grid-color-01 {
 	background: #E44E80;
 }
+
 .grid-colors .grid-color-02 {
 	background: #DF4646;
 }
+
 .grid-colors .grid-color-03 {
 	background: #E7784F;
 }
+
 .grid-colors .grid-color-04 {
 	background: #E39547;
 }
+
 .grid-colors .grid-color-05 {
 	background: #F1B930;
 }
+
 .grid-colors .grid-color-06 {
 	background: #EAE44F;
 }
+
 .grid-colors .grid-color-07 {
 	background: #58F31B;
 }
+
 .grid-colors .grid-color-08 {
 	background: #49E389;
 }
+
 .grid-colors .grid-color-09 {
 	background: #0CC08A;
 }
+
 .grid-colors .grid-color-10 {
 	background: #2F87FF;
 }
+
 .grid-colors .grid-color-11 {
 	background: #5972EE;
 }
+
 .grid-colors .grid-color-12 {
 	background: #A76DE7;
+}
+
+/* Index page */
+
+.header-text-box {
+	color: #777;
+	background-color: white;
+	text-align: center;
+	padding: 50px 0px;
+	text-align: justify;
+}
+
+.bgimg-1, .bgimg-2, .bgimg-3, .bgimg-4 {
+	position: relative;
+	opacity: 0.65;
+	background-attachment: fixed;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+
+.bgimg-1 {
+	background-image: url("../images/cake1.jpg");
+	min-height: 100%;
+	transform: scaleX(-1);
+}
+
+.bgimg-2 {
+	background-image: url("../images/cake2.jpg");
+	min-height: 400px;
+}
+
+.bgimg-3 {
+	background-image: url("../images/cake3.jpg");
+	min-height: 400px;
+}
+
+.bgimg-4 {
+	background-image: url("../images/Bebette_Kitten_Looking_Up.jpeg");
+	min-height: 400px;
+}
+
+.border {
+	background-color: transparent;
+	/* font-size:1.5625em; */
+	color: #f7f7f7;
+	border: none!important;
+	font-size: 1.5rem;
+	letter-spacing: 0.75rem;
+}
+
+.caption {
+	position: absolute;
+	left: 0;
+	bottom: 50%;
+	width: 100%;
+	text-align: center;
+	color: #000;
+	/* font-size: 18px; */
+	/* line-height:40px; */
+	/* font-kerning: 5px; */
+}
+
+.bgimg-1 .caption {
+	transform: scaleX(-1);
+	width: 50%;
+}
+
+.caption span.border {
+	background-color: #111;
+	color: #fff;
+	padding: 18px;
+	/* font-size: 1.5625em; */
+	/* letter-spacing: 0.625em; */
+}
+
+@media only screen and (max-device-width: 1024px) {
+	.bgimg-1, .bgimg-2, .bgimg-3 {
+		background-attachment: scroll;
+	}
+}
+
+.divider-bar {
+    position: relative;
+    color:#ddd;
+    background-color:#282E34;
+    text-align:center;
+    padding:3.125em 5em;
+
+}
+.divider-bar a {
+	text-decoration: none;
+}
+
+.divider-bar-2 {
+    position: relative;
+    color:#ddd;
+    background-color:#282E34;
+    text-align:center;
+    padding:3.125em 5em;
+    letter-spacing: 1.5625em;
+
 }
