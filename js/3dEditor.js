@@ -1,10 +1,22 @@
 let controls, camera, scene, renderer;
 let textureEquirec;
-let sphereMesh, sphereMaterial;
 var lights = [];
 var tableModel = [];
 var cakeModels = [];
+var instances;
 var textures = [];
+
+var options = {
+	'initialSetup' : true,
+	'baseCake' : 'Cake_round',
+	'baseHeight' : 50,
+	'baseMatrix' : new THREE.Matrix4().makeScale(0.85,0.85,0.85),
+	'tierHeight' : 40,
+	'tierScaling' : 0.22,
+	'orbitPoint' : new THREE.Vector3( 0, 50 / 2, 0 ),
+
+};
+
 
 init();
 animate();
@@ -42,7 +54,7 @@ function init() {
 	renderer.outputEncoding = THREE.sRGBEncoding;
 	$('#editor-3d').append(renderer.domElement);
 	renderer.shadowMap.enabled = true;
-	renderer.shadowMap.type = THREE.PCFSoftShadowMap; // default
+	renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
 	//startup models loading
 	loader = new THREE.GLTFLoader();
@@ -54,19 +66,17 @@ function init() {
 
 				lightsGroup.forEach( light => {
 					if (load) {
-						//TODO update lighting to have intensity and color from other attributes
 						newLight = new THREE.SpotLight("#" + light.name.split("_")[0], 0.15);
 						newLight.position.set(light.position.x, light.position.y , light.position.z);
 						newLight.castShadow = true;
 						newLight.penumbra  = 1;
-						// newLight.decay = 0;
 						newLight.angle = Math.PI/6;
 						newLight.shadow.bias = -0.000001;
 						newLight.shadow.mapSize.width = 512;
 						newLight.shadow.mapSize.height = 512;
-						newLight.shadow.camera.near = 0.5; // default
-						newLight.shadow.camera.far = 3000; // default
-						newLight.shadow.focus = 1; // default
+						newLight.shadow.camera.near = 0.5;
+						newLight.shadow.camera.far = 3000;
+						newLight.shadow.focus = 1;
 
 						lights.push(newLight);
 						// const spotLightHelper = new THREE.SpotLightHelper( newLight );
@@ -78,6 +88,7 @@ function init() {
 				});
 			}
 			if(element.name.startsWith("Cake")) {
+				// console.log(element);
 				cakeName = element.name;
 				cakeModels[cakeName] = [];
 				cakeModels[cakeName] = element;
@@ -96,6 +107,8 @@ function init() {
 					cakeModels[cakeName].receiveShadow = true;
 					// if(cakeModels[cakeName].material.map) cakeModels[cakeName].material.map.anisotropy = 1;
 				}
+				// cakeModels[cakeName].applyMatrix4(cakeModels[cakeName].matrixWorld.invert())
+				// cakeModels[cakeName].applyMatrix4(options.baseMatrix.clone().multiply(new THREE.Matrix4().makeTranslation(0,options.baseHeight*0.5, 0 )));
 
 			}
 			if(element.name == "Table") {
@@ -118,10 +131,8 @@ function init() {
 				}
 			}
 		});
-		updateEditor({
-			'initialSetup' : true,
-			'baseCake' : 'Cake_round'
-		});
+		updateEditor();
+		// setBaseScale(1);
 	}, undefined, function ( error ) {
 		console.error( error );
 	} );
@@ -131,8 +142,11 @@ function init() {
 	controls = new THREE.OrbitControls( camera, renderer.domElement );
 	controls.minDistance = 150;
 	controls.maxDistance = 800;
+	controls.enableDamping = true;
+	controls.dampingFactor = 0.1;
+	controls.target = options.orbitPoint;
 	// controls.autoRotate = true;
-	scene.add( new THREE.AxesHelper(500));
+	// scene.add( new THREE.AxesHelper(500));
 
 	window.addEventListener( 'resize', onWindowResize, false );
 
@@ -151,97 +165,80 @@ function animate() {
 	render();
 }
 
+
 function render() {
-	camera.lookAt( scene.position );
+	camera.lookAt( options.orbitPoint );
 	renderer.render( scene, camera );
 }
 
-function updateEditor(settings) {
+function updateEditor() {
 	//removing all cakes
 	for (const cake in cakeModels) {
 		scene.remove(cakeModels[cake])
 	}
+	//removing instances
+	if (instances) {
+		scene.remove(instances);
+	}
+
 	// adding lights and table
-	if (settings.initialSetup) {
+	if (options.initialSetup) {
 		scene.add(tableModel);
 		lights.forEach(light => scene.add(light));
 	}
-	//adding base cake
-	if (settings.baseCake) {
-		if (settings.baseCake in cakeModels) {
-			scene.add(cakeModels[settings.baseCake]);
-		}
 
+	//adding base cake
+	if (options.baseCake) {
+		if (options.baseCake in cakeModels) {
+
+			// console.log(cakeModels[options.baseCake].matrix);
+			cakeModels[options.baseCake].applyMatrix4(cakeModels[options.baseCake].matrixWorld.invert())
+			cakeModels[options.baseCake].applyMatrix4(options.baseMatrix.clone());
+			// cakeModels[options.baseCake].updateMatrix();
+			scene.add(cakeModels[options.baseCake]);
+		}
+		// console.log(cakeModels[options.baseCake]);
+		if (options.numberOfTiers > 1) {
+			source = cakeModels[options.baseCake];
+			material = Object.create(cakeModels[options.baseCake].material);
+			instances = new THREE.InstancedMesh(source.geometry, material, options.numberOfTiers-1);
+			instances.instanceMatrix.setUsage( THREE.DynamicDrawUsage );
+
+			for (i=1; i<options.numberOfTiers; i++) {
+				transform = options.baseMatrix.clone();
+				translateMatrix =  new THREE.Matrix4().makeTranslation(0, i*options.tierHeight, 0 );
+				scaleMatrix =  new THREE.Matrix4().makeScale(1- i* options.tierScaling, 1, 1 - i*options.tierScaling);
+				transform.multiply(translateMatrix);
+				transform.multiply(scaleMatrix);
+				instances.setMatrixAt( i-1, transform );
+			}
+			instances.instanceMatrix.needsUpdate = true;
+			scene.add( instances );
+
+			//set orbit point
+			options.orbitPoint.y = (options.baseHeight + (options.numberOfTiers -1 )* options.tierHeight) /2;
+		}
 	}
 
 }
 
+function setBaseModel(type) {
+	options.baseCake = type;
+	updateEditor();
+}
 
+function setNumberOfTiers(number) {
+	options.numberOfTiers = number;
+	updateEditor();
+}
 
+function setBaseScale(number) {
+	options.baseMatrix =  new THREE.Matrix4().makeScale(number, number, number);
+	updateEditor();
+	// console.log(options.baseMatrix);
+}
 
-
-// let scene, camera, renderer, controls, light, model;
-
-// function init() {
-
-//   scene = new THREE.Scene();
-//   scene.background = new THREE.Color(0xdddddd);
-//  /* scene.background = new THREE.CubeTextureLoader()
-// 	.setPath( 'skybox/' )
-// 	.load( [
-// 	  'posx.jpg',
-// 	  'negx.jpg',
-// 	  'posy.jpg',
-// 	  'negy.jpg',
-// 	  'posz.jpg',
-// 	  'negz.jpg'
-// 	] );*/
-
-//   camera = new THREE.PerspectiveCamera(60,window.innerWidth/window.innerHeight,1,5000);
-//   camera.position.set(0,25,25);
-//   controls = new THREE.OrbitControls(camera);
-
-//  // scene.add( new THREE.AxesHelper(500));
-
-//   light = new THREE.SpotLight(0xffa95c,4);
-//   light.position.set(-50,50,50);
-//   light.castShadow = true;
-//   light.shadow.bias = -0.0001;
-//   light.shadow.mapSize.width = 1024*4;
-//   light.shadow.mapSize.height = 1024*4;
-//   scene.add( light );
-
-//   hemiLight = new THREE.HemisphereLight(0xffeeb1, 0x080820, 4);
-//   scene.add(hemiLight);
-
-//   renderer = new THREE.WebGLRenderer();
-//   renderer.toneMapping = THREE.ReinhardToneMapping;
-//   renderer.toneMappingExposure = 2.3;
-//   renderer.setSize(window.innerWidth,window.innerHeight);
-//   renderer.shadowMap.enabled = true;
-//   document.body.appendChild(renderer.domElement);
-
-
-//   new THREE.GLTFLoader().load('model/scene.gltf', result => {
-// 	model = result.scene.children[0];
-// 	model.position.set(0,-5,-25);
-// 	model.traverse(n => { if ( n.isMesh ) {
-// 	  n.castShadow = true;
-// 	  n.receiveShadow = true;
-// 	  if(n.material.map) n.material.map.anisotropy = 1;
-// 	}});
-// 	scene.add(model);
-
-// 	animate();
-//   });
-// }
-// function animate() {
-//   renderer.render(scene,camera);
-//   light.position.set(
-// 	camera.position.x + 10,
-// 	camera.position.y + 10,
-// 	camera.position.z + 10,
-//   );
-//   requestAnimationFrame(animate);
-// }
-// init();
+//check if base model is used...and then remove
+//instantiate model
+//add stereo option
+//show a cm as reference on the table (or plates);
