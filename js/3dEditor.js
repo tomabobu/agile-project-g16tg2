@@ -1,18 +1,21 @@
 let controls, camera, scene, renderer;
-let textureEquirec;
+let textureLoader, textureEquirec;
 var lights = [];
 var tableModel = [];
 var cakeModels = [];
-var instances;
+var instances = [];
 var textures = [];
+var materials = [];
 
 var options = {
+	'step': 1,
 	'initialSetup' : true,
 	'baseCake' : 'Cake_round',
 	'baseHeight' : 50,
 	'baseMatrix' : new THREE.Matrix4().makeScale(0.85,0.85,0.85),
 	'tierHeight' : 40,
 	'tierScaling' : 0.22,
+	'numberOfTiers' : 1,
 	'orbitPoint' : new THREE.Vector3( 0, 50 / 2, 0 ),
 
 };
@@ -38,7 +41,7 @@ function init() {
 	scene.add(hemiLight);
 
 	// Textures
-	const textureLoader = new THREE.TextureLoader();
+	textureLoader = new THREE.TextureLoader();
 
 	//environment texture
 	textureEquirec = textureLoader.load( '../images/Classic-Kitchen-03.jpg' );
@@ -56,9 +59,30 @@ function init() {
 	renderer.shadowMap.enabled = true;
 	renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
+	//setting default materials
+	materials['dafaultLambert'] = new THREE.MeshStandardMaterial( {
+		color: 0xffffff,
+		envMapIntensity : 1,
+		refractionRatio : 2,
+		metalness: 0,
+		roughness: 0.9,
+		envMap : textureEquirec,
+		side: THREE.DoubleSide
+	});
+
+	textures['concrete'] = textureLoader.load( '../images/concrete.jpg' );
+
+	materials['defaultTable'] = new THREE.MeshStandardMaterial( {
+		map:textures['concrete'],
+		envMapIntensity : 1.5,
+		metalness: 0,
+		roughness: 0.3,
+		envMap : textureEquirec,
+	} );
+
 	//startup models loading
 	loader = new THREE.GLTFLoader();
-	loader.load( '../assets/base_02.gltf', function ( gltf ) {
+	loader.load( '../assets/base.gltf', function ( gltf ) {
 		gltf.scene.children.forEach(element => {
 			if (element.name == "Lights") {
 				var load = true;
@@ -88,19 +112,17 @@ function init() {
 				});
 			}
 			if(element.name.startsWith("Cake")) {
-				// console.log(element);
 				cakeName = element.name;
 				cakeModels[cakeName] = [];
 				cakeModels[cakeName] = element;
 				cakeModels[cakeName].name = cakeName;
-				cakeModels[cakeName].material = new THREE.MeshStandardMaterial( {
-					color: 0xffffff,
-					envMapIntensity : 1,
-					refractionRatio : 2,
-					metalness: 0,
-					roughness: 0.9,
-					envMap : textureEquirec,
-				} );
+
+				cakeModels[cakeName].material = materials['dafaultLambert'];
+				if (cakeModels[cakeName].children.length) {
+					cakeModels[cakeName].children.forEach(child => {
+						child.material = materials['dafaultLambert'];
+					})
+				}
 
 				if ( cakeModels[cakeName].isMesh ) {
 					cakeModels[cakeName].castShadow = true;
@@ -113,17 +135,7 @@ function init() {
 			}
 			if(element.name == "Table") {
 				tableModel = element;
-				textures['concrete'] = textureLoader.load( '../images/concrete.jpg' );
-
-				tableModel.material = new THREE.MeshStandardMaterial( {
-					map:textures['concrete'],
-					envMapIntensity : 1.5,
-					metalness: 0,
-					roughness: 0.3,
-					envMap : textureEquirec,
-				} );
-
-
+				tableModel.material = materials['defaultTable']
 				if ( tableModel.isMesh ) {
 					tableModel.castShadow = false;
 					tableModel.receiveShadow = true;
@@ -177,8 +189,8 @@ function updateEditor() {
 		scene.remove(cakeModels[cake])
 	}
 	//removing instances
-	if (instances) {
-		scene.remove(instances);
+	for (instance in instances) {
+		scene.remove(instances[instance]);
 	}
 
 	// adding lights and table
@@ -190,54 +202,130 @@ function updateEditor() {
 	//adding base cake
 	if (options.baseCake) {
 		if (options.baseCake in cakeModels) {
-
-			// console.log(cakeModels[options.baseCake].matrix);
 			cakeModels[options.baseCake].applyMatrix4(cakeModels[options.baseCake].matrixWorld.invert())
 			cakeModels[options.baseCake].applyMatrix4(options.baseMatrix.clone());
-			// cakeModels[options.baseCake].updateMatrix();
 			scene.add(cakeModels[options.baseCake]);
 		}
-		// console.log(cakeModels[options.baseCake]);
+
 		if (options.numberOfTiers > 1) {
 			source = cakeModels[options.baseCake];
 			material = Object.create(cakeModels[options.baseCake].material);
-			instances = new THREE.InstancedMesh(source.geometry, material, options.numberOfTiers-1);
-			instances.instanceMatrix.setUsage( THREE.DynamicDrawUsage );
 
-			for (i=1; i<options.numberOfTiers; i++) {
-				transform = options.baseMatrix.clone();
-				translateMatrix =  new THREE.Matrix4().makeTranslation(0, i*options.tierHeight, 0 );
-				scaleMatrix =  new THREE.Matrix4().makeScale(1- i* options.tierScaling, 1, 1 - i*options.tierScaling);
-				transform.multiply(translateMatrix);
-				transform.multiply(scaleMatrix);
-				instances.setMatrixAt( i-1, transform );
+			if (cakeModels[options.baseCake].children.length) {
+				if (cakeModels[options.baseCake].children[0]) {
+					instanceCakeTier(cakeModels[options.baseCake].children[0].geometry, Object.create(cakeModels[options.baseCake].children[0].material));
+				}
+
+				if (cakeModels[options.baseCake].children[1]) {
+					instanceCakeTier(cakeModels[options.baseCake].children[1].geometry, Object.create(cakeModels[options.baseCake].children[1].material));
+				}
+			} else {
+				instanceCakeTier(source.geometry, material);
 			}
-			instances.instanceMatrix.needsUpdate = true;
-			scene.add( instances );
 
-			//set orbit point
-			options.orbitPoint.y = (options.baseHeight + (options.numberOfTiers -1 )* options.tierHeight) /2;
 		}
+		options.orbitPoint.y = (options.baseHeight + (options.numberOfTiers -1 )* options.tierHeight) /2;
 	}
 
+}
+function instanceCakeTier(geometry, material) {
+	instance = new THREE.InstancedMesh(geometry, material, options.numberOfTiers-1);
+	instance.instanceMatrix.setUsage( THREE.DynamicDrawUsage );
+	tierRotation = 360/options.numberOfTiers;
+	for (i=1; i<options.numberOfTiers; i++) {
+		transform = options.baseMatrix.clone();
+		translateMatrix =  new THREE.Matrix4().makeTranslation(0, i*options.tierHeight, 0 );
+		rotationMatrix =  new THREE.Matrix4().makeRotationY((i*tierRotation)*Math.PI/180);
+		scaleMatrix =  new THREE.Matrix4().makeScale(1- i* options.tierScaling, 1, 1 - i*options.tierScaling);
+		transform.multiply(translateMatrix);
+		transform.multiply(rotationMatrix);
+		transform.multiply(scaleMatrix);
+		instance.setMatrixAt( i-1, transform );
+	}
+	instance.instanceMatrix.needsUpdate = true;
+	scene.add( instance );
+	instances.push(instance);
 }
 
 function setBaseModel(type) {
 	options.baseCake = type;
+	options.step = 2;
 	updateEditor();
+
 }
 
 function setNumberOfTiers(number) {
 	options.numberOfTiers = number;
+	options.step = 3;
 	updateEditor();
 }
 
-function setBaseScale(number) {
-	options.baseMatrix =  new THREE.Matrix4().makeScale(number, number, number);
+function setBaseScale(x,y,z) {
+	options.baseMatrix =  new THREE.Matrix4().makeScale(x, y, z);
+	options.step = 4;
 	updateEditor();
-	// console.log(options.baseMatrix);
 }
 
+
+function loadMaterial(name) {
+	textures[name+'_diffuse'] = textureLoader.load( '../images/materials/'+name+'/'+ name+'_diffuse.jpg' );
+	//wrapping texture
+	// textures[name+'_diffuse'].wrapS = THREE.RepeatWrapping;
+	// textures[name+'_diffuse'].wrapT = THREE.RepeatWrapping;
+	// textures[name+'_diffuse'].repeat.set( 4, 4 );
+
+	textures[name+'_gloss'] = textureLoader.load( '../images/materials/'+name+'/'+ name+'_glossiness.jpg' );
+	textures[name+'_height'] = textureLoader.load( '../images/materials/'+name+'/'+ name+'_height.jpg' );
+	textures[name+'_normal'] = textureLoader.load( '../images/materials/'+name+'/'+ name+'_normal.jpg' );
+	materials[name] = new THREE.MeshStandardMaterial( {
+		// color: 0x0066ff,
+		map:textures[name+'_diffuse'],
+		normalMap: textures[name+'_normal'],
+		roughnessMap : textures[name+'_gloss'],
+		displacementMap: textures[name+'_height'],
+		displacementScale: 10,
+		roughness: 1,
+		metalness: 0,
+		envMap : textureEquirec,
+		envMapIntensity : 1.5,
+		side: THREE.DoubleSide
+	} );
+}
+
+function setBaseMaterial(name, hasSecondMaterial) {
+	if (!(name in materials)) {
+		loadMaterial(name);
+	}
+	if (hasSecondMaterial) {
+		if (!(name+"_second" in materials)) {
+			loadMaterial(name+"_second");
+		}
+		setMaterialToAllBaseGeoms(name, hasSecondMaterial);
+	} else{
+		setMaterialToAllBaseGeoms(name);
+	}
+
+	updateEditor();
+}
+
+function setMaterialToAllBaseGeoms(name, hasSecondMaterial= false) {
+	for( cake in cakeModels) {
+		cakeModels[cake].material = materials[name];
+		if (cakeModels[cake].children.length) {
+			cakeModels[cake].children.forEach(child => {
+				child.material = materials[name];
+			})
+		}
+		if (hasSecondMaterial) {
+			if (cakeModels[cake].children.length) {
+				cakeModels[cake].children[1].material = materials[name+"_second"];
+			}
+		}
+	}
+}
+
+
+//use geom instead of instances for base geoms
 //check if base model is used...and then remove
 //instantiate model
 //add stereo option
