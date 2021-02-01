@@ -235,10 +235,10 @@ function instanceCakeTier(geometry, material) {
 	for (i=1; i<options.numberOfTiers; i++) {
 		transform = options.baseMatrix.clone();
 		translateMatrix =  new THREE.Matrix4().makeTranslation(0, i*options.tierHeight, 0 );
-		rotationMatrix =  new THREE.Matrix4().makeRotationY((i*tierRotation)*Math.PI/180);
+		// rotationMatrix =  new THREE.Matrix4().makeRotationY((i*tierRotation)*Math.PI/180);
 		scaleMatrix =  new THREE.Matrix4().makeScale(1- i* options.tierScaling, 1, 1 - i*options.tierScaling);
 		transform.multiply(translateMatrix);
-		transform.multiply(rotationMatrix);
+		// transform.multiply(rotationMatrix);
 		transform.multiply(scaleMatrix);
 		instance.setMatrixAt( i-1, transform );
 	}
@@ -269,22 +269,29 @@ function setBaseScale(x,y,z) {
 
 function loadMaterial(name) {
 	textures[name+'_diffuse'] = textureLoader.load( '../images/materials/'+name+'/'+ name+'_diffuse.jpg' );
-	//wrapping texture
-	// textures[name+'_diffuse'].wrapS = THREE.RepeatWrapping;
-	// textures[name+'_diffuse'].wrapT = THREE.RepeatWrapping;
-	// textures[name+'_diffuse'].repeat.set( 4, 4 );
+	textures[name+'_diffuse'].wrapS = THREE.RepeatWrapping;
+	textures[name+'_diffuse'].wrapT = THREE.RepeatWrapping;
+	textures[name+'_diffuse'].repeat.set( 1, 1 );
 
 	textures[name+'_gloss'] = textureLoader.load( '../images/materials/'+name+'/'+ name+'_glossiness.jpg' );
-	textures[name+'_height'] = textureLoader.load( '../images/materials/'+name+'/'+ name+'_height.jpg' );
+	textures[name+'_gloss'].wrapS = THREE.RepeatWrapping;
+	textures[name+'_gloss'].wrapT = THREE.RepeatWrapping;
+	textures[name+'_gloss'].repeat.set( 1, 1 );
+	// textures[name+'_height'] = textureLoader.load( '../images/materials/'+name+'/'+ name+'_height.jpg' );
+
 	textures[name+'_normal'] = textureLoader.load( '../images/materials/'+name+'/'+ name+'_normal.jpg' );
+	textures[name+'_normal'].wrapS = THREE.RepeatWrapping;
+	textures[name+'_normal'].wrapT = THREE.RepeatWrapping;
+	textures[name+'_normal'].repeat.set( 1, 1 );
+
 	materials[name] = new THREE.MeshStandardMaterial( {
 		// color: 0x0066ff,
 		map:textures[name+'_diffuse'],
 		normalMap: textures[name+'_normal'],
 		roughnessMap : textures[name+'_gloss'],
-		displacementMap: textures[name+'_height'],
-		displacementScale: 10,
-		roughness: 1,
+		// displacementMap: textures[name+'_height'],
+		// displacementScale: 10,
+		roughness: 1.3,
 		metalness: 0,
 		envMap : textureEquirec,
 		envMapIntensity : 1.5,
@@ -325,7 +332,8 @@ function setMaterialToAllBaseGeoms(name, hasSecondMaterial= false) {
 }
 
 
-//use geom instead of instances for base geoms
+//use geom instead of instances for base geoms to apply UV offsets for tier variation
+
 //check if base model is used...and then remove
 //instantiate model
 //add stereo option
