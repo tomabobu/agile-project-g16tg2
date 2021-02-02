@@ -333,8 +333,6 @@ function setMaterialToAllBaseGeoms(name, hasSecondMaterial= false) {
 
 
 //use geom instead of instances for base geoms to apply UV offsets for tier variation
-
-//check if base model is used...and then remove
-//instantiate model
+//preload materials before switching it (chrome material shown while loading model)
 //add stereo option
 //show a cm as reference on the table (or plates);
