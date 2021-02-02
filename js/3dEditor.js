@@ -44,7 +44,7 @@ function init() {
 	textureLoader = new THREE.TextureLoader();
 
 	//environment texture
-	textureEquirec = textureLoader.load( '../images/Classic-Kitchen-03.jpg' );
+	textureEquirec = textureLoader.load( './images/Classic-Kitchen-03.jpg' );
 	textureEquirec.mapping = THREE.EquirectangularReflectionMapping;
 	textureEquirec.encoding = THREE.sRGBEncoding;
 	scene.background = textureEquirec;
@@ -70,7 +70,7 @@ function init() {
 		side: THREE.DoubleSide
 	});
 
-	textures['concrete'] = textureLoader.load( '../images/concrete.jpg' );
+	textures['concrete'] = textureLoader.load( './images/concrete.jpg' );
 
 	materials['defaultTable'] = new THREE.MeshStandardMaterial( {
 		map:textures['concrete'],
@@ -82,7 +82,7 @@ function init() {
 
 	//startup models loading
 	loader = new THREE.GLTFLoader();
-	loader.load( '../assets/base.gltf', function ( gltf ) {
+	loader.load( './assets/base.gltf', function ( gltf ) {
 		gltf.scene.children.forEach(element => {
 			if (element.name == "Lights") {
 				var load = true;
