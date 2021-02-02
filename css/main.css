@@ -336,7 +336,7 @@ body, html {
 	text-align: justify;
 }
 
-.bgimg-1, .bgimg-2, .bgimg-3, .bgimg-4 {
+.bgimg-1, .bgimg-2, .bgimg-3, .bgimg-4, .bgimg-5, .bgimg-6, .bgimg-7, .bgimg-8 {
 	position: relative;
 	opacity: 0.65;
 	background-attachment: fixed;
@@ -364,6 +364,26 @@ body, html {
 .bgimg-4 {
 	background-image: url("../images/Bebette_Kitten_Looking_Up.jpeg");
 	min-height: 400px;
+}
+
+.bgimg-5 {
+	background-image: url("../images/cake7.jpg");
+	min-height: 100%;	
+}
+
+.bgimg-6 {
+	background-image: url("../images/cake-6.jpg");
+	min-height: 80%;	
+}
+
+.bgimg-7 {
+	background-image: url("../images/cake-7.jpg");
+	min-height: 50%;	
+}
+
+.bgimg-8 {
+	background-image: url("../images/cake-8.jpg");
+	min-height: 50%;	
 }
 
 .border {
