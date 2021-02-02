@@ -268,18 +268,18 @@ function setBaseScale(x,y,z) {
 
 
 function loadMaterial(name) {
-	textures[name+'_diffuse'] = textureLoader.load( '../images/materials/'+name+'/'+ name+'_diffuse.jpg' );
+	textures[name+'_diffuse'] = textureLoader.load( './images/materials/'+name+'/'+ name+'_diffuse.jpg' );
 	textures[name+'_diffuse'].wrapS = THREE.RepeatWrapping;
 	textures[name+'_diffuse'].wrapT = THREE.RepeatWrapping;
 	textures[name+'_diffuse'].repeat.set( 1, 1 );
 
-	textures[name+'_gloss'] = textureLoader.load( '../images/materials/'+name+'/'+ name+'_glossiness.jpg' );
+	textures[name+'_gloss'] = textureLoader.load( './images/materials/'+name+'/'+ name+'_glossiness.jpg' );
 	textures[name+'_gloss'].wrapS = THREE.RepeatWrapping;
 	textures[name+'_gloss'].wrapT = THREE.RepeatWrapping;
 	textures[name+'_gloss'].repeat.set( 1, 1 );
-	// textures[name+'_height'] = textureLoader.load( '../images/materials/'+name+'/'+ name+'_height.jpg' );
+	// textures[name+'_height'] = textureLoader.load( './images/materials/'+name+'/'+ name+'_height.jpg' );
 
-	textures[name+'_normal'] = textureLoader.load( '../images/materials/'+name+'/'+ name+'_normal.jpg' );
+	textures[name+'_normal'] = textureLoader.load( './images/materials/'+name+'/'+ name+'_normal.jpg' );
 	textures[name+'_normal'].wrapS = THREE.RepeatWrapping;
 	textures[name+'_normal'].wrapT = THREE.RepeatWrapping;
 	textures[name+'_normal'].repeat.set( 1, 1 );
