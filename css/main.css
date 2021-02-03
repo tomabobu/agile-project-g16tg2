@@ -295,11 +295,11 @@ body, html {
 }
 
 .grid-colors .grid-color-05 {
-	background: #F1B930;
+	background: #EAE44F;
 }
 
 .grid-colors .grid-color-06 {
-	background: #EAE44F;
+	background: #FFFFFF;
 }
 
 .grid-colors .grid-color-07 {
@@ -368,22 +368,22 @@ body, html {
 
 .bgimg-5 {
 	background-image: url("../images/cake7.jpg");
-	min-height: 100%;	
+	min-height: 100%;
 }
 
 .bgimg-6 {
 	background-image: url("../images/cake-6.jpg");
-	min-height: 80%;	
+	min-height: 80%;
 }
 
 .bgimg-7 {
 	background-image: url("../images/cake-7.jpg");
-	min-height: 50%;	
+	min-height: 50%;
 }
 
 .bgimg-8 {
 	background-image: url("../images/cake-8.jpg");
-	min-height: 50%;	
+	min-height: 50%;
 }
 
 .border {

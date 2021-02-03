@@ -17,7 +17,8 @@ var options = {
 	'tierScaling' : 0.22,
 	'numberOfTiers' : 1,
 	'orbitPoint' : new THREE.Vector3( 0, 50 / 2, 0 ),
-
+	'materialsUsed' : [],
+	'baseColor' : 0xFFFFFF,
 };
 
 
@@ -265,67 +266,93 @@ function setBaseScale(x,y,z) {
 	options.step = 4;
 	updateEditor();
 }
+function loadTexture(name, suffix,  scaleUV) {
+	fullName = name + suffix;
+	textures[fullName] = textureLoader.load( './images/materials/'+name+'/'+ fullName + '.jpg',
+	// onLoad callback
+	function ( texture ) {
+		// in this example we create the material when the texture is loaded
+	},
+	// onProgress callback currently not supported
+	undefined,
+
+	// onError callback
+	function ( err ) {
+		console.log( name+'/'+ fullName+'.jpg - texture not found.' );
+		return false;
+	});
+
+	textures[fullName].wrapS = THREE.RepeatWrapping;
+	textures[fullName].wrapT = THREE.RepeatWrapping;
+	textures[fullName].repeat.set(scaleUV,scaleUV );
+	return true;
+}
+
+function loadMaterial(name, scaleUV = 1, roughness= 1.3, envMapIntensity = 1.5) {
+	let diffuse = glossiness = normal = true;
+	diffuse = loadTexture(name, '_diffuse', scaleUV);
+	glossiness =  loadTexture(name, '_glossiness', scaleUV);
+	normal =  loadTexture(name, '_normal', scaleUV);
 
 
-function loadMaterial(name) {
-	textures[name+'_diffuse'] = textureLoader.load( './images/materials/'+name+'/'+ name+'_diffuse.jpg' );
-	textures[name+'_diffuse'].wrapS = THREE.RepeatWrapping;
-	textures[name+'_diffuse'].wrapT = THREE.RepeatWrapping;
-	textures[name+'_diffuse'].repeat.set( 1, 1 );
-
-	textures[name+'_gloss'] = textureLoader.load( './images/materials/'+name+'/'+ name+'_glossiness.jpg' );
-	textures[name+'_gloss'].wrapS = THREE.RepeatWrapping;
-	textures[name+'_gloss'].wrapT = THREE.RepeatWrapping;
-	textures[name+'_gloss'].repeat.set( 1, 1 );
-	// textures[name+'_height'] = textureLoader.load( './images/materials/'+name+'/'+ name+'_height.jpg' );
-
-	textures[name+'_normal'] = textureLoader.load( './images/materials/'+name+'/'+ name+'_normal.jpg' );
-	textures[name+'_normal'].wrapS = THREE.RepeatWrapping;
-	textures[name+'_normal'].wrapT = THREE.RepeatWrapping;
-	textures[name+'_normal'].repeat.set( 1, 1 );
-
-	materials[name] = new THREE.MeshStandardMaterial( {
-		// color: 0x0066ff,
-		map:textures[name+'_diffuse'],
-		normalMap: textures[name+'_normal'],
-		roughnessMap : textures[name+'_gloss'],
-		// displacementMap: textures[name+'_height'],
-		// displacementScale: 10,
-		roughness: 1.3,
+	materials[name+scaleUV] = new THREE.MeshStandardMaterial( {
+		color: options['baseColor'],
+		map:diffuse ? textures[name+'_diffuse'] : null,
+		normalMap: normal ? textures[name+'_normal'] : null,
+		normalScale: new THREE.Vector2( 1, 1 ),
+		roughnessMap : glossiness ? textures[name+'_gloss'] : null,
+		roughness: roughness,
 		metalness: 0,
 		envMap : textureEquirec,
-		envMapIntensity : 1.5,
+		envMapIntensity : envMapIntensity,
 		side: THREE.DoubleSide
 	} );
 }
 
-function setBaseMaterial(name, hasSecondMaterial) {
-	if (!(name in materials)) {
-		loadMaterial(name);
+
+function setColorToUsedMaterials(newColor) {
+	options['materialsUsed'].forEach(material => {
+		materials[material].color.setHex(newColor);
+	});
+	options['baseColor'] = newColor;
+
+}
+
+function resetBaseColorAndSetBaseMaterial(firstMaterialName, secondMaterialName, scaleUVFirst= 1, scaleUVSecond = 1,  roughness= 1.3, envMapIntensity = 1.5) {
+	options['baseColor'] = 0xffffff;
+	setBaseMaterial(firstMaterialName, secondMaterialName, scaleUVFirst, scaleUVSecond,  roughness, envMapIntensity);
+}
+
+function setBaseMaterial(firstMaterialName, secondMaterialName, scaleUVFirst= 1, scaleUVSecond = 1,  roughness= 1.3, envMapIntensity = 1.5) {
+	if (!(firstMaterialName in materials)) {
+		loadMaterial(firstMaterialName, scaleUVFirst, roughness, envMapIntensity);
 	}
-	if (hasSecondMaterial) {
-		if (!(name+"_second" in materials)) {
-			loadMaterial(name+"_second");
+	if (secondMaterialName) {
+		if (!(secondMaterialName in materials)) {
+			loadMaterial(secondMaterialName, scaleUVSecond,  roughness, envMapIntensity);
 		}
-		setMaterialToAllBaseGeoms(name, hasSecondMaterial);
+		setMaterialToAllBaseGeoms(firstMaterialName + scaleUVFirst, secondMaterialName + scaleUVSecond);
 	} else{
-		setMaterialToAllBaseGeoms(name);
+		setMaterialToAllBaseGeoms(firstMaterialName + scaleUVFirst);
 	}
 
 	updateEditor();
 }
 
-function setMaterialToAllBaseGeoms(name, hasSecondMaterial= false) {
+function setMaterialToAllBaseGeoms(firstMaterialName, secondMaterialName= false) {
 	for( cake in cakeModels) {
-		cakeModels[cake].material = materials[name];
+		options['materialsUsed'] = [firstMaterialName];
+		cakeModels[cake].material = materials[firstMaterialName];
 		if (cakeModels[cake].children.length) {
 			cakeModels[cake].children.forEach(child => {
-				child.material = materials[name];
+				child.material = materials[firstMaterialName];
 			})
 		}
-		if (hasSecondMaterial) {
+		if (secondMaterialName) {
 			if (cakeModels[cake].children.length) {
-				cakeModels[cake].children[1].material = materials[name+"_second"];
+				cakeModels[cake].children[1].material = materials[secondMaterialName];
+				options['materialsUsed'].push(secondMaterialName);
+				console.log(options['materialsUsed']);
 			}
 		}
 	}
