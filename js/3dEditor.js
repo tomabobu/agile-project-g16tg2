@@ -25,10 +25,13 @@ var options = {
 	'baseMatrix' : new THREE.Matrix4().makeScale(0.85,0.85,0.85),
 	'tierHeight' : 50,
 	'tierScaling' : 0.22,
+	'tierBorderScaling' : 0.04,
 	'numberOfTiers' : 1,
 	'orbitPoint' : new THREE.Vector3( 0, 50 / 2, 0 ),
 	'materialsUsed' : [],
 	'baseColor' : 0xFFFFFF,
+	'topBorderColor' : 0xFFFFFF,
+	'bottomBorderColor' : 0xFFFFFF,
 	'topBorder' : null,
 	'bottomBorder' : null,
 	'cakeSize' : 'medium',
@@ -37,7 +40,7 @@ var options = {
 	'smallNrInst' : 60,
 	'mediumNrInst' : 75,
 	'bigNrInst' : 90,
-	'topBorderRadiusScale' : 1,
+	'topBorderRadiusScale' : 0.95,
 	'bottomBorderRadiusScale' : 0.993,
 
 };
@@ -96,7 +99,8 @@ function init() {
 		envMapIntensity : 1,
 		refractionRatio : 2,
 		metalness: 0,
-		roughness: 0.9,
+		roughness: 0.2,
+		envMapIntensity : 1.7,
 		envMap : textureEquirec,
 		side: THREE.DoubleSide
 	});
@@ -105,7 +109,8 @@ function init() {
 		envMapIntensity : 1,
 		refractionRatio : 2,
 		metalness: 0,
-		roughness: 0.9,
+		roughness: 0.2,
+		envMapIntensity : 1.7,
 		envMap : textureEquirec,
 		side: THREE.DoubleSide
 	});
@@ -160,6 +165,10 @@ function init() {
 				cakeModels[cakeName].material = materials['dafaultLambert'];
 				if (cakeModels[cakeName].children.length) {
 					cakeModels[cakeName].children.forEach(child => {
+						if ( child.isMesh ) {
+							child.castShadow = true;
+							child.receiveShadow = true;
+						}
 						child.material = materials['dafaultLambert'];
 					})
 				}
@@ -171,10 +180,7 @@ function init() {
 					cakeModels[cakeName].receiveShadow = true;
 					// if(cakeModels[cakeName].material.map) cakeModels[cakeName].material.map.anisotropy = 1;
 				}
-				// cakeModels[cakeName].applyMatrix4(cakeModels[cakeName].matrixWorld.invert())
-				// cakeModels[cakeName].applyMatrix4(options.baseMatrix.clone().multiply(new THREE.Matrix4().makeTranslation(0,options.baseHeight*0.5, 0 )));
-
-			}
+							}
 			if(element.name.startsWith("Borders")) {
 
 
@@ -186,8 +192,8 @@ function init() {
 
 					borderModels[borderName+"top"].material = materials['defaultTopBorder'];
 					if ( borderModels[borderName+"top"].isMesh ) {
-						borderModels[borderName+"top"].castShadow = true;
-						borderModels[borderName+"top"].receiveShadow = true;
+						borderModels[borderName+"top"].castShadow = false;
+						borderModels[borderName+"top"].receiveShadow = false;
 					}
 
 					borderModels[borderName+"bottom"] = [];
@@ -196,8 +202,8 @@ function init() {
 
 					borderModels[borderName+"bottom"].material = materials['defaultBottomBorder'];
 					if ( borderModels[borderName+"bottom"].isMesh ) {
-						borderModels[borderName+"bottom"].castShadow = true;
-						borderModels[borderName+"bottom"].receiveShadow = true;
+						borderModels[borderName+"bottom"].castShadow = false;
+						borderModels[borderName+"bottom"].receiveShadow = false;
 					}
 
 
@@ -259,6 +265,11 @@ function render() {
 }
 
 function addBorderPoints(position, transform = null, instanceIndex = 0) {
+	//add adaptive scaling for top border on all tiers
+	if (position == 'top' && transform) {
+		scaleMatrix =  new THREE.Matrix4().makeScale(1- instanceIndex* options.tierBorderScaling, 1, 1 - instanceIndex*options.tierBorderScaling);
+		transform.multiply(scaleMatrix);
+	}
 	if (position == 'top') {
 		curve = cakeModels[options.baseCake].topBorder;
 		nrMultiplier = 1;
@@ -298,57 +309,8 @@ function addBorderPoints(position, transform = null, instanceIndex = 0) {
 		}
 	});
 
-
-	// const geometry = new THREE.BufferGeometry().setFromPoints( points );
-	// const material = new THREE.LineBasicMaterial( { color : 0xff0000 } );
-	// const curveObject = new THREE.Line( geometry, material );
-	// curveObject.rotateOnWorldAxis( new THREE.Vector3(1,0,0), Math.PI/2);
-	// if (position == 'top') {
-	// 	translateMatrix =  new THREE.Matrix4().makeTranslation(0, 50, 0 );
-	// } else {
-	// 	translateMatrix =  new THREE.Matrix4().makeTranslation(0, 1, 0 );
-	// }
-	// baseScale = options.baseMatrix.clone();
-	// baseScale.multiply(translateMatrix);
-	// curveObject.applyMatrix4(baseScale);
-
-
-
-	// addCurveGeometryBorderInstances(curveObject, position);
-
-
-
-	//don't add curve to the scene, add the instances
-	// scene.add(curveObject);
 }
 
-// function addCurveGeometryBorderInstances(curveObject, position) {
-// 	console.log('trece');
-// 	positions = curveObject.geometry.attributes.position.array;
-// 	count = curveObject.geometry.attributes.position.count;
-
-// 	if (position == 'top') {
-// 		geometry = borderModels[options.topBorder];
-// 		material =  Object.create(borderModels[options.topBorder].material);
-// 	} else {
-// 		geometry = borderModels[options.bottomBorder];
-// 		material =  Object.create(borderModels[options.bottomBorder].material);
-
-// 	}
-
-// 	instance = new THREE.InstancedMesh(geometry, material, count);
-// 	instance.instanceMatrix.setUsage( THREE.DynamicDrawUsage );
-
-// 	// for (i=0; i< positions.length;) {
-
-// 	// 	i = i+3;
-// 	// }
-// 	console.log(count);
-// // 	.localToWorld ( vector : Vector3 ) : Vector3
-// // vector - A vector representing a position in this object's local space.
-
-// // Converts the vector from this object's local space to world space.
-// }
 
 function updateEditor() {
 	//reinitialize top and bottom border points
@@ -419,8 +381,8 @@ function updateEditor() {
 			instances.push(instance);
 		}
 		if (bottomBorderPoints.length) {
-			geometry = borderModels[options.topBorder+"bottom"].geometry;
-			material = Object.create(borderModels[options.topBorder+"bottom"].material);
+			geometry = borderModels[options.bottomBorder+"bottom"].geometry;
+			material = Object.create(borderModels[options.bottomBorder+"bottom"].material);
 			instance = new THREE.InstancedMesh(geometry, material, bottomBorderPoints.length);
 			instance.instanceMatrix.setUsage( THREE.DynamicDrawUsage );
 			for (i=0; i<bottomBorderPoints.length; i++) {
@@ -449,13 +411,13 @@ function instanceCakeTier(geometry, material, addBorderPointsToInstance = true) 
 		transform.multiply(scaleMatrix);
 		instance.setMatrixAt( i-1, transform );
 		if (addBorderPointsToInstance) {
-			if (options.topBorder) {
-				//add top border for base cake
-				addBorderPoints('top', transform, i);
-			}
 			if (options.bottomBorder) {
 				addBorderPoints('bottom', transform, i);
 				//add bottom border for base cake
+			}
+			if (options.topBorder) {
+				//add top border for base cake
+				addBorderPoints('top', transform, i);
 			}
 		}
 	}
@@ -619,21 +581,6 @@ function createCurve(type, position) {
 		curve = new THREE.Shape();
 		roundedRect(curve, -l1/2, -l2/2, l1, l2, 10 );
 	}
-
-	// const points = curve.getPoints( 50 );
-	// const geometry = new THREE.BufferGeometry().setFromPoints( points );
-	// const material = new THREE.LineBasicMaterial( { color : 0xff0000 } );
-
-	// // Create the final object to add to the scene
-	// const curveObject = new THREE.Line( geometry, material );
-	// curveObject.rotateOnWorldAxis( new THREE.Vector3(1,0,0), Math.PI/2);
-	// curveObject.applyMatrix4(options.baseMatrix.clone());
-	// if (position == 'bottom') {
-	// 	curveObject.translateZ(-1);
-	// }
-	// if (position == 'top') {
-	// 	curveObject.translateZ(-43);
-	// }
 	return curve;
 }
 
@@ -647,10 +594,23 @@ function setBorder(type, position) {
 	updateEditor();
 }
 
+function setColorToTopBorder(color) {
+	materials['defaultTopBorder'].color.setHex(color);
+	options['topBorderColor'] = color;
+}
+
+function setColorToBottomBorder(color) {
+	materials['defaultBottomBorder'].color.setHex(color);
+	options['topBorderColor'] = color;
+}
 
 
-//top radius....scale based on tier
-// check shadows??
+
+// add new border models
+// cake color icing adjust
+//check shadows for borders
+
+// setup for mobile size
 //TODO set limits on camera rotation
 //use geom instead of instances for base geoms to apply UV offsets for tier variation
 //preload materials before switching it (chrome material shown while loading model)
