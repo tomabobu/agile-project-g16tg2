@@ -3,9 +3,13 @@ let textureLoader, textureEquirec;
 var lights = [];
 var tableModel = [];
 var cakeModels = [];
+var borderModels = [];
 var instances = [];
 var textures = [];
 var materials = [];
+var topBorderPoints = [];
+var bottomBorderPoints = [];
+
 
 var sizes = {
 	'small' : [0.65, 0.75, 0.65],
@@ -19,7 +23,7 @@ var options = {
 	'baseCake' : 'Cake_round',
 	'baseHeight' : 50,
 	'baseMatrix' : new THREE.Matrix4().makeScale(0.85,0.85,0.85),
-	'tierHeight' : 40,
+	'tierHeight' : 50,
 	'tierScaling' : 0.22,
 	'numberOfTiers' : 1,
 	'orbitPoint' : new THREE.Vector3( 0, 50 / 2, 0 ),
@@ -28,6 +32,14 @@ var options = {
 	'topBorder' : null,
 	'bottomBorder' : null,
 	'cakeSize' : 'medium',
+	'borderInstancesReductionRate' : 0.2, //upper tiers need fewer instances
+	'bottomBorderInstancesIncreaseRate' : 0.2, // bottom border needs more instances than the top
+	'smallNrInst' : 60,
+	'mediumNrInst' : 75,
+	'bigNrInst' : 90,
+	'topBorderRadiusScale' : 1,
+	'bottomBorderRadiusScale' : 0.993,
+
 };
 
 
@@ -79,6 +91,24 @@ function init() {
 		envMap : textureEquirec,
 		side: THREE.DoubleSide
 	});
+	materials['defaultTopBorder'] = new THREE.MeshStandardMaterial( {
+		color: 0xffffff,
+		envMapIntensity : 1,
+		refractionRatio : 2,
+		metalness: 0,
+		roughness: 0.9,
+		envMap : textureEquirec,
+		side: THREE.DoubleSide
+	});
+	materials['defaultBottomBorder'] = new THREE.MeshStandardMaterial( {
+		color: 0xffffff,
+		envMapIntensity : 1,
+		refractionRatio : 2,
+		metalness: 0,
+		roughness: 0.9,
+		envMap : textureEquirec,
+		side: THREE.DoubleSide
+	});
 
 	textures['concrete'] = textureLoader.load( './images/concrete.jpg' );
 
@@ -95,11 +125,11 @@ function init() {
 	loader.load( './assets/base.gltf', function ( gltf ) {
 		gltf.scene.children.forEach(element => {
 			if (element.name == "Lights") {
-				var load = true;
+				// var load = true;
 				lightsGroup = element.children;
 
 				lightsGroup.forEach( light => {
-					if (load) {
+					// if (load) {
 						newLight = new THREE.SpotLight("#" + light.name.split("_")[0], 0.15);
 						newLight.position.set(light.position.x, light.position.y , light.position.z);
 						newLight.castShadow = true;
@@ -118,7 +148,7 @@ function init() {
 						// const helper = new THREE.CameraHelper( newLight.shadow.camera );
 						// scene.add( helper );
 						// load=false;
-					}
+					// }
 				});
 			}
 			if(element.name.startsWith("Cake")) {
@@ -145,6 +175,38 @@ function init() {
 				// cakeModels[cakeName].applyMatrix4(options.baseMatrix.clone().multiply(new THREE.Matrix4().makeTranslation(0,options.baseHeight*0.5, 0 )));
 
 			}
+			if(element.name.startsWith("Borders")) {
+
+
+				element.children.forEach( border => {
+					borderName = border.name;
+					borderModels[borderName+"top"] = [];
+					borderModels[borderName+"top"] = border;
+					borderModels[borderName+"top"].name = borderName;
+
+					borderModels[borderName+"top"].material = materials['defaultTopBorder'];
+					if ( borderModels[borderName+"top"].isMesh ) {
+						borderModels[borderName+"top"].castShadow = true;
+						borderModels[borderName+"top"].receiveShadow = true;
+					}
+
+					borderModels[borderName+"bottom"] = [];
+					borderModels[borderName+"bottom"] = border.clone();
+					borderModels[borderName+"bottom"].name = borderName;
+
+					borderModels[borderName+"bottom"].material = materials['defaultBottomBorder'];
+					if ( borderModels[borderName+"bottom"].isMesh ) {
+						borderModels[borderName+"bottom"].castShadow = true;
+						borderModels[borderName+"bottom"].receiveShadow = true;
+					}
+
+
+				});
+
+
+			}
+
+
 			if(element.name == "Table") {
 				tableModel = element;
 				tableModel.material = materials['defaultTable']
@@ -171,7 +233,7 @@ function init() {
 	controls.dampingFactor = 0.1;
 	controls.target = options.orbitPoint;
 	// controls.autoRotate = true;
-	// scene.add( new THREE.AxesHelper(500));
+	scene.add( new THREE.AxesHelper(500));
 
 	window.addEventListener( 'resize', onWindowResize, false );
 
@@ -196,44 +258,102 @@ function render() {
 	renderer.render( scene, camera );
 }
 
-function addBorderInstances(position) {
+function addBorderPoints(position, transform = null, instanceIndex = 0) {
 	if (position == 'top') {
 		curve = cakeModels[options.baseCake].topBorder;
+		nrMultiplier = 1;
 	} else {
 		curve = cakeModels[options.baseCake].bottomBorder;
+		nrMultiplier = 1 + options.bottomBorderInstancesIncreaseRate
 	}
 	numPoints = 0;
 	if (options.cakeSize == 'small') {
-		numPoints = 10;
+		numPoints = parseInt(options.smallNrInst * (1 - instanceIndex * options.borderInstancesReductionRate) * nrMultiplier);
 	}
 	if (options.cakeSize == 'medium') {
-		numPoints = 20;
+		numPoints =  parseInt(options.mediumNrInst * (1 - instanceIndex * options.borderInstancesReductionRate) * nrMultiplier);
 	}
 	if (options.cakeSize == 'big') {
-		numPoints = 30;
+		numPoints = parseInt(options.bigNrInst * (1 - instanceIndex * options.borderInstancesReductionRate) * nrMultiplier);
 	}
 	const points = curve.getPoints(numPoints);
-	const geometry = new THREE.BufferGeometry().setFromPoints( points );
-	const material = new THREE.LineBasicMaterial( { color : 0xff0000 } );
+	baseMatrix =  options.baseMatrix.clone();
+	points.forEach(element => {
+		if  (position == 'top') {
+			point = new THREE.Vector3(element.x, 50, element.y)
+			if (transform) {
+				point.applyMatrix4(transform);
+			} else {
+				point.applyMatrix4(baseMatrix);
+			}
+			topBorderPoints.push(point);
+		} else {
+			point = new THREE.Vector3(element.x, 1, element.y)
+			if (transform) {
+				point.applyMatrix4(transform);
+			} else {
+				point.applyMatrix4(baseMatrix);
+			}
+			bottomBorderPoints.push(point);
+		}
+	});
 
-	// Create the final object to add to the scene
-	const curveObject = new THREE.Line( geometry, material );
-	curveObject.rotateOnWorldAxis( new THREE.Vector3(1,0,0), Math.PI/2);
-	if (position == 'top') {
-		translateMatrix =  new THREE.Matrix4().makeTranslation(0, 50, 0 );
-	} else {
-		translateMatrix =  new THREE.Matrix4().makeTranslation(0, 1, 0 );
-	}
 
-	baseScale = options.baseMatrix.clone();
-	baseScale.multiply(translateMatrix);
-	curveObject.applyMatrix4(baseScale);
+	// const geometry = new THREE.BufferGeometry().setFromPoints( points );
+	// const material = new THREE.LineBasicMaterial( { color : 0xff0000 } );
+	// const curveObject = new THREE.Line( geometry, material );
+	// curveObject.rotateOnWorldAxis( new THREE.Vector3(1,0,0), Math.PI/2);
+	// if (position == 'top') {
+	// 	translateMatrix =  new THREE.Matrix4().makeTranslation(0, 50, 0 );
+	// } else {
+	// 	translateMatrix =  new THREE.Matrix4().makeTranslation(0, 1, 0 );
+	// }
+	// baseScale = options.baseMatrix.clone();
+	// baseScale.multiply(translateMatrix);
+	// curveObject.applyMatrix4(baseScale);
+
+
+
+	// addCurveGeometryBorderInstances(curveObject, position);
+
+
 
 	//don't add curve to the scene, add the instances
-	scene.add(curveObject);
+	// scene.add(curveObject);
 }
 
+// function addCurveGeometryBorderInstances(curveObject, position) {
+// 	console.log('trece');
+// 	positions = curveObject.geometry.attributes.position.array;
+// 	count = curveObject.geometry.attributes.position.count;
+
+// 	if (position == 'top') {
+// 		geometry = borderModels[options.topBorder];
+// 		material =  Object.create(borderModels[options.topBorder].material);
+// 	} else {
+// 		geometry = borderModels[options.bottomBorder];
+// 		material =  Object.create(borderModels[options.bottomBorder].material);
+
+// 	}
+
+// 	instance = new THREE.InstancedMesh(geometry, material, count);
+// 	instance.instanceMatrix.setUsage( THREE.DynamicDrawUsage );
+
+// 	// for (i=0; i< positions.length;) {
+
+// 	// 	i = i+3;
+// 	// }
+// 	console.log(count);
+// // 	.localToWorld ( vector : Vector3 ) : Vector3
+// // vector - A vector representing a position in this object's local space.
+
+// // Converts the vector from this object's local space to world space.
+// }
+
 function updateEditor() {
+	//reinitialize top and bottom border points
+	topBorderPoints = [];
+	bottomBorderPoints = [];
 	//removing all cakes
 	for (const cake in cakeModels) {
 		scene.remove(cakeModels[cake])
@@ -257,10 +377,10 @@ function updateEditor() {
 			scene.add(cakeModels[options.baseCake]);
 			if (options.topBorder) {
 				//add top border for base cake
-				addBorderInstances('top');
+				addBorderPoints('top');
 			}
 			if (options.bottomBorder) {
-				addBorderInstances('bottom');
+				addBorderPoints('bottom');
 				//add bottom border for base cake
 			}
 		}
@@ -271,34 +391,73 @@ function updateEditor() {
 
 			if (cakeModels[options.baseCake].children.length) {
 				if (cakeModels[options.baseCake].children[0]) {
-					instanceCakeTier(cakeModels[options.baseCake].children[0].geometry, Object.create(cakeModels[options.baseCake].children[0].material));
+					instanceCakeTier(cakeModels[options.baseCake].children[0].geometry, Object.create(cakeModels[options.baseCake].children[0].material), true);
 				}
 
 				if (cakeModels[options.baseCake].children[1]) {
-					instanceCakeTier(cakeModels[options.baseCake].children[1].geometry, Object.create(cakeModels[options.baseCake].children[1].material));
+					instanceCakeTier(cakeModels[options.baseCake].children[1].geometry, Object.create(cakeModels[options.baseCake].children[1].material), false);
 				}
 			} else {
-				instanceCakeTier(source.geometry, material);
+				instanceCakeTier(source.geometry, material, true);
 			}
 
+		}
+		//add border instances
+		if (topBorderPoints.length) {
+			geometry = borderModels[options.topBorder+"top"].geometry;
+			material = Object.create(borderModels[options.topBorder+"top"].material);
+			instance = new THREE.InstancedMesh(geometry, material, topBorderPoints.length);
+			instance.instanceMatrix.setUsage( THREE.DynamicDrawUsage );
+			for (i=0; i<topBorderPoints.length; i++) {
+				translateMatrix =  new THREE.Matrix4().makeTranslation(topBorderPoints[i].x, topBorderPoints[i].y, topBorderPoints[i].z);
+				rotationMatrix =  new THREE.Matrix4().makeRotationY(Math.random()*2*Math.PI);
+				translateMatrix.multiply(rotationMatrix);
+				instance.setMatrixAt( i-1, translateMatrix );
+			}
+			instance.instanceMatrix.needsUpdate = true;
+			scene.add(instance);
+			instances.push(instance);
+		}
+		if (bottomBorderPoints.length) {
+			geometry = borderModels[options.topBorder+"bottom"].geometry;
+			material = Object.create(borderModels[options.topBorder+"bottom"].material);
+			instance = new THREE.InstancedMesh(geometry, material, bottomBorderPoints.length);
+			instance.instanceMatrix.setUsage( THREE.DynamicDrawUsage );
+			for (i=0; i<bottomBorderPoints.length; i++) {
+				translateMatrix =  new THREE.Matrix4().makeTranslation(bottomBorderPoints[i].x, bottomBorderPoints[i].y, bottomBorderPoints[i].z);
+				rotationMatrix =  new THREE.Matrix4().makeRotationY(Math.random()*2*Math.PI);
+				translateMatrix.multiply(rotationMatrix);
+				instance.setMatrixAt( i-1, translateMatrix );
+			}
+			instance.instanceMatrix.needsUpdate = true;
+			scene.add(instance);
+			instances.push(instance);
 		}
 		options.orbitPoint.y = (options.baseHeight + (options.numberOfTiers -1 )* options.tierHeight) /2;
 	}
 
 }
-function instanceCakeTier(geometry, material) {
+function instanceCakeTier(geometry, material, addBorderPointsToInstance = true) {
 	instance = new THREE.InstancedMesh(geometry, material, options.numberOfTiers-1);
 	instance.instanceMatrix.setUsage( THREE.DynamicDrawUsage );
 	tierRotation = 360/options.numberOfTiers;
 	for (i=1; i<options.numberOfTiers; i++) {
 		transform = options.baseMatrix.clone();
 		translateMatrix =  new THREE.Matrix4().makeTranslation(0, i*options.tierHeight, 0 );
-		// rotationMatrix =  new THREE.Matrix4().makeRotationY((i*tierRotation)*Math.PI/180);
 		scaleMatrix =  new THREE.Matrix4().makeScale(1- i* options.tierScaling, 1, 1 - i*options.tierScaling);
 		transform.multiply(translateMatrix);
-		// transform.multiply(rotationMatrix);
 		transform.multiply(scaleMatrix);
 		instance.setMatrixAt( i-1, transform );
+		if (addBorderPointsToInstance) {
+			if (options.topBorder) {
+				//add top border for base cake
+				addBorderPoints('top', transform, i);
+			}
+			if (options.bottomBorder) {
+				addBorderPoints('bottom', transform, i);
+				//add bottom border for base cake
+			}
+		}
 	}
 	instance.instanceMatrix.needsUpdate = true;
 	scene.add( instance );
@@ -442,8 +601,11 @@ function createCurve(type, position) {
 		l2 = 160;
 	}
 	if (position == 'top') {
-		l1 = l1 * 0.95;
-		l2 = l2 * 0.95;
+		l1 = l1 * options.topBorderRadiusScale;
+		l2 = l2 * options.topBorderRadiusScale;
+	} else {
+		l1 = l1 * options.bottomBorderRadiusScale;
+		l2 = l2 * options.bottomBorderRadiusScale;
 	}
 	if (type == 'Cake_round') {
 		curve = new THREE.EllipseCurve(
@@ -453,7 +615,6 @@ function createCurve(type, position) {
 			false,            // aClockwise
 			90                 // aRotation
 		);
-		console.log(curve);
 	} else if (type == 'Cake_square' || type == 'Cake_sheet') {
 		curve = new THREE.Shape();
 		roundedRect(curve, -l1/2, -l2/2, l1, l2, 10 );
@@ -488,8 +649,8 @@ function setBorder(type, position) {
 
 
 
-
-
+//top radius....scale based on tier
+// check shadows??
 //TODO set limits on camera rotation
 //use geom instead of instances for base geoms to apply UV offsets for tier variation
 //preload materials before switching it (chrome material shown while loading model)
