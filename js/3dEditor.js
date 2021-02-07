@@ -37,11 +37,11 @@ var options = {
 	'cakeSize' : 'medium',
 	'borderInstancesReductionRate' : 0.2, //upper tiers need fewer instances
 	'bottomBorderInstancesIncreaseRate' : 0.2, // bottom border needs more instances than the top
-	'smallNrInst' : 60,
-	'mediumNrInst' : 75,
-	'bigNrInst' : 90,
+	'smallNrInst' : 65,
+	'mediumNrInst' : 80,
+	'bigNrInst' : 95,
 	'topBorderRadiusScale' : 0.95,
-	'bottomBorderRadiusScale' : 0.993,
+	'bottomBorderRadiusScale' : 1,
 
 };
 
@@ -140,7 +140,7 @@ function init() {
 						newLight.castShadow = true;
 						newLight.penumbra  = 1;
 						newLight.angle = Math.PI/6;
-						newLight.shadow.bias = -0.000001;
+						newLight.shadow.bias = -0.0001;
 						newLight.shadow.mapSize.width = 512;
 						newLight.shadow.mapSize.height = 512;
 						newLight.shadow.camera.near = 0.5;
@@ -287,7 +287,7 @@ function addBorderPoints(position, transform = null, instanceIndex = 0) {
 	if (options.cakeSize == 'big') {
 		numPoints = parseInt(options.bigNrInst * (1 - instanceIndex * options.borderInstancesReductionRate) * nrMultiplier);
 	}
-	const points = curve.getPoints(numPoints);
+	const points = curve.getSpacedPoints(numPoints);
 	baseMatrix =  options.baseMatrix.clone();
 	points.forEach(element => {
 		if  (position == 'top') {
@@ -604,12 +604,10 @@ function setColorToBottomBorder(color) {
 	options['topBorderColor'] = color;
 }
 
-
-
-// add new border models
+//shadow map bias...error fix
+// optimize border geometries
 // cake color icing adjust
 //check shadows for borders
-
 // setup for mobile size
 //TODO set limits on camera rotation
 //use geom instead of instances for base geoms to apply UV offsets for tier variation
