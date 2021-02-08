@@ -84,6 +84,9 @@ function init() {
 	renderer.shadowMap.enabled = true;
 	renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
+	renderer.gammaFactor = 2.2;
+	renderer.outputEncoding = THREE.sRGBEncoding;
+
 	//setting default materials
 	materials['dafaultLambert'] = new THREE.MeshStandardMaterial( {
 		color: 0xffffff,
@@ -470,6 +473,7 @@ function loadTexture(name, suffix,  scaleUV) {
 function loadMaterial(name, scaleUV = 1, roughness= 1.3, envMapIntensity = 1.5) {
 	let diffuse = glossiness = normal = true;
 	diffuse = loadTexture(name, '_diffuse', scaleUV);
+	diffuse.encoding = THREE.sRGBEncoding;
 	glossiness =  loadTexture(name, '_glossiness', scaleUV);
 	normal =  loadTexture(name, '_normal', scaleUV);
 
@@ -492,6 +496,7 @@ function loadMaterial(name, scaleUV = 1, roughness= 1.3, envMapIntensity = 1.5) 
 function setColorToUsedMaterials(newColor) {
 	options['materialsUsed'].forEach(material => {
 		materials[material].color.setHex(newColor);
+		materials[material].color.convertSRGBToLinear();
 	});
 	options['baseColor'] = newColor;
 
@@ -596,11 +601,13 @@ function setBorder(type, position) {
 
 function setColorToTopBorder(color) {
 	materials['defaultTopBorder'].color.setHex(color);
+	materials['defaultTopBorder'].color.convertSRGBToLinear();
 	options['topBorderColor'] = color;
 }
 
 function setColorToBottomBorder(color) {
 	materials['defaultBottomBorder'].color.setHex(color);
+	materials['defaultBottomBorder'].color.convertSRGBToLinear();
 	options['topBorderColor'] = color;
 }
 
@@ -614,3 +621,107 @@ function setColorToBottomBorder(color) {
 //preload materials before switching it (chrome material shown while loading model)
 //add stereo option
 //show a cm as reference on the table (or plates);
+
+
+
+
+
+
+
+//optimizations:
+// If you need to make large groups of objects visible and invisible (or add/remove them from your scene), consider using Layers for best performance.
+//Make your frustum as small as possible for better performance. It’s fine to use a large frustum in development, but once you are fine-tuning your app for deployment, make your frustum as small as possible to gain a few vital FPS.
+// Don’t put things right on the far clipping plane (especially if your far clipping plane is really big), as this can cause flickering.
+
+
+// Renderer#
+
+//     Don’t enable preserveDrawingBuffer unless you need it.
+//     Disable the alpha buffer unless you need it.
+//     Don’t enable the stencil buffer unless you need it.
+//     Disable the depth buffer unless you need it (but you probably do need it).
+//     Use powerPreference: "high-performance" when creating the renderer. This may encourage a user’s system to choose the high-performance GPU, in multi-GPU systems.
+//     Consider only rendering when the camera position changes by epsilon or when an animation happens.
+//     If your scene is static and uses OrbitControls, you can listen for the control’s change event. This way you can render the scene only when the camera moves:
+
+// OrbitControls.addEventListener( 'change', () => renderer.render( scene, camera ) );
+
+// You won’t get a higher frame rate from the last two, but what you will get is less fans switching on, and less battery drain on mobile devices.
+
+// Note: I’ve seen a few places around the web recommending that you disable anti-aliasing and apply a post-processing AA pass instead. In my testing, this is not true. On modern hardware built-in MSAA seems to be extremely cheap even on low-power mobile devices, while the post-processing FXAA or SMAA passes cause a considerable frame rate drop on every scene I’ve tested them with, and are also lower quality than MSAA.
+
+
+// https://discoverthreejs.com/tips-and-tricks/
+
+
+
+// Shadows#
+
+//     If your scene is static, only update the shadow map when something changes, rather than every frame.
+//     Use a CameraHelper to visualize the shadow camera’s viewing frustum.
+//     Make the shadow frustum as small as possible.
+//     Make the shadow texture as low resolution as possible.
+//     Remember that point light shadows are more expensive than other shadow types since they must render six times (once in each direction), compared with a single time for DirectionalLight and SpotLight shadows.
+//     While we’re on the topic of PointLight shadows, note that the CameraHelper only visualizes one out of six of the shadow directions when used to visualize point light shadows. It’s still useful, but you’ll need to use your imagination for the other five directions.
+
+// Materials#
+
+//     MeshLambertMaterial doesn’t work for shiny materials, but for matte materials like cloth it will give very similar results to MeshPhongMaterial but is faster.
+//     If you are using morph targets, make sure you set morphTargets = true in your material, or they won’t work!
+//     Same goes for morph normals.
+//     And if you’re using a SkinnedMesh for skeletal animations, make sure that material.skinning = true.
+//     Materials used with morph targets, morph normals, or skinning can’t be shared. You’ll need to create a unique material for each skinned or morphed mesh (material.clone() is your friend here).
+
+// Custom Materials#
+
+//     Only update your uniforms when they change, not every frame.
+
+// Geometry#
+
+//     Avoid using LineLoop since it must be emulated by line strip.
+
+// Textures#
+
+//     All of your textures need to be power of two (POT) size: 1,2,4,8,16,…,512,2048,….
+//     Don’t change the dimensions of your textures. Create new ones instead, it’s faster
+//     Use the smallest texture sizes possible (can you get away with a 256x256 tiled texture? You might be surprised!).
+//     Non-power-of-two (NPOT) textures require linear or nearest filtering, and clamp-to-border or clamp-to-edge wrapping. Mipmap filtering and repeat wrapping are not supported. But seriously, just don’t use NPOT textures.
+//     All textures with the same dimensions are the same size in memory, so JPG may have a smaller file size than PNG, but it will take up the same amount of memory on your GPU.
+
+// Antialiasing#
+
+//     The worst-case scenario for antialiasing is geometry made up of lots of thin straight pieces aligned parallel with one another. Think metal window blinds or a lattice fence. If it’s at all possible, don’t include geometry like this in your scenes. If you have no choice, consider replacing the lattice with a texture instead, as that may give better results.
+
+// Post-Processing#
+
+//     The built-in antialiasing doesn’t work with post-processing (at least in WebGL 1). You will need to do this manually, using FXAA or SMAA (probably faster, better)
+//     Since you are not using the built-in AA, be sure to disable it!
+//     three.js has loads of post-processing shaders, and that’s just great! But remember that each pass requires rendering your entire scene. Once you’re done testing, consider whether you can combine your passes into one single custom pass. It’s a little more work to do this, but can come with a considerable performance increase.
+
+// Disposing of Things#
+
+// Removing something from your scene?
+
+// First of all, consider not doing that, especially if you will add it back again later. You can hide objects temporarily using object.visible = false (works for lights too), or material.opacity = 0. You can set light.intensity = 0 to disable a light without causing shaders to recompile.
+
+// If you do need to remove things from your scene permanently, read this article first: How to dispose of objects.
+// Updating Objects in Your Scene?#
+
+// Read this article: How to update things.
+// Performance#
+
+//     Set object.matrixAutoUpdate = false for static or rarely moving objects and manually call object.updateMatrix() whenever their position/rotation/quaternion/scale are updated.
+//     Transparent objects are slow. Use as few transparent objects as possible in your scenes.
+//     use alphatest instead of standard transparency if possible, it’s faster.
+//     When testing the performance of your apps, one of the first things you’ll need to do is check whether it is CPU bound, or GPU bound. Replace all materials with basic material using scene.overrideMaterial (see beginners tips and the start of the page). If performance increases, then your app is GPU bound. If performance doesn’t increase, your app is CPU bound.
+//     When performance testing on a fast machine, you’ll probably be getting the maximum frame rate of 60FPS. Run chrome using open -a "Google Chrome" --args --disable-gpu-vsync for an unlimited frame rate.
+//     Modern mobile devices have high pixel ratios as high as 5 - consider limiting the max pixel ratio to 2 or 3 on these devices. At the expense of some very slight blurring of your scene you will gain a considerable performance increase.
+//     Bake lighting and shadow maps to reduce the number of lights in your scene.
+//     Keep an eye on the number of drawcalls in your scene. A good rule of thumb is fewer draw calls = better performance.
+//     Far away objects don’t need the same level of detail as objects close to the camera. There are many tricks used to increase performance by reducing the quality of distant objects. Consider using a LOD (Level Of Detail) object. You may also get away with only updating position / animation every 2nd or 3rd frame for distant objects, or replacing them with a billboard - that is, a drawing of the object.
+
+// Advanced Tips#
+
+//     Don’t use TriangleFanDrawMode, it’s slow.
+//     Use geometry instancing when you have hundreds or thousands of similar geometries.
+//     Animate on the GPU instead of the CPU, especially when animating vertices or particles (see THREE.Bas for one approach to doing this).
