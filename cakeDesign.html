@@ -246,19 +246,19 @@
 						</div>
 						<div class="card-body">
 							<div class='grid-buttons'>
-								<a href="javascript:setBaseMaterial('fondant_icing', 'fondant_icing', 3, 8, 0.35, 1.7)">
+								<a href="javascript:setBaseMaterial('fondant_icing', 'fondant_icing', 3,3, 8,8, 0.35, 1.7)">
 									<img src="./images/thumbs/thumb-(50).jpg" alt="Cake" class="rounded-circle">
 									<p>
 										Fondant
 									</p>
 								</a>
-								<a href="javascript:setBaseMaterial('buttercream_icing', 'buttercream_icing', 1, 1, 0.6, 1.9)">
+								<a href="javascript:setBaseMaterial('buttercream_icing', 'buttercream_icing', 1,1, 1,1, 0.6, 1.9)">
 									<img src="./images/thumbs/thumb-(49).jpg" alt="Cake" class="rounded-circle">
 									<p>
 										Buttercream
 									</p>
 								</a>
-								<a href="javascript:setBaseMaterial('whipped_icing', 'whipped_icing', 0.45, 1.3, 0.65, 1.2)">
+								<a href="javascript:setBaseMaterial('whipped_icing', 'whipped_icing', 0.45, 0.45, 1.3, 1.3, 0.65, 1.2)">
 									<img src="./images/thumbs/thumb-(51).jpg" alt="Cake" class="rounded-circle">
 									<p>
 										Whipped cream
@@ -477,7 +477,7 @@
 							</div>
 						</div>
 					</div>
-					<div class="card">
+					<!-- <div class="card">
 						<div class="card-header">
 							<h4>Side decorations</h4>
 							<p>11</p>
@@ -505,8 +505,8 @@
 							</div>
 							<button type="button" class="btn btn-danger btn-sm align-right">Skip this step</button>
 						</div>
-					</div>
-					<div class="card">
+					</div> -->
+					<!-- <div class="card">
 						<div class="card-header">
 							<h4>Top decorations</h4>
 							<p>12</p>
@@ -564,7 +564,7 @@
 							</div>
 							<button type="button" class="btn btn-danger btn-sm align-right">Skip this step</button>
 						</div>
-					</div>
+					</div> -->
 					<div class="card">
 						<div class="card-header">
 							<h4>Use photo</h4>
@@ -572,52 +572,52 @@
 						</div>
 						<div class="card-body">
 							<div class='grid-buttons'>
-								<a href="">
+								<a href="javascript:setTopMaterial('top01')">
 									<img src="./images/thumbs/thumb-(38).jpg" alt="Cake" class="rounded-circle">
 									<p>
 										Your Photo
 									</p>
 								</a>
-								<a href="">
+								<a href="javascript:setTopMaterial('top02')">
 									<img src="./images/thumbs/thumb-(40).jpg" alt="Cake" class="rounded-circle">
 									<p>
 										Theme 02
 									</p>
 								</a>
-								<a href="">
+								<a href="javascript:setTopMaterial('top03')">
 									<img src="./images/thumbs/thumb-(42).jpg" alt="Cake" class="rounded-circle">
 									<p>
 										Theme 03
 									</p>
 								</a>
-								<a href="">
+								<a href="javascript:setTopMaterial('top04')">
 									<img src="./images/thumbs/thumb-(1).jpg" alt="Cake" class="rounded-circle">
 									<p>
 										Theme 04
 									</p>
 								</a>
-								<a href="">
+								<a href="javascript:setTopMaterial('top05')">
 									<img src="./images/thumbs/thumb-(39).jpg" alt="Cake" class="rounded-circle">
 									<p>
 										Theme 05
 									</p>
 								</a>
-								<a href="">
+								<a href="javascript:setTopMaterial('top06')">
 									<img src="./images/thumbs/thumb-(41).jpg" alt="Cake" class="rounded-circle">
 									<p>
 										Theme 06
 									</p>
 								</a>
-								<a href="">
+								<a href="javascript:setTopMaterial('top07')">
 									<img src="./images/thumbs/thumb-(43).jpg" alt="Cake" class="rounded-circle">
 									<p>
 										Theme 07
 									</p>
 								</a>
-								<a href="">
+								<a href="javascript:setTopMaterial('')">
 									<img src="./images/thumbs/thumb-(2).jpg" alt="Cake" class="rounded-circle">
 									<p>
-										Theme 08
+										Use no image
 									</p>
 								</a>
 							</div>
@@ -724,8 +724,10 @@
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
 	<script src="./js/main.js"></script>
 	<script src="./js/three.min.js"></script>
+	<!-- <script type="module">import * as Nodes from './js/nodes/Nodes.js';</script> -->
 	<script src="./js/GLTFLoader.js"></script>
 	<script src="./js/OrbitControls.js"></script>
+
 	<script src="./js/3dEditor.js"></script>
 
 </body>
