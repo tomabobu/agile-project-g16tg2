@@ -11,13 +11,12 @@ var materials = [];
 var topBorderPoints = [];
 var bottomBorderPoints = [];
 
-
-
 var sizes = {
 	'small' : [0.65, 0.75, 0.65],
 	'medium':[0.85, 0.85, 0.85],
 	'big':[1.1, 0.9, 1.1]
 };
+var textureSize = 1024;
 
 var options = {
 	'step': 1,
@@ -45,12 +44,48 @@ var options = {
 	'topBorderRadiusScale' : 0.95,
 	'bottomBorderRadiusScale' : 1,
 	'baseMaterial' : {},
-
 };
 
+WebFont.load({
+	google: {
+	  families: ['Pacifico']
+	},
+	active: function() {
+		bitmap = document.createElement('canvas');
+		g = bitmap.getContext('2d');
+		bitmap.width = textureSize;
+		bitmap.height = textureSize;
+		g.font = '100px Pacifico';
+		// g.font = 'Bold 100px Arial';
+		txt =  $('#customMessage').val();
+		txt = "Testing";
+		txtWidth = g.measureText(txt).width;
+		txtHeight = g.measureText(txt).actualBoundingBoxAscent;
 
-init();
-animate();
+		g.fillStyle = 'white';
+		g.fillText(txt, textureSize/2-txtWidth/2, textureSize/2+ txtHeight/2);
+
+
+		// canvas contents will be used for a texture
+		textures['customText'] = new THREE.Texture(bitmap) ;
+		textures['customText'].needsUpdate = true;
+		materials['customText'] = new THREE.MeshStandardMaterial( {
+			map:textures['customText'],
+			envMapIntensity : 1.5,
+			metalness: 0,
+			roughness: 0.3,
+			envMap : textureEquirec,
+		} );
+
+		init();
+		animate();
+	}
+  });
+
+
+
+// init();
+// animate();
 
 function init() {
 
@@ -86,8 +121,8 @@ function init() {
 	renderer.setSize( window.innerWidth/2, window.innerHeight );
 	renderer.outputEncoding = THREE.sRGBEncoding;
 	$('#editor-3d').append(renderer.domElement);
-	renderer.shadowMap.enabled = true;
-	renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+	// renderer.shadowMap.enabled = true;
+	// renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
 	renderer.gammaFactor = 2.2;
 	renderer.outputEncoding = THREE.sRGBEncoding;
@@ -132,6 +167,46 @@ function init() {
 		envMap : textureEquirec,
 	} );
 
+
+
+	//fonts
+	// <link rel="preconnect" href="https://fonts.gstatic.com">
+	// <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500&display=swap" rel="stylesheet">
+{/* <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">  */}
+{/* <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">  */}
+
+	// let myFont = new FontFace(
+	// 	"Dancing",
+	// 	"url(https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500&display=swap)"
+	//   );
+
+	//   myFont.load().then((font) => {
+
+		  //   });
+	// document.fonts.add(font);
+		// console.log("Font loaded");
+	// 	var ctx = image.getContext("2d");
+	// 	ctx.fillStyle = "#292929";
+	// 	ctx.font = "30px Pangolin";
+	// 	ctx.fillText("A chicken", 400, 120);
+
+	// display the fucking text
+// function displayText(){
+// 	// boring
+// 	ctx.fillStyle = '#fff';
+// 	ctx.textBaseline = 'top';
+
+// 	ctx.font = '140px Open Sans';
+// 	ctx.fillText('OPEN', W/2 - 180, H/2 - 140); // txt, offsetX, offsetY
+
+// 	ctx.font = 'bold 140px Open Sans';
+// 	ctx.fillText('IT', W/2 - 50, H/2);
+//   }
+
+  // async font loading
+  // https://github.com/typekit/webfontloader
+
+
 	//startup models loading
 	loader = new THREE.GLTFLoader();
 	loader.load( './assets/base.gltf', function ( gltf ) {
@@ -169,14 +244,14 @@ function init() {
 				cakeModels[cakeName] = element;
 				cakeModels[cakeName].name = cakeName;
 
-				cakeModels[cakeName].material = materials['dafaultLambert'];
+				cakeModels[cakeName].material = materials['customText'];
 				if (cakeModels[cakeName].children.length) {
 					cakeModels[cakeName].children.forEach(child => {
 						if ( child.isMesh ) {
 							child.castShadow = true;
 							child.receiveShadow = true;
 						}
-						child.material = materials['dafaultLambert'];
+						child.material = materials['customText'];
 					})
 				}
 				cakeModels[cakeName].topBorder = createCurve(cakeName, 'top');
@@ -222,7 +297,8 @@ function init() {
 
 			if(element.name == "Table") {
 				tableModel = element;
-				tableModel.material = materials['defaultTable']
+				// tableModel.material = materials['defaultTable']
+				tableModel.material = materials['customText']
 				if ( tableModel.isMesh ) {
 					tableModel.castShadow = false;
 					tableModel.receiveShadow = true;
@@ -440,7 +516,7 @@ function instanceCakeTier(geometry, material, addBorderPointsToInstance = true) 
 function setBaseModel(type) {
 	options.baseCake = type;
 	options.step = 2;
-	updateEditor();
+	updateMaterials();
 
 }
 
@@ -459,7 +535,7 @@ function setBaseScale(size) {
 function loadTexture(name, suffix,  scaleU, scaleV) {
 	fullName = name + suffix;
 	if (!(fullName in textures)) {
-		console.log('load texture' + fullName);
+		console.log('load texture ' + fullName);
 		textures[fullName] = textureLoader.load( './images/materials/'+name+'/'+ fullName + '.jpg',
 		// onLoad callback
 		function ( texture ) {
@@ -507,23 +583,51 @@ function loadTopMaterial(topName, name, scaleU = 1, scaleV = 1, roughness= 1.3, 
 	let diffuse = glossiness = normal = true;
 	diffuse = loadTexture(topName, '', 1, 1);
 	diffuse.encoding = THREE.sRGBEncoding;
-	alpha = loadTexture('topAlpha', '', 1,1);
+	alpha = loadTexture('topAlpha','_' + options.baseCake, 1,1);
 	glossiness =  loadTexture(name, '_glossiness', scaleU, scaleV);
 	normal =  loadTexture(name, '_normal', scaleU, scaleV);
 
 
-	materials[topName+name+scaleU+scaleV] = new THREE.MeshStandardMaterial( {
+	materials[options.baseCake + topName + name+scaleU+scaleV] = new THREE.MeshStandardMaterial( {
 		displacementMap: alpha,
-		displacementScale : 0.01,
-		displacementBias :0.01,
+		displacementScale : 0.1,
+		displacementBias :0.1,
 		alphaMap: alpha,
 		transparent: true,
 		color: 0xffffff,
 		map: diffuse,
 		normalMap: normal,
-		normalScale: new THREE.Vector2(1, 1),
+		normalScale: new THREE.Vector2(0.5, 0.5),
 		roughnessMap : glossiness,
-		roughness: roughness/1.6,
+		roughness: roughness/2,
+		metalness: 0,
+		envMap : textureEquirec,
+		envMapIntensity : envMapIntensity*1.2,
+		side: THREE.FrontSide
+	} );
+}
+function loadTopCustomFile(name, scaleU = 1, scaleV = 1, roughness= 1.3, envMapIntensity = 1.5) {
+	console.log('setting the custom file material')
+	let diffuse = glossiness = normal = true;
+	diffuse = textures['customFile'];
+	diffuse.encoding = THREE.sRGBEncoding;
+	alpha = loadTexture('topAlpha','_' + options.baseCake, 1,1);
+	glossiness =  loadTexture(name, '_glossiness', scaleU, scaleV);
+	normal =  loadTexture(name, '_normal', scaleU, scaleV);
+
+
+	materials['customFile'] = new THREE.MeshStandardMaterial( {
+		displacementMap: alpha,
+		displacementScale : 0.1,
+		displacementBias :0.1,
+		alphaMap: alpha,
+		transparent: true,
+		color: 0xffffff,
+		map: diffuse,
+		normalMap: normal,
+		normalScale: new THREE.Vector2(0.5, 0.5),
+		roughnessMap : glossiness,
+		roughness: roughness/2,
 		metalness: 0,
 		envMap : textureEquirec,
 		envMapIntensity : envMapIntensity*1.2,
@@ -559,27 +663,51 @@ function setBaseMaterial(firstMaterialName, secondMaterialName, scaleUFirst= 1, 
 }
 function updateMaterials() {
 	settings = options.baseMaterial;
-	if (!((settings.firstMaterialName + settings.scaleUFirst + settings.scaleVFirst) in materials)) {
-		console.log('load first material ' + settings.firstMaterialName);
-		loadMaterial(settings.firstMaterialName, settings.scaleUFirst, settings.scaleVFirst, settings.roughness, settings.envMapIntensity);
-	}
-	if (settings.secondMaterialName) {
-		if (!((settings.secondMaterialName +settings.scaleUSecond + settings.scaleVSecond) in materials)) {
-			console.log('load second material ' + settings.secondMaterialName);
-			loadMaterial(settings.secondMaterialName, settings.scaleUSecond, settings.scaleVSecond,  settings.roughness, settings.envMapIntensity);
+	if (settings.firstMaterialName) {
+		if (!((settings.firstMaterialName + settings.scaleUFirst + settings.scaleVFirst) in materials)) {
+			console.log('load first material ' + settings.firstMaterialName);
+			loadMaterial(settings.firstMaterialName, settings.scaleUFirst, settings.scaleVFirst, settings.roughness, settings.envMapIntensity);
 		}
-		setMaterialToAllBaseGeoms(settings.firstMaterialName + settings.scaleUFirst+ settings.scaleVFirst, settings.secondMaterialName + settings.scaleUSecond + settings.scaleVSecond);
-	} else{
-		setMaterialToAllBaseGeoms(settings.firstMaterialName + settings.scaleUFirst + settings.scaleVFirst);
-	}
-	if ('topMaterial' in settings) {
-		if (settings.topMaterial) {
-			if (!((settings.topMaterial + settings.firstMaterialName + settings.scaleUFirst + settings.scaleVFirst) in materials)) {
-				loadTopMaterial(settings.topMaterial, settings.firstMaterialName, settings.scaleUFirst, settings.scaleVFirst, settings.roughness, settings.envMapIntensity)
+		if (settings.secondMaterialName) {
+			if (!((settings.secondMaterialName +settings.scaleUSecond + settings.scaleVSecond) in materials)) {
+				console.log('load second material ' + settings.secondMaterialName);
+				loadMaterial(settings.secondMaterialName, settings.scaleUSecond, settings.scaleVSecond,  settings.roughness, settings.envMapIntensity);
 			}
+			setMaterialToAllBaseGeoms(settings.firstMaterialName + settings.scaleUFirst+ settings.scaleVFirst, settings.secondMaterialName + settings.scaleUSecond + settings.scaleVSecond);
+		} else{
+			setMaterialToAllBaseGeoms(settings.firstMaterialName + settings.scaleUFirst + settings.scaleVFirst);
 		}
-		setTopMaterialToAllBaseGeoms(settings.topMaterial + settings.firstMaterialName + settings.scaleUFirst + settings.scaleVFirst);
-		// console.log(' add base top material ' + settings.topMaterial );
+		if (settings.customImage) {
+			if  (settings.secondMaterialName) {
+				loadTopCustomFile(settings.secondMaterialName, settings.scaleUSecond, settings.scaleVSecond,  settings.roughness, settings.envMapIntensity);
+			}else {
+				loadTopCustomFile( settings.firstMaterialName, settings.scaleUFirst, settings.scaleVFirst, settings.roughness, settings.envMapIntensity);
+			}
+			console.log('setting the top custom material')
+			setTopCustomFileToAllBaseGeoms();
+
+		} else {
+			if ('topMaterial' in settings) {
+				if (settings.topMaterial) {
+					if  (settings.secondMaterialName) {
+						if (!((options.baseCake + settings.topMaterial + settings.secondMaterialName +settings.scaleUSecond + settings.scaleVSecond) in materials)) {
+							loadTopMaterial(settings.topMaterial, settings.secondMaterialName, settings.scaleUSecond, settings.scaleVSecond,  settings.roughness, settings.envMapIntensity)
+						}
+						console.log(materials);
+						console.log('set top material '  );
+						setTopMaterialToAllBaseGeoms(options.baseCake + settings.topMaterial + settings.secondMaterialName +settings.scaleUSecond + settings.scaleVSecond);
+
+					} else {
+						if (!((options.baseCake + settings.topMaterial + settings.firstMaterialName + settings.scaleUFirst + settings.scaleVFirst) in materials)) {
+							loadTopMaterial( settings.topMaterial, settings.firstMaterialName, settings.scaleUFirst, settings.scaleVFirst, settings.roughness, settings.envMapIntensity)
+						}
+						setTopMaterialToAllBaseGeoms(options.baseCake + settings.topMaterial + settings.firstMaterialName + settings.scaleUFirst + settings.scaleVFirst);
+					}
+				}
+				// console.log(' add base top material ' + settings.topMaterial );
+			}
+
+		}
 	}
 	updateEditor();
 }
@@ -601,23 +729,41 @@ function setMaterialToAllBaseGeoms(firstMaterialName, secondMaterialName= false)
 
 function setTopMaterialToAllBaseGeoms(topMaterialName) {
 	for( cake in cakeModels) {
-		if (topMaterialName) {
-			if (cakeModels[cake].children.length < 3) {
-				newObject = cakeModels[cake].children[1].clone(true);
-				newObject.remove(newObject.children[0]);
-				cakeModels[cake].add(newObject);
-			}
-			cakeModels[cake].children[2].material = materials[topMaterialName];
-		} else {
-			if (cakeModels[cake].children.length > 2) {
-				cakeModels[cake].remove(cakeModels[cake].children[2]);
-			}
+		if (cakeModels[cake].children.length < 3) {
+			newObject = cakeModels[cake].children[1].clone(true);
+			newObject.remove(newObject.children[0]);
+			newObject.castShadow = false;
+			newObject.receiveShadow = false;
+			cakeModels[cake].add(newObject);
 		}
+		cakeModels[cake].children[2].material = materials[topMaterialName];
+	}
+}
+function setTopCustomFileToAllBaseGeoms() {
+	for( cake in cakeModels) {
+		if (cakeModels[cake].children.length < 3) {
+			newObject = cakeModels[cake].children[1].clone(true);
+			newObject.remove(newObject.children[0]);
+			newObject.castShadow = false;
+			newObject.receiveShadow = false;
+			cakeModels[cake].add(newObject);
+		}
+		cakeModels[cake].children[2].material = materials['customFile'];
 	}
 }
 
 function setTopMaterial(materialName) {
-	options.baseMaterial.topMaterial = materialName;
+	if (materialName) {
+		options.baseMaterial.topMaterial = materialName;
+	} else {
+		for( cake in cakeModels) {
+			if (cakeModels[cake].children.length > 2) {
+				cakeModels[cake].remove(cakeModels[cake].children[2]);
+			}
+		}
+		options.baseMaterial.topMaterial = null;
+	}
+	options.baseMaterial.customImage = null;
 	updateMaterials()
 }
 
@@ -691,14 +837,28 @@ function setColorToBottomBorder(color) {
 	options['topBorderColor'] = color;
 }
 
-//duplicate picture with the instance
+function selectYourPhoto() {
+	$('#customFile').trigger('click');
+}
+
+$('#customFile').on('change', function (event){
+	var userImage = event.target.files[0];
+	var userImageURL = URL.createObjectURL( userImage );
+	textures['customFile'] = textureLoader.load(userImageURL);
+	textureLoader.setCrossOrigin("");
+	options.baseMaterial.customImage = 'customFile';
+	updateMaterials();
+
+});
+
+
 // change alpha map with the cake type (square)
 
 
 
 
 
-
+//wrap in on load function
 //shadow map bias...error fix
 // optimize border geometries
 // cake color icing adjust
