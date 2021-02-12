@@ -11,6 +11,9 @@ var materials = [];
 var topBorderPoints = [];
 var bottomBorderPoints = [];
 
+var photoChildNumber = -1;
+var messageChildNumber = -1;
+
 var sizes = {
 	'small' : [0.65, 0.75, 0.65],
 	'medium':[0.85, 0.85, 0.85],
@@ -44,39 +47,44 @@ var options = {
 	'topBorderRadiusScale' : 0.95,
 	'bottomBorderRadiusScale' : 1,
 	'baseMaterial' : {},
+	'messageColor' : 0x000000,
 };
+
+function loadTextTexture(txt, size, fontName, textureSize) {
+	bitmap = document.createElement('canvas');
+	g = bitmap.getContext('2d');
+	bitmap.width = textureSize;
+	bitmap.height = textureSize;
+	// g.rect(0, 0, textureSize, textureSize);
+	// g.fillStyle = '#ffffff';
+	// g.fill();
+	g.font = size + 'px ' + fontName;
+
+	txtWidth = g.measureText(txt).width;
+	txtHeight = g.measureText(txt).actualBoundingBoxAscent;
+
+	g.fillStyle = 'white';
+	g.fillText(txt, textureSize/2-txtWidth/2, textureSize/2+ txtHeight/2);
+
+	// canvas contents will be used for a texture
+	textures['customText'] = new THREE.Texture(bitmap) ;
+	textures['customText'].needsUpdate = true;
+	// materials['customText'] = new THREE.MeshStandardMaterial( {
+	// 	map:textures['customText'],
+	// 	envMapIntensity : 1.5,
+	// 	metalness: 0,
+	// 	roughness: 0.3,
+	// 	envMap : textureEquirec,
+	// } );
+	return textures['customText'];
+}
 
 WebFont.load({
 	google: {
-	  families: ['Pacifico']
+	  families: ['Pacifico','Great Vibes', 'Dancing Script']
 	},
 	active: function() {
-		bitmap = document.createElement('canvas');
-		g = bitmap.getContext('2d');
-		bitmap.width = textureSize;
-		bitmap.height = textureSize;
-		g.font = '100px Pacifico';
-		// g.font = 'Bold 100px Arial';
-		txt =  $('#customMessage').val();
-		txt = "Testing";
-		txtWidth = g.measureText(txt).width;
-		txtHeight = g.measureText(txt).actualBoundingBoxAscent;
-
-		g.fillStyle = 'white';
-		g.fillText(txt, textureSize/2-txtWidth/2, textureSize/2+ txtHeight/2);
-
-
-		// canvas contents will be used for a texture
-		textures['customText'] = new THREE.Texture(bitmap) ;
-		textures['customText'].needsUpdate = true;
-		materials['customText'] = new THREE.MeshStandardMaterial( {
-			map:textures['customText'],
-			envMapIntensity : 1.5,
-			metalness: 0,
-			roughness: 0.3,
-			envMap : textureEquirec,
-		} );
-
+		// loadTextTexture("Happy Birthday!", '100',  'Great Vibes', 1024)
 		init();
 		animate();
 	}
@@ -244,14 +252,14 @@ function init() {
 				cakeModels[cakeName] = element;
 				cakeModels[cakeName].name = cakeName;
 
-				cakeModels[cakeName].material = materials['customText'];
+				cakeModels[cakeName].material = materials['dafaultLambert'];
 				if (cakeModels[cakeName].children.length) {
 					cakeModels[cakeName].children.forEach(child => {
 						if ( child.isMesh ) {
 							child.castShadow = true;
 							child.receiveShadow = true;
 						}
-						child.material = materials['customText'];
+						child.material = materials['dafaultLambert'];
 					})
 				}
 				cakeModels[cakeName].topBorder = createCurve(cakeName, 'top');
@@ -298,7 +306,7 @@ function init() {
 			if(element.name == "Table") {
 				tableModel = element;
 				// tableModel.material = materials['defaultTable']
-				tableModel.material = materials['customText']
+				tableModel.material = materials['defaultTable']
 				if ( tableModel.isMesh ) {
 					tableModel.castShadow = false;
 					tableModel.receiveShadow = true;
@@ -446,6 +454,9 @@ function updateEditor() {
 				if (cakeModels[options.baseCake].children[2]) {
 					instanceCakeTier(cakeModels[options.baseCake].children[2].geometry, Object.create(cakeModels[options.baseCake].children[2].material), false);
 				}
+				if (cakeModels[options.baseCake].children[3]) {
+					instanceCakeTier(cakeModels[options.baseCake].children[3].geometry, Object.create(cakeModels[options.baseCake].children[3].material), false);
+				}
 			} else {
 				instanceCakeTier(source.geometry, material, true);
 			}
@@ -535,7 +546,6 @@ function setBaseScale(size) {
 function loadTexture(name, suffix,  scaleU, scaleV) {
 	fullName = name + suffix;
 	if (!(fullName in textures)) {
-		console.log('load texture ' + fullName);
 		textures[fullName] = textureLoader.load( './images/materials/'+name+'/'+ fullName + '.jpg',
 		// onLoad callback
 		function ( texture ) {
@@ -561,7 +571,7 @@ function loadMaterial(name, scaleU = 1, scaleV = 1, roughness= 1.3, envMapIntens
 	let diffuse = glossiness = normal = true;
 	diffuse = loadTexture(name, '_diffuse', scaleU, scaleV);
 	diffuse.encoding = THREE.sRGBEncoding;
-	glossiness =  loadTexture(name, '_glossiness', scaleU, scaleV);
+	// glossiness =  loadTexture(name, '_glossiness', scaleU, scaleV);
 	normal =  loadTexture(name, '_normal', scaleU, scaleV);
 
 
@@ -570,7 +580,7 @@ function loadMaterial(name, scaleU = 1, scaleV = 1, roughness= 1.3, envMapIntens
 		map: diffuse,
 		normalMap: normal,
 		normalScale: new THREE.Vector2( 1, 1 ),
-		roughnessMap : glossiness,
+		// roughnessMap : glossiness,
 		roughness: roughness,
 		metalness: 0,
 		envMap : textureEquirec,
@@ -584,7 +594,7 @@ function loadTopMaterial(topName, name, scaleU = 1, scaleV = 1, roughness= 1.3, 
 	diffuse = loadTexture(topName, '', 1, 1);
 	diffuse.encoding = THREE.sRGBEncoding;
 	alpha = loadTexture('topAlpha','_' + options.baseCake, 1,1);
-	glossiness =  loadTexture(name, '_glossiness', scaleU, scaleV);
+	// glossiness =  loadTexture(name, '_glossiness', scaleU, scaleV);
 	normal =  loadTexture(name, '_normal', scaleU, scaleV);
 
 
@@ -598,7 +608,7 @@ function loadTopMaterial(topName, name, scaleU = 1, scaleV = 1, roughness= 1.3, 
 		map: diffuse,
 		normalMap: normal,
 		normalScale: new THREE.Vector2(0.5, 0.5),
-		roughnessMap : glossiness,
+		// roughnessMap : glossiness,
 		roughness: roughness/2,
 		metalness: 0,
 		envMap : textureEquirec,
@@ -606,13 +616,42 @@ function loadTopMaterial(topName, name, scaleU = 1, scaleV = 1, roughness= 1.3, 
 		side: THREE.FrontSide
 	} );
 }
+
+function loadTopMessage(topName, name, scaleU = 1, scaleV = 1, roughness= 1.3, envMapIntensity = 1.5) {
+	text = $('#customMessage').val();
+	size = $('#customSize').val();
+	alpha = loadTextTexture(text, size, options.baseMaterial.messageMaterial, textureSize);
+	// diffuse.encoding = THREE.sRGBEncoding;
+	// glossiness =  loadTexture(name, '_glossiness', scaleU, scaleV);
+	// normal =  loadTexture(name, '_normal', scaleU, scaleV);
+
+
+	materials['customText'] = new THREE.MeshStandardMaterial( {
+		displacementMap: alpha,
+		displacementScale : 0.2,
+		displacementBias :0.2,
+		alphaMap: alpha,
+		transparent: true,
+		color: options.messageColor,
+		// map: diffuse,
+		// normalMap: normal,
+		normalScale: new THREE.Vector2(0.5, 0.5),
+		// roughnessMap : glossiness,
+		roughness: roughness/2,
+		metalness: 0,
+		envMap : textureEquirec,
+		envMapIntensity : envMapIntensity*1.2,
+		side: THREE.FrontSide
+	} );
+}
+
+
 function loadTopCustomFile(name, scaleU = 1, scaleV = 1, roughness= 1.3, envMapIntensity = 1.5) {
-	console.log('setting the custom file material')
 	let diffuse = glossiness = normal = true;
 	diffuse = textures['customFile'];
 	diffuse.encoding = THREE.sRGBEncoding;
 	alpha = loadTexture('topAlpha','_' + options.baseCake, 1,1);
-	glossiness =  loadTexture(name, '_glossiness', scaleU, scaleV);
+	// glossiness =  loadTexture(name, '_glossiness', scaleU, scaleV);
 	normal =  loadTexture(name, '_normal', scaleU, scaleV);
 
 
@@ -626,7 +665,7 @@ function loadTopCustomFile(name, scaleU = 1, scaleV = 1, roughness= 1.3, envMapI
 		map: diffuse,
 		normalMap: normal,
 		normalScale: new THREE.Vector2(0.5, 0.5),
-		roughnessMap : glossiness,
+		// roughnessMap : glossiness,
 		roughness: roughness/2,
 		metalness: 0,
 		envMap : textureEquirec,
@@ -665,12 +704,10 @@ function updateMaterials() {
 	settings = options.baseMaterial;
 	if (settings.firstMaterialName) {
 		if (!((settings.firstMaterialName + settings.scaleUFirst + settings.scaleVFirst) in materials)) {
-			console.log('load first material ' + settings.firstMaterialName);
 			loadMaterial(settings.firstMaterialName, settings.scaleUFirst, settings.scaleVFirst, settings.roughness, settings.envMapIntensity);
 		}
 		if (settings.secondMaterialName) {
 			if (!((settings.secondMaterialName +settings.scaleUSecond + settings.scaleVSecond) in materials)) {
-				console.log('load second material ' + settings.secondMaterialName);
 				loadMaterial(settings.secondMaterialName, settings.scaleUSecond, settings.scaleVSecond,  settings.roughness, settings.envMapIntensity);
 			}
 			setMaterialToAllBaseGeoms(settings.firstMaterialName + settings.scaleUFirst+ settings.scaleVFirst, settings.secondMaterialName + settings.scaleUSecond + settings.scaleVSecond);
@@ -683,8 +720,7 @@ function updateMaterials() {
 			}else {
 				loadTopCustomFile( settings.firstMaterialName, settings.scaleUFirst, settings.scaleVFirst, settings.roughness, settings.envMapIntensity);
 			}
-			console.log('setting the top custom material')
-			setTopCustomFileToAllBaseGeoms();
+			setTopMaterialToAllBaseGeoms();
 
 		} else {
 			if ('topMaterial' in settings) {
@@ -693,8 +729,6 @@ function updateMaterials() {
 						if (!((options.baseCake + settings.topMaterial + settings.secondMaterialName +settings.scaleUSecond + settings.scaleVSecond) in materials)) {
 							loadTopMaterial(settings.topMaterial, settings.secondMaterialName, settings.scaleUSecond, settings.scaleVSecond,  settings.roughness, settings.envMapIntensity)
 						}
-						console.log(materials);
-						console.log('set top material '  );
 						setTopMaterialToAllBaseGeoms(options.baseCake + settings.topMaterial + settings.secondMaterialName +settings.scaleUSecond + settings.scaleVSecond);
 
 					} else {
@@ -704,10 +738,18 @@ function updateMaterials() {
 						setTopMaterialToAllBaseGeoms(options.baseCake + settings.topMaterial + settings.firstMaterialName + settings.scaleUFirst + settings.scaleVFirst);
 					}
 				}
-				// console.log(' add base top material ' + settings.topMaterial );
 			}
 
 		}
+	}
+	if (settings.messageMaterial) {
+		if  (settings.secondMaterialName) {
+			loadTopMessage(settings.secondMaterialName, settings.scaleUSecond, settings.scaleVSecond,  settings.roughness, settings.envMapIntensity);
+		}else {
+			loadTopMessage( settings.firstMaterialName, settings.scaleUFirst, settings.scaleVFirst, settings.roughness, settings.envMapIntensity);
+		}
+		setTopMessageToAllBaseGeoms();
+
 	}
 	updateEditor();
 }
@@ -727,28 +769,56 @@ function setMaterialToAllBaseGeoms(firstMaterialName, secondMaterialName= false)
 	}
 }
 
-function setTopMaterialToAllBaseGeoms(topMaterialName) {
+function setTopMaterialToAllBaseGeoms(topMaterialName = 'customFile') {
+	updated = false;
+	childPos = 0;
 	for( cake in cakeModels) {
-		if (cakeModels[cake].children.length < 3) {
+		console.log([cakeModels[cake].children]);
+
+		if (photoChildNumber == -1) {
 			newObject = cakeModels[cake].children[1].clone(true);
 			newObject.remove(newObject.children[0]);
 			newObject.castShadow = false;
 			newObject.receiveShadow = false;
 			cakeModels[cake].add(newObject);
+			childPos = cakeModels[cake].children.length-1;
+			updated = true;
+			cakeModels[cake].children[childPos].material = materials[topMaterialName];
+		} else {
+			cakeModels[cake].children[photoChildNumber].material = materials[topMaterialName];
+
 		}
-		cakeModels[cake].children[2].material = materials[topMaterialName];
+		// if (photoChildNumber != -1) {
+		// }
+	}
+	if (updated) {
+		photoChildNumber = childPos;
 	}
 }
-function setTopCustomFileToAllBaseGeoms() {
+
+function setTopMessageToAllBaseGeoms() {
+	updated = false;
+	childPos = 0;
 	for( cake in cakeModels) {
-		if (cakeModels[cake].children.length < 3) {
+
+		if (messageChildNumber == -1) {
 			newObject = cakeModels[cake].children[1].clone(true);
 			newObject.remove(newObject.children[0]);
 			newObject.castShadow = false;
 			newObject.receiveShadow = false;
 			cakeModels[cake].add(newObject);
+			childPos = cakeModels[cake].children.length-1;
+			updated = true;
+			cakeModels[cake].children[childPos].material = materials['customText'];
+		} else {
+			cakeModels[cake].children[messageChildNumber].material = materials['customText'];
+
 		}
-		cakeModels[cake].children[2].material = materials['customFile'];
+		// if (messageChildNumber != -1) {
+			// }
+	}
+	if (updated) {
+		messageChildNumber = childPos;
 	}
 }
 
@@ -757,13 +827,25 @@ function setTopMaterial(materialName) {
 		options.baseMaterial.topMaterial = materialName;
 	} else {
 		for( cake in cakeModels) {
-			if (cakeModels[cake].children.length > 2) {
-				cakeModels[cake].remove(cakeModels[cake].children[2]);
-			}
+			cakeModels[cake].remove(cakeModels[cake].children[photoChildNumber]);
 		}
 		options.baseMaterial.topMaterial = null;
+		photoChildNumber = -1;
 	}
 	options.baseMaterial.customImage = null;
+	updateMaterials()
+}
+
+function setMessageMaterial(materialName) {
+	if (materialName) {
+		options.baseMaterial.messageMaterial = materialName;
+	} else {
+		for( cake in cakeModels) {
+			cakeModels[cake].remove(cakeModels[cake].children[messageChildNumber]);
+		}
+		options.baseMaterial.messageMaterial = null;
+		messageChildNumber = -1;
+	}
 	updateMaterials()
 }
 
@@ -851,12 +933,36 @@ $('#customFile').on('change', function (event){
 
 });
 
+function updateMessageMaterial() {
+	if (options.baseMaterial.messageMaterial) {
+		setMessageMaterial(options.baseMaterial.messageMaterial);
+	} else {
+		setMessageMaterial('Pacifico');
+	}
+}
 
-// change alpha map with the cake type (square)
+$('#customMessage').on('keyup', updateMessageMaterial);
+
+$('#customSize').on('change', updateMessageMaterial);
+
+function setMessageColor(color) {
+	options.messageColor = color;
+	updateMessageMaterial();
+}
+
+// bug when add top, add message, remove top....can't remove message
+
+//try other fonts
+
+//create side textures and functionality
+
+// auto starting size based on the text
+// text shadow or stroke (compositing flag.....add to multiply)
+//add font size slider
+//add font x position and y position offset
 
 
-
-
+//resize thumbs to 100x100
 
 //wrap in on load function
 //shadow map bias...error fix
@@ -871,7 +977,7 @@ $('#customFile').on('change', function (event){
 //show a cm as reference on the table (or plates);
 
 
-
+// add support for multi line text
 
 
 

@@ -636,37 +636,97 @@
 						</div>
 						<div class="card-body text-dark">
 
-							<div class="mb-3">
+							<div class='form-group mb-3'>
 								<label for="customMessage" class="form-label">Message</label>
-								<input type="text" class="form-control" id="customMessage" placeholder="Message on the cake">
+								<input type="text" class="form-control" id="customMessage" placeholder="Message on the cake" value="Happy Birthday!">
+								<!-- <textarea id="customMessage" name="customMessage" rows="4" cols="50" class="form-control"  placeholder="Message on the cake" value="Happy Birthday!"></textarea> -->
 							</div>
-							<div>
-								<label class="form-label">Choose typeface</label>
+
+
+							<div class='grid-buttons'>
+								<a href="javascript:setMessageMaterial('Pacifico')">
+									<img src="./images/thumbs/thumb-(54).jpg" alt="Cake" class="rounded-circle">
+									<p>
+										Pacifico
+									</p>
+								</a>
+								<a href="javascript:setMessageMaterial('Dancing Script')">
+									<img src="./images/thumbs/thumb-(55).jpg" alt="Cake" class="rounded-circle">
+									<p>
+										Dancing Script
+									</p>
+								</a>
+								<a href="javascript:setMessageMaterial('Great Vibes')">
+									<img src="./images/thumbs/thumb-(56).jpg" alt="Cake" class="rounded-circle">
+									<p>
+										Great Vibes
+									</p>
+								</a>
+								<a href="javascript:setMessageMaterial('')">
+									<img src="./images/thumbs/thumb-(57).jpg" alt="Cake" class="rounded-circle">
+									<p>
+										Use no message
+									</p>
+								</a>
 							</div>
-							<div class="form-check form-check-inline">
-								<input class="form-check-input" type="radio" name="fontOption" id="inlineRadio1" value="option1" checked>
-								<label class="form-check-label" for="inlineRadio1">Font 01</label>
+							<div class='form-group mb-3'>
+								<label for="customRange" class="form-label">Message Size</label>
+								<input type="range" class="form-range" min="50" max="150" id="customSize">
 							</div>
-							<div class="form-check form-check-inline">
-								<input class="form-check-input" type="radio" name="fontOption" id="inlineRadio2" value="option2">
-								<label class="form-check-label" for="inlineRadio2">Font 02</label>
-							</div>
-							<div class="form-check form-check-inline">
-								<input class="form-check-input" type="radio" name="fontOption" id="inlineRadio3" value="option3">
-								<label class="form-check-label" for="inlineRadio3">Font 03</label>
-							</div>
-							<div class="form-check form-check-inline pb-2">
-								<input class="form-check-input" type="radio" name="fontOption" id="inlineRadio4" value="option4">
-								<label class="form-check-label" for="inlineRadio4">Font 04</label>
-							</div>
+
 							<button type="button" class="btn btn-danger btn-sm align-right">Skip this step</button>
-							<button type="button" class="btn btn-success btn-sm align-right">Apply Message</button>
+						</div>
+					</div>
+					<div class="card">
+						<div class="card-header">
+							<h4>Set color for the message</h4>
+							<p>15</p>
+						</div>
+						<div class="card-body">
+							<div class='grid-colors'>
+								<a href="javascript:setMessageColor(0xff3377)" class="grid-color-01">
+
+								</a>
+								<a href="javascript:setMessageColor(0xff2424)" class="grid-color-02">
+
+								</a>
+								<a href="javascript:setMessageColor(0xff6d38)" class="grid-color-03">
+
+								</a>
+								<a href="javascript:setMessageColor(0xff9429)" class="grid-color-04">
+
+								</a>
+								<a href="javascript:setMessageColor(0xfff838)" class="grid-color-05">
+
+								</a>
+								<a href="javascript:setMessageColor(0xffffff)" class="grid-color-06">
+
+								</a>
+								<a href="javascript:setMessageColor(0x53ff0f)" class="grid-color-07">
+
+								</a>
+								<a href="javascript:setMessageColor(0x2eff85)" class="grid-color-08">
+
+								</a>
+								<a href="javascript:setMessageColor(0x00cc8f)" class="grid-color-09">
+
+								</a>
+								<a href="javascript:setMessageColor(0x2e85ff)" class="grid-color-10">
+
+								</a>
+								<a href="javascript:setMessageColor(0x4766ff)" class="grid-color-11">
+
+								</a>
+								<a href="javascript:setMessageColor(0x000000)" class="grid-color-13">
+
+								</a>
+							</div>
 						</div>
 					</div>
 					<div class="card">
 						<div class="card-header">
 							<h4>Finalize the order</h4>
-							<p>15</p>
+							<p>16</p>
 						</div>
 						<div class="card-body green-background">
 							<div class="row mt-3">
