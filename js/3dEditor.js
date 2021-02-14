@@ -11,10 +11,6 @@ var materials = [];
 var topBorderPoints = [];
 var bottomBorderPoints = [];
 
-// var photoChildNumber = -1;
-// var sideDecorationChildNumber = -1;
-// var messageChildNumber = -1;
-
 var sizes = {
 	'small' : [0.65, 0.75, 0.65],
 	'medium':[0.85, 0.85, 0.85],
@@ -49,6 +45,11 @@ var options = {
 	'bottomBorderRadiusScale' : 0.98,
 	'baseMaterial' : {},
 	'messageColor' : 0x000000,
+	'customMessage' : 'Happy Birthday!',
+	'messageFont' : 'Pacifico',
+	'messageSize' : 100,
+	'messageHorizontalOffset' : 0,
+	'messageVerticalOffset': 0,
 };
 
 function loadTextTexture(txt, size, horizontalOffset, verticalOffset, fontName, textureSize, stroke = null) {
@@ -178,46 +179,6 @@ function init() {
 		roughness: 0.3,
 		envMap : textureEquirec,
 	} );
-
-
-
-	//fonts
-	// <link rel="preconnect" href="https://fonts.gstatic.com">
-	// <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500&display=swap" rel="stylesheet">
-{/* <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">  */}
-{/* <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">  */}
-
-	// let myFont = new FontFace(
-	// 	"Dancing",
-	// 	"url(https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500&display=swap)"
-	//   );
-
-	//   myFont.load().then((font) => {
-
-		  //   });
-	// document.fonts.add(font);
-		// console.log("Font loaded");
-	// 	var ctx = image.getContext("2d");
-	// 	ctx.fillStyle = "#292929";
-	// 	ctx.font = "30px Pangolin";
-	// 	ctx.fillText("A chicken", 400, 120);
-
-	// display the fucking text
-// function displayText(){
-// 	// boring
-// 	ctx.fillStyle = '#fff';
-// 	ctx.textBaseline = 'top';
-
-// 	ctx.font = '140px Open Sans';
-// 	ctx.fillText('OPEN', W/2 - 180, H/2 - 140); // txt, offsetX, offsetY
-
-// 	ctx.font = 'bold 140px Open Sans';
-// 	ctx.fillText('IT', W/2 - 50, H/2);
-//   }
-
-  // async font loading
-  // https://github.com/typekit/webfontloader
-
 
 	//startup models loading
 	loader = new THREE.GLTFLoader();
@@ -445,24 +406,10 @@ function updateEditor() {
 		if (options.numberOfTiers > 1) {
 			source = cakeModels[options.baseCake];
 			material = Object.create(cakeModels[options.baseCake].material);
-
 			if (cakeModels[options.baseCake].children.length) {
 				for (let i = 0; i< cakeModels[options.baseCake].children.length; i++) {
 					instanceCakeTier(cakeModels[options.baseCake].children[i].geometry, Object.create(cakeModels[options.baseCake].children[i].material), true);
 				}
-				// if (cakeModels[options.baseCake].children[0]) {
-				// }
-
-				// if (cakeModels[options.baseCake].children[1]) {
-				// 	instanceCakeTier(cakeModels[options.baseCake].children[1].geometry, Object.create(cakeModels[options.baseCake].children[1].material), false);
-				// }
-
-				// if (cakeModels[options.baseCake].children[2]) {
-				// 	instanceCakeTier(cakeModels[options.baseCake].children[2].geometry, Object.create(cakeModels[options.baseCake].children[2].material), false);
-				// }
-				// if (cakeModels[options.baseCake].children[3]) {
-				// 	instanceCakeTier(cakeModels[options.baseCake].children[3].geometry, Object.create(cakeModels[options.baseCake].children[3].material), false);
-				// }
 			} else {
 				instanceCakeTier(source.geometry, material, true);
 			}
@@ -630,18 +577,7 @@ function loadTopMaterial(topName, name = null, scaleU = 1, scaleV = 1, roughness
 }
 
 function loadTopMessage(roughness= 1.3, envMapIntensity = 1.5) {
-	text = $('#customMessage').val();
-	size = $('#customSize').val();
-	horizontalOffset = parseInt($('#customHorizontalMovement').val());
-	verticalOffset = parseInt($('#customVerticalMovement').val());
-	alpha = loadTextTexture(text, size, horizontalOffset, verticalOffset,  options.baseMaterial.messageMaterial, textureSize);
-
-	// diffuse = loadTextTexture(text, size, horizontalOffset, verticalOffset,  options.baseMaterial.messageMaterial, textureSize);
-
-	// diffuse.encoding = THREE.sRGBEncoding;
-	// glossiness =  loadTexture(name, '_glossiness', scaleU, scaleV);
-	// normal =  loadTexture(name, '_normal', scaleU, scaleV);
-
+	alpha = loadTextTexture(options.customMessage, options.messageSize, options.messageHorizontalOffset, options.messageVerticalOffset,  options.baseMaterial.messageMaterial, textureSize);
 
 	materials['customText'] = new THREE.MeshStandardMaterial( {
 		displacementMap: alpha,
@@ -681,7 +617,7 @@ function loadSideMaterial(topName, scaleU = 1, scaleV = 1, roughness= 1.3, envMa
 		color: 0xffffff,
 		map: diffuse,
 		normalMap: normal,
-		normalScale: new THREE.Vector2(0.5, 0.5),
+		normalScale: new THREE.Vector2(1, 1),
 		// roughnessMap : glossiness,
 		roughness: roughness/2,
 		metalness: 0,
@@ -768,7 +704,7 @@ function updateMaterials() {
 	}
 
 	if (settings.sideMaterial) {
-		loadSideMaterial(settings.sideMaterial);
+		loadSideMaterial(settings.sideMaterial, 1, 1, 0.5, 2);
 	}
 
 
@@ -877,94 +813,13 @@ function setMaterialToAllBaseGeoms(firstMaterialName, secondMaterialName= false)
 	}
 }
 
-// function setSideMaterialToAllBaseGeoms() {
-// 	updated = false;
-// 	childPos = 0;
-// 	for( cake in cakeModels) {
-// 		if (sideDecorationChildNumber < 0) {
-// 			newObject = cakeModels[cake].children[1].clone(true);
-// 			newObject.remove(newObject.children[0]);
-// 			newObject.castShadow = false;
-// 			newObject.receiveShadow = false;
-// 			cakeModels[cake].add(newObject);
-// 			childPos = cakeModels[cake].children.length-1;
-// 			updated = true;
-// 			cakeModels[cake].children[childPos].material = materials[topMaterialName];
-// 		} else {
-// 			cakeModels[cake].children[sideDecorationChildNumber].material = materials[topMaterialName];
 
-// 		}
-// 		// if (photoChildNumber != -1) {
-// 		// }
-// 	}
-// 	if (updated) {
-// 		sideDecorationChildNumber = childPos;
-// 	}
-// }
-
-// function setTopMaterialToAllBaseGeoms(topMaterialName = 'customFile') {
-// 	updated = false;
-// 	childPos = 0;
-// 	for( cake in cakeModels) {
-// 		if (photoChildNumber < 0) {
-// 			newObject = cakeModels[cake].children[1].clone(true);
-// 			newObject.remove(newObject.children[0]);
-// 			newObject.castShadow = false;
-// 			newObject.receiveShadow = false;
-// 			cakeModels[cake].add(newObject);
-// 			childPos = cakeModels[cake].children.length-1;
-// 			updated = true;
-// 			cakeModels[cake].children[childPos].material = materials[topMaterialName];
-// 		} else {
-// 			cakeModels[cake].children[photoChildNumber].material = materials[topMaterialName];
-
-// 		}
-// 		// if (photoChildNumber != -1) {
-// 		// }
-// 	}
-// 	if (updated) {
-// 		photoChildNumber = childPos;
-// 	}
-// }
-
-// function setTopMessageToAllBaseGeoms() {
-// 	updated = false;
-// 	childPos = 0;
-// 	for( cake in cakeModels) {
-
-// 		if (messageChildNumber < 0) {
-// 			newObject = cakeModels[cake].children[1].clone(true);
-// 			newObject.remove(newObject.children[0]);
-// 			newObject.castShadow = false;
-// 			newObject.receiveShadow = false;
-// 			cakeModels[cake].add(newObject);
-// 			childPos = cakeModels[cake].children.length-1;
-// 			updated = true;
-// 			cakeModels[cake].children[childPos].material = materials['customText'];
-// 		} else {
-// 			cakeModels[cake].children[messageChildNumber].material = materials['customText'];
-
-// 		}
-// 		// if (messageChildNumber != -1) {
-// 			// }
-// 	}
-// 	if (updated) {
-// 		messageChildNumber = childPos;
-// 	}
-// }
 
 function setTopMaterial(materialName) {
 	if (materialName) {
 		options.baseMaterial.topMaterial = materialName;
 	} else {
 		options.baseMaterial.topMaterial = null;
-		// for( cake in cakeModels) {
-		// 	cakeModels[cake].remove(cakeModels[cake].children[photoChildNumber]);
-		// }
-		// if (photoChildNumber < messageChildNumber && messageChildNumber > 0) {
-		// 	messageChildNumber--;
-		// }
-		// photoChildNumber = -1;
 	}
 	options.baseMaterial.customImage = null;
 	updateMaterials()
@@ -975,33 +830,19 @@ function setSideMaterial(materialName) {
 		options.baseMaterial.sideMaterial = materialName;
 	} else {
 		options.baseMaterial.sideMaterial = null;
-		// for( cake in cakeModels) {
-		// 	cakeModels[cake].remove(cakeModels[cake].children[sideDecorationChildNumber]);
-		// }
-		// if (sideDecorationChildNumber < messageChildNumber && messageChildNumber > 0) {
-		// 	messageChildNumber--;
-		// }
-		// if (sideDecorationChildNumber < photoChildNumber && photoChildNumber > 0) {
-		// 	photoChildNumber--;
-		// }
-		// sideDecorationChildNumber = -1;
 	}
 	updateMaterials()
 }
 
-function setMessageMaterial(materialName) {
+function setMessageFont(materialName = null) {
 	if (materialName) {
 		options.baseMaterial.messageMaterial = materialName;
+		options.customMessage = $('#customMessage').val();
+		options.messageSize = $('#customSize').val();
+		options.messageHorizontalOffset = parseInt($('#customHorizontalMovement').val());
+		options.messageVerticalOffset = parseInt($('#customVerticalMovement').val());
 	} else {
 		options.baseMaterial.messageMaterial = null;
-		// for( cake in cakeModels) {
-		// 	cakeModels[cake].remove(cakeModels[cake].children[messageChildNumber]);
-		// }
-		// if (messageChildNumber < photoChildNumber && photoChildNumber > 0) {
-		// 	photoChildNumber--;
-		// }
-		// messageChildNumber = -1;
-
 	}
 	updateMaterials()
 }
@@ -1087,16 +928,17 @@ $('#customFile').on('change', function (event){
 	textureLoader.setCrossOrigin("");
 	options.baseMaterial.customImage = 'customFile';
 	updateMaterials();
-
 });
 
 function updateMessageMaterial() {
 	if (options.baseMaterial.messageMaterial) {
-		setMessageMaterial(options.baseMaterial.messageMaterial);
+		setMessageFont(options.baseMaterial.messageMaterial);
 	} else {
-		setMessageMaterial('Pacifico');
+		setMessageFont('Pacifico');
 	}
 }
+
+
 
 $('#customMessage').on('keyup', updateMessageMaterial);
 
@@ -1107,38 +949,35 @@ function setMessageColor(color) {
 	updateMessageMaterial();
 }
 
+// Resolve next:
+// buttons on the page - reset camera, reset selection
+// set status and update top form
+// check status and show messages when selecting options
+// add checkout card
+// compile cake description based on selection
+// show options descriptions on mouse hover
+// update cake price based on selections
+// update layout for mobile version
+// optimize editor settings for faster performance
+// show textures based on detected window size (lower textures for mobile)
+// show a cm as reference on the table (or plates);
 
-// renumber cards
-// bug when add top, add message, remove top....can't remove message
 
+// Future:
+// fade icing colors
+// add support for multi line text
+
+//add side materials color multiplier
 //try other fonts
-
-//create side textures and functionality
-
-// auto starting size based on the text
 // text shadow or stroke (compositing flag.....add to multiply)
-//add font size slider
-//add font x position and y position offset
-
-
-//resize thumbs to 100x100
-
 //wrap in on load function
 //shadow map bias...error fix
 // optimize border geometries
-// cake color icing adjust
 //check shadows for borders
-// setup for mobile size
 //TODO set limits on camera rotation
-//use geom instead of instances for base geoms to apply UV offsets for tier variation
+//use geom instead of instances for base geoms to apply UV offsets for tier variation or side texture scaleU
 //preload materials before switching it (chrome material shown while loading model)
 //add stereo option
-//show a cm as reference on the table (or plates);
-
-
-// add support for multi line text
-
-
 
 
 //optimizations:
