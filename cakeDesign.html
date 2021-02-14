@@ -478,27 +478,33 @@
 							</div>
 						</div>
 					</div>
-					<!-- <div class="card">
+					<div class="card">
 						<div class="card-header">
 							<h4>Side decorations</h4>
 							<p>11</p>
 						</div>
 						<div class="card-body">
 							<div class='grid-buttons'>
-								<a href="">
+								<a href="javascript:setSideMaterial('side02')">
 									<img src="./images/thumbs/thumb-(29).jpg" alt="Cake" class="rounded-circle">
 									<p>
 										Type 01
 									</p>
 								</a>
-								<a href="">
+								<a href="javascript:setSideMaterial('side02')">
 									<img src="./images/thumbs/thumb-(8).jpg" alt="Cake" class="rounded-circle">
 									<p>
 										Type 02
 									</p>
 								</a>
-								<a href="">
+								<a href="javascript:setSideMaterial('side02')">
 									<img src="./images/thumbs/thumb-(7).jpg" alt="Cake" class="rounded-circle">
+									<p>
+										Type 03
+									</p>
+								</a>
+								<a href="javascript:setSideMaterial('')">
+									<img src="./images/thumbs/thumb-(58).jpg" alt="Cake" class="rounded-circle">
 									<p>
 										Type 03
 									</p>
@@ -506,7 +512,7 @@
 							</div>
 							<button type="button" class="btn btn-danger btn-sm align-right">Skip this step</button>
 						</div>
-					</div> -->
+					</div>
 					<!-- <div class="card">
 						<div class="card-header">
 							<h4>Top decorations</h4>
@@ -669,11 +675,6 @@
 									</p>
 								</a>
 							</div>
-							<div class='form-group mb-3'>
-								<label for="customRange" class="form-label">Message Size</label>
-								<input type="range" class="form-range" min="50" max="150" id="customSize">
-							</div>
-
 							<button type="button" class="btn btn-danger btn-sm align-right">Skip this step</button>
 						</div>
 					</div>
@@ -725,8 +726,30 @@
 					</div>
 					<div class="card">
 						<div class="card-header">
-							<h4>Finalize the order</h4>
+							<h4>Custom message</h4>
 							<p>16</p>
+						</div>
+						<div class="card-body text-dark">
+							<div class='form-group mb-3'>
+								<label for="customRange" class="form-label">Message Size</label>
+								<input type="range" class="form-range" min="50" max="150" id="customSize" value ="100">
+							</div>
+							<div class='form-group mb-3'>
+								<label for="customRange" class="form-label">Message left/right movement</label>
+								<input type="range" class="form-range" min="-300" max="300" id="customHorizontalMovement" value = "0">
+							</div>
+							<div class='form-group mb-3'>
+								<label for="customRange" class="form-label">Message top/down movement</label>
+								<input type="range" class="form-range" min="-500" max="500" id="customVerticalMovement" value = "0">
+							</div>
+
+							<button type="button" class="btn btn-danger btn-sm align-right">Skip this step</button>
+						</div>
+					</div>
+					<div class="card">
+						<div class="card-header">
+							<h4>Finalize the order</h4>
+							<p>17</p>
 						</div>
 						<div class="card-body green-background">
 							<div class="row mt-3">
