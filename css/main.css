@@ -76,6 +76,13 @@ body, html {
 	margin: 5px;
 	margin-bottom: 10px;
 	margin-top: 10px;
+	transition: background-color ease 1s;
+	transition: color ease .3s;
+}
+
+.circle-buttons-list li.active a {
+	background: #00C9FF;
+	color: white;
 }
 
 #options-strip {
@@ -199,11 +206,11 @@ body, html {
 	bottom: 40px;
 }
 
-#editor-buttons button:first-child {
+#editor-buttons a:first-child {
 	margin-left: 20px
 }
 
-#editor-buttons button {
+#editor-buttons a {
 	border-radius: 20px;
 	background: white;
 	color: black;

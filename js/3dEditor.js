@@ -18,39 +18,8 @@ var sizes = {
 };
 var textureSize = 1024;
 
-var options = {
-	'step': 1,
-	'initialSetup' : true,
-	'baseCake' : 'Cake_round',
-	'baseHeight' : 50,
-	'baseMatrix' : new THREE.Matrix4().makeScale(0.85,0.85,0.85),
-	'tierHeight' : 50,
-	'tierScaling' : 0.22,
-	'tierBorderScaling' : 0.04,
-	'numberOfTiers' : 1,
-	'orbitPoint' : new THREE.Vector3( 0, 50 / 2, 0 ),
-	'materialsUsed' : [],
-	'baseColor' : 0xFFFFFF,
-	'topBorderColor' : 0xFFFFFF,
-	'bottomBorderColor' : 0xFFFFFF,
-	'topBorder' : null,
-	'bottomBorder' : null,
-	'cakeSize' : 'medium',
-	'borderInstancesReductionRate' : 0.2, //upper tiers need fewer instances
-	'bottomBorderInstancesIncreaseRate' : 0.2, // bottom border needs more instances than the top
-	'smallNrInst' : 65,
-	'mediumNrInst' : 80,
-	'bigNrInst' : 95,
-	'topBorderRadiusScale' : 0.95,
-	'bottomBorderRadiusScale' : 0.98,
-	'baseMaterial' : {},
-	'messageColor' : 0x000000,
-	'customMessage' : 'Happy Birthday!',
-	'messageFont' : 'Pacifico',
-	'messageSize' : 100,
-	'messageHorizontalOffset' : 0,
-	'messageVerticalOffset': 0,
-};
+var options = {};
+loadDefaultCustomizations();
 
 function loadTextTexture(txt, size, horizontalOffset, verticalOffset, fontName, textureSize, stroke = null) {
 	bitmap = document.createElement('canvas');
@@ -101,7 +70,6 @@ WebFont.load({
 // animate();
 
 function init() {
-
 	// const frame = new Nodes.NodeFrame();
 
 	// CAMERAS
@@ -280,6 +248,7 @@ function init() {
 			}
 
 		});
+
 		updateEditor();
 		// setBaseScale(1);
 	}, undefined, function ( error ) {
@@ -369,6 +338,8 @@ function addBorderPoints(position, transform = null, instanceIndex = 0) {
 
 
 function updateEditor() {
+	updatePageElementsAndForm();
+
 	//reinitialize top and bottom border points
 	topBorderPoints = [];
 	bottomBorderPoints = [];
@@ -479,23 +450,145 @@ function instanceCakeTier(geometry, material, addBorderPointsToInstance = true) 
 
 function setBaseModel(type) {
 	options.baseCake = type;
-	options.step = 2;
+	goToNextStep(2);
 	updateMaterials();
-
 }
 
 function setNumberOfTiers(number) {
 	options.numberOfTiers = number;
-	options.step = 3;
+	goToNextStep(3);
 	updateEditor();
 }
 
 function setBaseScale(size) {
 	options.cakeSize = size;
 	options.baseMatrix =  new THREE.Matrix4().makeScale(sizes[size][0], sizes[size][1], sizes[size][2]);
-	options.step = 4;
+	goToNextStep(4);
 	updateEditor();
 }
+
+function resetBaseColorAndSetBaseMaterial(firstMaterialName, secondMaterialName, scaleUFirst= 1, scaleVFirst=1, scaleUSecond = 1, scaleVSecond = 1,  roughness= 1.3, envMapIntensity = 1.5) {
+	options['baseColor'] = 0xffffff;
+	goToNextStep(5);
+	setMaterial(firstMaterialName, secondMaterialName, scaleUFirst, scaleVFirst,scaleUSecond,scaleVSecond,  roughness, envMapIntensity);
+}
+
+function setBaseMaterial(firstMaterialName, secondMaterialName, scaleUFirst= 1, scaleVFirst= 1, scaleUSecond = 1,scaleVSecond = 1,  roughness= 1.3, envMapIntensity = 1.5) {
+	goToNextStep(6);
+	setMaterial(firstMaterialName, secondMaterialName, scaleUFirst, scaleVFirst, scaleUSecond,scaleVSecond,  roughness, envMapIntensity);
+}
+
+function setColorToUsedMaterials(newColor) {
+	options['materialsUsed'].forEach(material => {
+		materials[material].color.setHex(newColor);
+		materials[material].color.convertSRGBToLinear();
+	});
+	options['baseColor'] = newColor;
+	goToNextStep(7);
+	updateEditor();
+}
+
+function setBorder(type, position) {
+	if (position == 'top') {
+		goToNextStep(8);
+		options.topBorder = type;
+	}
+	if (position == 'bottom') {
+		goToNextStep(10);
+		options.bottomBorder = type;
+	}
+	updateEditor();
+}
+
+function setColorToTopBorder(color) {
+	materials['defaultTopBorder'].color.setHex(color);
+	materials['defaultTopBorder'].color.convertSRGBToLinear();
+	options['topBorderColor'] = color;
+	goToNextStep(9);
+	updateEditor();
+}
+
+function setColorToBottomBorder(color) {
+	materials['defaultBottomBorder'].color.setHex(color);
+	materials['defaultBottomBorder'].color.convertSRGBToLinear();
+	options['topBorderColor'] = color;
+	goToNextStep(11);
+	updateEditor();
+}
+
+function setSideMaterial(materialName) {
+	if (materialName) {
+		options.baseMaterial.sideMaterial = materialName;
+	} else {
+		options.baseMaterial.sideMaterial = null;
+	}
+	goToNextStep(12);
+	updateMaterials()
+}
+
+function setTopMaterial(materialName) {
+	if (materialName) {
+		options.baseMaterial.topMaterial = materialName;
+	} else {
+		options.baseMaterial.topMaterial = null;
+	}
+	options.baseMaterial.customImage = null;
+	goToNextStep(13);
+	updateMaterials()
+}
+
+function selectYourPhoto() {
+	$('#customFile').trigger('click');
+}
+
+$('#customFile').on('change', function (event){
+	var userImage = event.target.files[0];
+	var userImageURL = URL.createObjectURL( userImage );
+	textures['customFile'] = textureLoader.load(userImageURL);
+	textureLoader.setCrossOrigin("");
+	options.baseMaterial.customImage = 'customFile';
+	goToNextStep(13);
+	updateMaterials();
+});
+
+function setMessageFont(materialName = null) {
+	if (materialName) {
+		options.baseMaterial.messageMaterial = materialName;
+		options.customMessage = $('#customMessage').val();
+		options.messageSize = $('#customSize').val();
+		options.messageHorizontalOffset = parseInt($('#customHorizontalMovement').val());
+		options.messageVerticalOffset = parseInt($('#customVerticalMovement').val());
+	} else {
+		options.baseMaterial.messageMaterial = null;
+	}
+	goToNextStep(14);
+	updateMaterials()
+}
+
+function setMessageColor(color) {
+	options.messageColor = color;
+	goToNextStep(15);
+	updateMessageMaterial();
+}
+
+$('#customSize, #customHorizontalMovement, #customVerticalMovement').on('input', function() {
+	goToNextStep(16);
+	updateMessageMaterial();
+});
+
+
+function setMaterial(firstMaterialName, secondMaterialName, scaleUFirst= 1, scaleVFirst= 1, scaleUSecond = 1,scaleVSecond = 1,  roughness= 1.3, envMapIntensity = 1.5) {
+	options.baseMaterial.firstMaterialName = firstMaterialName;
+	options.baseMaterial.secondMaterialName = secondMaterialName;
+	options.baseMaterial.scaleUFirst = scaleUFirst;
+	options.baseMaterial.scaleVFirst = scaleVFirst;
+	options.baseMaterial.scaleUSecond = scaleUSecond;
+	options.baseMaterial.scaleVSecond = scaleVSecond;
+	options.baseMaterial.roughness = roughness;
+	options.baseMaterial.envMapIntensity = envMapIntensity;
+	updateMaterials();
+}
+
 function loadTexture(name, suffix,  scaleU, scaleV) {
 	fullName = name + suffix;
 	if (!(fullName in textures)) {
@@ -663,33 +756,11 @@ function loadTopCustomFile(name = null, scaleU = 1, scaleV = 1, roughness= 1.3, 
 }
 
 
-function setColorToUsedMaterials(newColor) {
-	options['materialsUsed'].forEach(material => {
-		materials[material].color.setHex(newColor);
-		materials[material].color.convertSRGBToLinear();
-	});
-	options['baseColor'] = newColor;
 
-}
 
-function resetBaseColorAndSetBaseMaterial(firstMaterialName, secondMaterialName, scaleUFirst= 1, scaleVFirst=1, scaleUSecond = 1, scaleVSecond = 1,  roughness= 1.3, envMapIntensity = 1.5) {
-	options['baseColor'] = 0xffffff;
-	setBaseMaterial(firstMaterialName, secondMaterialName, scaleUFirst, scaleVFirst,scaleUSecond,scaleVSecond,  roughness, envMapIntensity);
-}
-
-function setBaseMaterial(firstMaterialName, secondMaterialName, scaleUFirst= 1, scaleVFirst= 1, scaleUSecond = 1,scaleVSecond = 1,  roughness= 1.3, envMapIntensity = 1.5) {
-	options.baseMaterial.firstMaterialName = firstMaterialName;
-	options.baseMaterial.secondMaterialName = secondMaterialName;
-	options.baseMaterial.scaleUFirst = scaleUFirst;
-	options.baseMaterial.scaleVFirst = scaleVFirst;
-	options.baseMaterial.scaleUSecond = scaleUSecond;
-	options.baseMaterial.scaleVSecond = scaleVSecond;
-	options.baseMaterial.roughness = roughness;
-	options.baseMaterial.envMapIntensity = envMapIntensity;
-	updateMaterials()
-}
 function updateMaterials() {
 	settings = options.baseMaterial;
+
 	if (settings.firstMaterialName) {
 		if (!((settings.firstMaterialName + settings.scaleUFirst + settings.scaleVFirst) in materials)) {
 			loadMaterial(settings.firstMaterialName, settings.scaleUFirst, settings.scaleVFirst, settings.roughness, settings.envMapIntensity);
@@ -756,6 +827,12 @@ function setMaterialToAllBaseGeoms(firstMaterialName, secondMaterialName= false)
 			options['materialsUsed'] = [firstMaterialName];
 			cakeModels[cake].material = materials[firstMaterialName];
 			cakeModels[cake].children[0].material = materials[firstMaterialName];
+			cakeModels[cake].children[1].material = materials[firstMaterialName];
+		} else {
+			options['materialsUsed'] = ['dafaultLambert'];
+			cakeModels[cake].material = materials['dafaultLambert'];
+			cakeModels[cake].children[0].material = materials['dafaultLambert'];
+			cakeModels[cake].children[1].material = materials['dafaultLambert'];
 		}
 
 		if (settings.secondMaterialName) {
@@ -763,10 +840,6 @@ function setMaterialToAllBaseGeoms(firstMaterialName, secondMaterialName= false)
 				cakeModels[cake].children[1].material = materials[secondMaterialName];
 				options['materialsUsed'].push(secondMaterialName);
 			}
-		}
-		console.log(cakeModels[cake].children.length + ' before adding additional elements');
-		if (cakeModels[cake].children.length > 2) {
-			console.log(cakeModels);
 		}
 
 		//top material pos
@@ -790,7 +863,6 @@ function setMaterialToAllBaseGeoms(firstMaterialName, secondMaterialName= false)
 			messagePos = 3;
 		}
 
-		console.log(cakeModels[cake].children.length + ' after adding the side geom');
 		// top material
 		if (settings.customImage) {
 			newTopObject.material =  materials['customFile'];
@@ -803,50 +875,13 @@ function setMaterialToAllBaseGeoms(firstMaterialName, secondMaterialName= false)
 				messagePos = 4;
 			}
 		}
-		console.log(cakeModels[cake].children.length + ' after adding the top geom');
 
 		if (settings.messageMaterial) {
 			newMessageObject.material = materials['customText'];
 			cakeModels[cake].add(newMessageObject);
 		}
-		console.log(cakeModels[cake].children.length + ' after adding the message geom');
 	}
 }
-
-
-
-function setTopMaterial(materialName) {
-	if (materialName) {
-		options.baseMaterial.topMaterial = materialName;
-	} else {
-		options.baseMaterial.topMaterial = null;
-	}
-	options.baseMaterial.customImage = null;
-	updateMaterials()
-}
-
-function setSideMaterial(materialName) {
-	if (materialName) {
-		options.baseMaterial.sideMaterial = materialName;
-	} else {
-		options.baseMaterial.sideMaterial = null;
-	}
-	updateMaterials()
-}
-
-function setMessageFont(materialName = null) {
-	if (materialName) {
-		options.baseMaterial.messageMaterial = materialName;
-		options.customMessage = $('#customMessage').val();
-		options.messageSize = $('#customSize').val();
-		options.messageHorizontalOffset = parseInt($('#customHorizontalMovement').val());
-		options.messageVerticalOffset = parseInt($('#customVerticalMovement').val());
-	} else {
-		options.baseMaterial.messageMaterial = null;
-	}
-	updateMaterials()
-}
-
 
 function roundedRect( ctx, x, y, width, height, radius ) {
 	ctx.moveTo( x, y + radius );
@@ -895,41 +930,6 @@ function createCurve(type, position) {
 	return curve;
 }
 
-function setBorder(type, position) {
-	if (position == 'top') {
-		options.topBorder = type;
-	}
-	if (position == 'bottom') {
-		options.bottomBorder = type;
-	}
-	updateEditor();
-}
-
-function setColorToTopBorder(color) {
-	materials['defaultTopBorder'].color.setHex(color);
-	materials['defaultTopBorder'].color.convertSRGBToLinear();
-	options['topBorderColor'] = color;
-}
-
-function setColorToBottomBorder(color) {
-	materials['defaultBottomBorder'].color.setHex(color);
-	materials['defaultBottomBorder'].color.convertSRGBToLinear();
-	options['topBorderColor'] = color;
-}
-
-function selectYourPhoto() {
-	$('#customFile').trigger('click');
-}
-
-$('#customFile').on('change', function (event){
-	var userImage = event.target.files[0];
-	var userImageURL = URL.createObjectURL( userImage );
-	textures['customFile'] = textureLoader.load(userImageURL);
-	textureLoader.setCrossOrigin("");
-	options.baseMaterial.customImage = 'customFile';
-	updateMaterials();
-});
-
 function updateMessageMaterial() {
 	if (options.baseMaterial.messageMaterial) {
 		setMessageFont(options.baseMaterial.messageMaterial);
@@ -939,20 +939,107 @@ function updateMessageMaterial() {
 }
 
 
-
 $('#customMessage').on('keyup', updateMessageMaterial);
 
-$('#customSize, #customHorizontalMovement, #customVerticalMovement').on('input', updateMessageMaterial);
 
-function setMessageColor(color) {
-	options.messageColor = color;
-	updateMessageMaterial();
+function resetCamera() {
+	controls.reset();
+}
+
+function loadDefaultCustomizations() {
+	options = {
+		'step': 1,
+		'initialSetup' : true,
+		'baseCake' : 'Cake_round',
+		'baseHeight' : 50,
+		'baseMatrix' : new THREE.Matrix4().makeScale(0.85,0.85,0.85),
+		'tierHeight' : 50,
+		'tierScaling' : 0.22,
+		'tierBorderScaling' : 0.04,
+		'numberOfTiers' : 1,
+		'orbitPoint' : new THREE.Vector3( 0, 50 / 2, 0 ),
+		'materialsUsed' : [],
+		'baseColor' : 0xFFFFFF,
+		'topBorderColor' : 0xFFFFFF,
+		'bottomBorderColor' : 0xFFFFFF,
+		'topBorder' : null,
+		'bottomBorder' : null,
+		'cakeSize' : 'medium',
+		'borderInstancesReductionRate' : 0.2, //upper tiers need fewer instances
+		'bottomBorderInstancesIncreaseRate' : 0.2, // bottom border needs more instances than the top
+		'smallNrInst' : 65,
+		'mediumNrInst' : 80,
+		'bigNrInst' : 95,
+		'topBorderRadiusScale' : 0.95,
+		'bottomBorderRadiusScale' : 0.983,
+		'baseMaterial' : {},
+		'messageColor' : 0x000000,
+		'customMessage' : 'Happy Birthday!',
+		'messageFont' : 'Pacifico',
+		'messageSize' : 100,
+		'messageHorizontalOffset' : 0,
+		'messageVerticalOffset': 0,
+	};
+}
+
+function resetCustomizations() {
+	loadDefaultCustomizations();
+
+	options['materialsUsed'].forEach(material => {
+		materials[material].color.setHex('0xffffff');
+		materials[material].color.convertSRGBToLinear();
+	});
+	options['baseColor'] = '0xffffff';
+
+	materials['defaultTopBorder'].color.setHex('0xffffff');
+	materials['defaultTopBorder'].color.convertSRGBToLinear();
+	options['topBorderColor'] = '0xffffff';
+
+	materials['defaultBottomBorder'].color.setHex('0xffffff');
+	materials['defaultBottomBorder'].color.convertSRGBToLinear();
+	options['topBorderColor'] = '0xffffff';
+
+	$('#customSize').val(100);
+	$('#customHorizontalMovement').val(0);
+	$('#customVerticalMovement').val(0);
+
+	updateMaterials();
+
+	//TODO reset checkout form and current step for the top input
+}
+
+function updatePageElementsAndForm() {
+	$(".circle-buttons-list ul li").removeClass('active');
+	if (options.step > 1) {
+		$(".circle-buttons-list ul li:lt("+(options.step-1)+")").addClass('active');
+	}
+
+	// scroll to next option
+	//TODO test with scrolling
+	// if (options.step < 10) {
+	// 	scrollToAnchor('#card0'+ options.step)
+	// } else {
+	// 	scrollToAnchor('#card'+ options.step)
+	// }
+}
+
+function scrollToAnchor(anchor) {
+	$('html, body').animate({
+		'scrollTop':   $(anchor).offset().top
+	  }, 1000);
+}
+
+function goToNextStep(step) {
+	if (step > options.step) {
+		options.step = step;
+	}
 }
 
 // Resolve next:
-// buttons on the page - reset camera, reset selection
-// set status and update top form
-// check status and show messages when selecting options
+
+// can't execute step if previous step was not chosen of skipped
+// remove the steps at the top and show price on top of the editor, update the colors of the cards
+// random numbers for instances that are fixed
 // add checkout card
 // compile cake description based on selection
 // show options descriptions on mouse hover
@@ -961,7 +1048,6 @@ function setMessageColor(color) {
 // optimize editor settings for faster performance
 // show textures based on detected window size (lower textures for mobile)
 // show a cm as reference on the table (or plates);
-
 
 // Future:
 // fade icing colors
