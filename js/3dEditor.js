@@ -448,97 +448,209 @@ function instanceCakeTier(geometry, material, addBorderPointsToInstance = true) 
 	instances.push(instance);
 }
 
+function showMessage(message) {
+	alert = '<div  class="alert alert-danger alert-dismissible fade show in" role="alert">';
+	alert += message;
+	alert += '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>';
+	$('#alert-messages').html(alert);
+}
+
+
+function checkStep(step) {
+	if (options.step < step) {
+		switch(options.step) {
+			case 1:
+				showMessage("Please choose the cake shape in step 01");
+				scrollToAnchor('#card01');
+				break;
+
+			case 2:
+				showMessage("Please choose the number of tiers in step 02");
+				scrollToAnchor('#card02');
+				break;
+			case 3:
+				showMessage("Please choose the number of portions in step 03");
+				scrollToAnchor('#card03');
+				break;
+			case 4:
+				showMessage("Please choose the cake flavor in step 04");
+				scrollToAnchor('#card04');
+				break;
+			case 5:
+				showMessage("Please choose the cake icing in step 05");
+				scrollToAnchor('#card05');
+				break;
+			case 6:
+				showMessage("Please choose the icing color in step 06");
+				scrollToAnchor('#card06');
+				break;
+			case 7:
+				showMessage("Please choose the top border style in step 07");
+				scrollToAnchor('#card07');
+				break;
+			case 8:
+				showMessage("Please choose the top border color in step 08");
+				scrollToAnchor('#card08');
+				break;
+			case 9:
+				showMessage("Please choose the bottom border style in step 09");
+				scrollToAnchor('#card09');
+				break;
+			case 10:
+				showMessage("Please choose the bottom border color in step 10");
+				scrollToAnchor('#card10');
+				break;
+			case 11:
+				showMessage("Please choose the side decoration in step 11");
+				scrollToAnchor('#card11');
+				break;
+			case 12:
+				showMessage("Please choose top photo in step 12");
+				scrollToAnchor('#card12');
+				break;
+			case 13:
+				showMessage("Please choose the custom message in step 13");
+				scrollToAnchor('#card13');
+				break;
+			case 14:
+				showMessage("Please choose the custom message color in step 14");
+				scrollToAnchor('#card14');
+				break;
+			case 15:
+				showMessage("Please choose the custom message position in step 15");
+				scrollToAnchor('#card15');
+				break;
+
+			default:
+				return false;
+		}
+
+		return false;
+
+	} else {
+		return true;
+	}
+}
+
+
 function setBaseModel(type) {
 	options.baseCake = type;
 	goToNextStep(2);
 	updateMaterials();
 }
 
+
 function setNumberOfTiers(number) {
-	options.numberOfTiers = number;
-	goToNextStep(3);
-	updateEditor();
+	if (checkStep(2)) {
+		options.numberOfTiers = number;
+		goToNextStep(3);
+		updateEditor();
+	}
+
 }
 
 function setBaseScale(size) {
-	options.cakeSize = size;
-	options.baseMatrix =  new THREE.Matrix4().makeScale(sizes[size][0], sizes[size][1], sizes[size][2]);
-	goToNextStep(4);
-	updateEditor();
+	if (checkStep(3)) {
+		options.cakeSize = size;
+		options.baseMatrix =  new THREE.Matrix4().makeScale(sizes[size][0], sizes[size][1], sizes[size][2]);
+		goToNextStep(4);
+		updateEditor();
+	}
 }
 
 function resetBaseColorAndSetBaseMaterial(firstMaterialName, secondMaterialName, scaleUFirst= 1, scaleVFirst=1, scaleUSecond = 1, scaleVSecond = 1,  roughness= 1.3, envMapIntensity = 1.5) {
-	options['baseColor'] = 0xffffff;
-	goToNextStep(5);
-	setMaterial(firstMaterialName, secondMaterialName, scaleUFirst, scaleVFirst,scaleUSecond,scaleVSecond,  roughness, envMapIntensity);
+	if (checkStep(4)) {
+		options['baseColor'] = 0xffffff;
+		goToNextStep(5);
+		setMaterial(firstMaterialName, secondMaterialName, scaleUFirst, scaleVFirst,scaleUSecond,scaleVSecond,  roughness, envMapIntensity);
+	}
 }
 
 function setBaseMaterial(firstMaterialName, secondMaterialName, scaleUFirst= 1, scaleVFirst= 1, scaleUSecond = 1,scaleVSecond = 1,  roughness= 1.3, envMapIntensity = 1.5) {
-	goToNextStep(6);
-	setMaterial(firstMaterialName, secondMaterialName, scaleUFirst, scaleVFirst, scaleUSecond,scaleVSecond,  roughness, envMapIntensity);
+	if (checkStep(5)) {
+		goToNextStep(6);
+		setMaterial(firstMaterialName, secondMaterialName, scaleUFirst, scaleVFirst, scaleUSecond,scaleVSecond,  roughness, envMapIntensity);
+	}
 }
 
 function setColorToUsedMaterials(newColor) {
-	options['materialsUsed'].forEach(material => {
-		materials[material].color.setHex(newColor);
-		materials[material].color.convertSRGBToLinear();
-	});
-	options['baseColor'] = newColor;
-	goToNextStep(7);
-	updateEditor();
+	if (checkStep(6)) {
+		options['materialsUsed'].forEach(material => {
+			materials[material].color.setHex(newColor);
+			materials[material].color.convertSRGBToLinear();
+		});
+		options['baseColor'] = newColor;
+		goToNextStep(7);
+		updateEditor();
+	}
 }
 
 function setBorder(type, position) {
 	if (position == 'top') {
-		goToNextStep(8);
-		options.topBorder = type;
+		if (checkStep(7)) {
+			goToNextStep(8);
+			options.topBorder = type;
+			updateEditor();
+		}
 	}
 	if (position == 'bottom') {
-		goToNextStep(10);
-		options.bottomBorder = type;
+		if (checkStep(9)) {
+			goToNextStep(10);
+			options.bottomBorder = type;
+			updateEditor();
+		}
 	}
-	updateEditor();
 }
 
 function setColorToTopBorder(color) {
-	materials['defaultTopBorder'].color.setHex(color);
-	materials['defaultTopBorder'].color.convertSRGBToLinear();
-	options['topBorderColor'] = color;
-	goToNextStep(9);
-	updateEditor();
+	if (checkStep(8)) {
+		materials['defaultTopBorder'].color.setHex(color);
+		materials['defaultTopBorder'].color.convertSRGBToLinear();
+		options['topBorderColor'] = color;
+		goToNextStep(9);
+		updateEditor();
+	}
 }
 
 function setColorToBottomBorder(color) {
-	materials['defaultBottomBorder'].color.setHex(color);
-	materials['defaultBottomBorder'].color.convertSRGBToLinear();
-	options['topBorderColor'] = color;
-	goToNextStep(11);
-	updateEditor();
+	if (checkStep(10)) {
+		materials['defaultBottomBorder'].color.setHex(color);
+		materials['defaultBottomBorder'].color.convertSRGBToLinear();
+		options['topBorderColor'] = color;
+		goToNextStep(11);
+		updateEditor();
+	}
 }
 
 function setSideMaterial(materialName) {
-	if (materialName) {
-		options.baseMaterial.sideMaterial = materialName;
-	} else {
-		options.baseMaterial.sideMaterial = null;
+	if (checkStep(11)) {
+		if (materialName) {
+			options.baseMaterial.sideMaterial = materialName;
+		} else {
+			options.baseMaterial.sideMaterial = null;
+		}
+		goToNextStep(12);
+		updateMaterials()
 	}
-	goToNextStep(12);
-	updateMaterials()
 }
 
 function setTopMaterial(materialName) {
-	if (materialName) {
-		options.baseMaterial.topMaterial = materialName;
-	} else {
-		options.baseMaterial.topMaterial = null;
+	if (checkStep(12)) {
+		if (materialName) {
+			options.baseMaterial.topMaterial = materialName;
+		} else {
+			options.baseMaterial.topMaterial = null;
+		}
+		options.baseMaterial.customImage = null;
+		goToNextStep(13);
+		updateMaterials()
 	}
-	options.baseMaterial.customImage = null;
-	goToNextStep(13);
-	updateMaterials()
 }
 
 function selectYourPhoto() {
-	$('#customFile').trigger('click');
+	if (checkStep(12)) {
+		$('#customFile').trigger('click');
+	}
 }
 
 $('#customFile').on('change', function (event){
@@ -552,28 +664,34 @@ $('#customFile').on('change', function (event){
 });
 
 function setMessageFont(materialName = null) {
-	if (materialName) {
-		options.baseMaterial.messageMaterial = materialName;
-		options.customMessage = $('#customMessage').val();
-		options.messageSize = $('#customSize').val();
-		options.messageHorizontalOffset = parseInt($('#customHorizontalMovement').val());
-		options.messageVerticalOffset = parseInt($('#customVerticalMovement').val());
-	} else {
-		options.baseMaterial.messageMaterial = null;
+	if (checkStep(13)) {
+		if (materialName) {
+			options.baseMaterial.messageMaterial = materialName;
+			options.customMessage = $('#customMessage').val();
+			options.messageSize = $('#customSize').val();
+			options.messageHorizontalOffset = parseInt($('#customHorizontalMovement').val());
+			options.messageVerticalOffset = parseInt($('#customVerticalMovement').val());
+		} else {
+			options.baseMaterial.messageMaterial = null;
+		}
+		goToNextStep(14);
+		updateMaterials()
 	}
-	goToNextStep(14);
-	updateMaterials()
 }
 
 function setMessageColor(color) {
-	options.messageColor = color;
-	goToNextStep(15);
-	updateMessageMaterial();
+	if (checkStep(14)) {
+		options.messageColor = color;
+		goToNextStep(15);
+		updateMessageMaterial();
+	}
 }
 
 $('#customSize, #customHorizontalMovement, #customVerticalMovement').on('input', function() {
-	goToNextStep(16);
-	updateMessageMaterial();
+	if (checkStep(15)) {
+		goToNextStep(16);
+		updateMessageMaterial();
+	}
 });
 
 
@@ -983,6 +1101,7 @@ function loadDefaultCustomizations() {
 }
 
 function resetCustomizations() {
+	resetCamera();
 	loadDefaultCustomizations();
 
 	options['materialsUsed'].forEach(material => {
@@ -1004,7 +1123,7 @@ function resetCustomizations() {
 	$('#customVerticalMovement').val(0);
 
 	updateMaterials();
-
+	scrollToAnchor('#card01')
 	//TODO reset checkout form and current step for the top input
 }
 
@@ -1032,6 +1151,7 @@ function scrollToAnchor(anchor) {
 function goToNextStep(step) {
 	if (step > options.step) {
 		options.step = step;
+		$('.alert').alert('close');
 	}
 }
 

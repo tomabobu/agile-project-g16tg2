@@ -219,6 +219,19 @@ body, html {
 	margin-left: 20px
 }
 
+#center-alert-messages {
+	position: fixed;
+	top: 200px;
+	text-align: center;
+	width: 50%;
+}
+
+#alert-messages {
+	display:inline-block;
+}
+
+
+
 .grid-buttons {
 	padding-top: 20px;
 	display: grid;
