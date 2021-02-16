@@ -21,7 +21,8 @@ body, html {
 
 /*"about me" styling text*/
 .about-me-description {
-
+     
+     width: 200px;
      font: italic 1.2em "Fira Sans", serif;
 
     }
