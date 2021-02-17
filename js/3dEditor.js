@@ -458,78 +458,47 @@ function showMessage(message) {
 
 function checkStep(step) {
 	if (options.step < step) {
-		switch(options.step) {
-			case 1:
-				showMessage("Please choose the cake shape in step 01");
-				scrollToAnchor('#card01');
-				break;
-
-			case 2:
-				showMessage("Please choose the number of tiers in step 02");
-				scrollToAnchor('#card02');
-				break;
-			case 3:
-				showMessage("Please choose the number of portions in step 03");
-				scrollToAnchor('#card03');
-				break;
-			case 4:
+		if (step == 5) {
+			if (options.step < 5) {
 				showMessage("Please choose the cake flavor in step 04");
 				scrollToAnchor('#card04');
-				break;
-			case 5:
+				return false;
+			}
+		}
+		if ([6, 7,9 ,11 ,12,13].includes(step)) {
+			if (options.step < 6) {
 				showMessage("Please choose the cake icing in step 05");
 				scrollToAnchor('#card05');
-				break;
-			case 6:
-				showMessage("Please choose the icing color in step 06");
-				scrollToAnchor('#card06');
-				break;
-			case 7:
-				showMessage("Please choose the top border style in step 07");
-				scrollToAnchor('#card07');
-				break;
-			case 8:
-				showMessage("Please choose the top border color in step 08");
-				scrollToAnchor('#card08');
-				break;
-			case 9:
-				showMessage("Please choose the bottom border style in step 09");
-				scrollToAnchor('#card09');
-				break;
-			case 10:
-				showMessage("Please choose the bottom border color in step 10");
-				scrollToAnchor('#card10');
-				break;
-			case 11:
-				showMessage("Please choose the side decoration in step 11");
-				scrollToAnchor('#card11');
-				break;
-			case 12:
-				showMessage("Please choose top photo in step 12");
-				scrollToAnchor('#card12');
-				break;
-			case 13:
-				showMessage("Please choose the custom message in step 13");
-				scrollToAnchor('#card13');
-				break;
-			case 14:
-				showMessage("Please choose the custom message color in step 14");
-				scrollToAnchor('#card14');
-				break;
-			case 15:
-				showMessage("Please choose the custom message position in step 15");
-				scrollToAnchor('#card15');
-				break;
-
-			default:
 				return false;
+			}
 		}
 
-		return false;
+		if (step == 8) {
+			if (options.step < 8) {
+				showMessage("Please choose the top border style in step 07");
+				scrollToAnchor('#card07');
+				return false;
+			}
+		}
 
-	} else {
-		return true;
+		if (step == 10) {
+			if (options.step < 10) {
+				showMessage("Please choose the bottom border style in step 09");
+				scrollToAnchor('#card09');
+				return false;
+			}
+		}
+
+		if ([14, 15].includes(step)) {
+			if (options.step < 13) {
+				showMessage("Please choose the custom message in step 13");
+				scrollToAnchor('#card13');
+				return false;
+			}
+		}
+
 	}
+	return true;
 }
 
 
@@ -1157,7 +1126,9 @@ function goToNextStep(step) {
 
 // Resolve next:
 
-// can't execute step if previous step was not chosen of skipped
+// test ... combine cards with the color options
+// skip this step button
+// update the colors on the card if selected
 // remove the steps at the top and show price on top of the editor, update the colors of the cards
 // random numbers for instances that are fixed
 // add checkout card
@@ -1168,9 +1139,10 @@ function goToNextStep(step) {
 // optimize editor settings for faster performance
 // show textures based on detected window size (lower textures for mobile)
 // show a cm as reference on the table (or plates);
+// fade icing colors
+// add the error message to the destination card
 
 // Future:
-// fade icing colors
 // add support for multi line text
 
 //add side materials color multiplier
