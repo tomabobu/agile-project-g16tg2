@@ -1124,6 +1124,50 @@ function goToNextStep(step) {
 	}
 }
 
+function cakeDescription() {
+	description = 'You have opted for a cake with the following description: '
+	if (options.baseCake == 'Cake_round') {
+		description += 'round shaped';
+	}
+	if (options.baseCake == 'Cake_square') {
+		description += 'square shaped';
+	}
+	if (options.baseCake == 'Cake_sheet') {
+		description += 'sheet';
+	}
+	if (options.numberOfTiers == 1) {
+		description += ', ' + options.numberOfTiers + ' tier';
+	} else {
+		description += ', ' + options.numberOfTiers + ' tiers';
+	}
+	description += ', ' + options.numberOfPortions + ' portions';
+	if (options.cakeFlavor) {
+		description += ', '+ options.cakeFlavor;
+	}
+	if (options.icing) {
+		description += ', ' + options.icingColor + ' ' + options.icing;
+	}
+	if (options.topBorderName) {
+		description += ', ' + options.topBorderColorName + ' ' + options.topBorderName + ' top border';
+	}
+	if (options.bottomBorderName) {
+		description += ', ' + options.bottomBorderColorName + ' ' + options.bottomBorderName + ' top border';
+	}
+	if (options.sideMaterialName) {
+		description += ', ' + options.sideMaterialName + ' as decoration on the side';
+	}
+	if (options.topPhotoName) {
+		description += ', ' + options.topPhotoName + ' photo as decoration on the top';
+	}
+	if (options.customTopMessage) {
+		description += ', with the "' + $('#customMessage').val() + '" custom message';
+	}
+	description += '.';
+	$('#order-description').html(description);
+
+}
+
+
 // Resolve next:
 
 // test ... combine cards with the color options
