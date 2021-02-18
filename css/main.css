@@ -26,6 +26,10 @@ body, html {
 .big-icon {
 	font-size: 3rem;
 	line-height: 1rem;
+	padding-left: 30px;
+}
+.big-icon-holder {
+	padding-bottom: 20px;
 }
 
 .navbar-nav>li {
@@ -124,14 +128,21 @@ body, html {
 }
 
 .card {
-	background: #0CC08A;
 	color: white;
 	border-radius: 30px;
+	background: linear-gradient(-90deg, #92FE9D 0%, hsl(126, 98%, 75%) 100%);
 	margin: 50px 30px 50px 0px;
+	overflow: hidden;
+}
+
+div#card01 {
+	margin-top: 0px;
+	background: #1cdaa1 ;
 }
 
 .card-header {
 	padding: 5px 30px 0px 30px;
+	background: #1cdaa1;
 }
 
 .card-header h4 {
@@ -154,11 +165,16 @@ body, html {
 }
 
 .card-body {
-	background: linear-gradient(90deg, #92FE9D 0%, #00C9FF 100%);
+	background: linear-gradient(-90deg, #00C9FF 0%, #92FE9D 100%);
 	box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.5);
 	margin: -1px;
 	border-radius: 0px 0px 30px 30px;
 	padding: 20px 30px 20px 30px;
+	transition: background 1s ease;
+	background-repeat: no-repeat;
+}
+.card.card-done .card-body {
+	background-position: 600px;
 }
 
 .card-body.green-background {
@@ -202,21 +218,27 @@ body, html {
 }
 
 #editor-buttons {
-	position: fixed;
-	bottom: 40px;
+	/* position: fixed;
+	bottom: 40px; */
 }
 
 #editor-buttons a:first-child {
-	margin-left: 20px
+	/* margin-left: 20px */
 }
 
 #editor-buttons a {
 	border-radius: 20px;
-	background: white;
-	color: black;
+	/* background: rgba(255, 255, 255, 1); */
+	/* color: black; */
 	border: none;
 	padding: 5px 20px 5px 20px;
-	margin-left: 20px
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+
+#editor-buttons a:first-child {
+
+	margin-right: 20px;
 }
 
 #center-alert-messages {
@@ -225,6 +247,20 @@ body, html {
 	text-align: center;
 	width: 50%;
 }
+
+#selection-status {
+	position:fixed;
+	bottom: 30px;
+	/* right: 30px; */
+	background: #ddd;
+	color:#3A3131;
+	border-radius: 30px;
+	padding: 30px 50px 20px 50px;
+	margin-bottom: 30px;
+	margin-left: 40px;
+}
+
+
 
 #alert-messages {
 	display:inline-block;
@@ -280,6 +316,17 @@ body, html {
 	grid-template-columns: repeat(auto-fill, 70px);
 	grid-gap: 1rem;
 	justify-content: space-between;
+	transition: all 2s ease;
+	max-height: 500px;
+	height:auto;
+	overflow: hidden;
+}
+
+.display-hidden {
+	/* height: 0px; */
+	overflow: hidden;
+	padding: 0px;
+	max-height: 0px;
 }
 
 .grid-colors a {
@@ -480,5 +527,4 @@ body, html {
     text-align:center;
     padding:3.125em 5em;
     letter-spacing: 1.5625em;
-
 }

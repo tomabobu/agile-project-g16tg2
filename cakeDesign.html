@@ -40,7 +40,7 @@
 
 			</div>
 		</nav>
-		<div class="fluid-container bg-secondary">
+		<!-- <div class="fluid-container bg-secondary">
 			<div class="container">
 				<div class="row align-items-center" id="options-strip">
 					<div class="col-auto me-5">
@@ -87,38 +87,24 @@
 							<li>
 								<a href="javascript:scrollToAnchor('#card12')">12</a>
 							</li>
-							<li>
-								<a href="javascript:scrollToAnchor('#card13')">13</a>
-							</li>
-							<li>
-								<a href="javascript:scrollToAnchor('#card14')">14</a>
-							</li>
-							<li>
-								<a href="javascript:scrollToAnchor('#card15')">15</a>
-							</li>
-							<li>
-								<a href="javascript:scrollToAnchor('#card16')">16</a>
-							</li>
 						</ul>
 					</div>
 				</div>
 			</div>
-		</div>
+		</div> -->
 	</div>
 	<div class="fluid-container custom-cake-form-background">
 		<div class="container">
 			<div class="row">
 				<div class="col pe-5">
-					<div class="card mt-5 pt-5" id="card01">
-						<div class="mt-2"></div>
-						<div class="card-body">
-							<div class="row pt-4 pb-2">
-								<div class="col-2">
-									<i class="bi bi-card-checklist big-icon"></i>
-								</div>
-								<div class="col-10">
-									<h5>Use the following options to customize your cake</h5>
-								</div>
+					<div class="card pt-5" id="card01">
+						<!-- <div class="mt-2"></div> -->
+						<div class="row pt-4 pb-2 align-items-center">
+							<div class="col-2 big-icon-holder">
+								<i class="bi bi-card-checklist big-icon"></i>
+							</div>
+							<div class="col-10">
+								<h5>Use the following options to customize your cake</h5>
 							</div>
 						</div>
 					</div>
@@ -268,16 +254,7 @@
 									</p>
 								</a>
 							</div>
-						</div>
-					</div>
-
-					<div class="card" id="card07">
-						<div class="card-header">
-							<h4>Icing color</h4>
-							<p>06</p>
-						</div>
-						<div class="card-body">
-							<div class='grid-colors'>
+							<div id='base-material-color' class='grid-colors display-hidden'>
 								<a href="javascript:setColorToUsedMaterials(0xff3377)" class="grid-color-01">
 
 								</a>
@@ -314,15 +291,14 @@
 								<a href="javascript:setColorToUsedMaterials(0xa857ff)" class="grid-color-12">
 
 								</a>
-
 							</div>
 						</div>
 					</div>
 
-					<div class="card" id="card08">
+					<div class="card" id="card07">
 						<div class="card-header">
 							<h4>Top border</h4>
-							<p>07</p>
+							<p>06</p>
 						</div>
 						<div class="card-body">
 							<div class='grid-buttons'>
@@ -351,16 +327,7 @@
 									</p>
 								</a>
 							</div>
-						</div>
-					</div>
-
-					<div class="card" id="card09">
-						<div class="card-header">
-							<h4>Top border colour</h4>
-							<p>08</p>
-						</div>
-						<div class="card-body">
-							<div class='grid-colors'>
+							<div id='top-border-color' class='grid-colors display-hidden'>
 								<a href="javascript:setColorToTopBorder(0xff3377)" class="grid-color-01">
 
 								</a>
@@ -401,10 +368,10 @@
 						</div>
 					</div>
 
-					<div class="card" id="card10">
+					<div class="card" id="card08">
 						<div class="card-header">
 							<h4>Bottom border</h4>
-							<p>09</p>
+							<p>07</p>
 						</div>
 						<div class="card-body">
 							<div class='grid-buttons'>
@@ -433,16 +400,7 @@
 									</p>
 								</a>
 							</div>
-						</div>
-					</div>
-
-					<div class="card" id="card11">
-						<div class="card-header">
-							<h4>Bottom border colour</h4>
-							<p>10</p>
-						</div>
-						<div class="card-body">
-							<div class='grid-colors'>
+							<div id='bottom-border-color' class='grid-colors display-hidden'>
 								<a href="javascript:setColorToBottomBorder(0xff3377)" class="grid-color-01">
 
 								</a>
@@ -483,10 +441,10 @@
 						</div>
 					</div>
 
-					<div class="card" id="card12">
+					<div class="card" id="card09">
 						<div class="card-header">
 							<h4>Side decorations</h4>
-							<p>11</p>
+							<p>08</p>
 						</div>
 						<div class="card-body">
 							<div class='grid-buttons'>
@@ -518,10 +476,10 @@
 						</div>
 					</div>
 
-					<div class="card" id="card13">
+					<div class="card" id="card10">
 						<div class="card-header">
 							<h4>Use photo</h4>
-							<p>12</p>
+							<p>09</p>
 						</div>
 						<div class="card-body">
 							<div class='grid-buttons'>
@@ -581,10 +539,10 @@
 						</div>
 					</div>
 
-					<div class="card" id="card14">
+					<div class="card" id="card11">
 						<div class="card-header">
 							<h4>Custom message</h4>
-							<p>13</p>
+							<p>10</p>
 						</div>
 						<div class="card-body text-dark">
 
@@ -621,16 +579,7 @@
 									</p>
 								</a>
 							</div>
-						</div>
-					</div>
-
-					<div class="card" id="card15">
-						<div class="card-header">
-							<h4>Set color for the message</h4>
-							<p>14</p>
-						</div>
-						<div class="card-body">
-							<div class='grid-colors'>
+							<div id='custom-message-color' class='grid-colors display-hidden'>
 								<a href="javascript:setMessageColor(0xff3377)" class="grid-color-01">
 
 								</a>
@@ -668,40 +617,32 @@
 
 								</a>
 							</div>
-						</div>
-					</div>
-
-					<div class="card" id="card16">
-						<div class="card-header">
-							<h4>Custom message</h4>
-							<p>15</p>
-						</div>
-						<div class="card-body text-dark">
-							<div class='form-group mb-3'>
-								<label for="customRange" class="form-label">Message Size</label>
-								<input type="range" class="form-range" min="50" max="150" id="customSize" value ="100">
-							</div>
-							<div class='form-group mb-3'>
-								<label for="customRange" class="form-label">Message left/right movement</label>
-								<input type="range" class="form-range" min="-300" max="300" id="customHorizontalMovement" value = "0">
-							</div>
-							<div class='form-group mb-3'>
-								<label for="customRange" class="form-label">Message top/down movement</label>
-								<input type="range" class="form-range" min="-500" max="500" id="customVerticalMovement" value = "0">
+							<div id="custom-message-position" class='display-hidden'>
+								<div class='form-group mb-3'>
+									<label for="customRange" class="form-label">Message Size</label>
+									<input type="range" class="form-range" min="50" max="150" id="customSize" value ="100">
+								</div>
+								<div class='form-group mb-3'>
+									<label for="customRange" class="form-label">Message left/right movement</label>
+									<input type="range" class="form-range" min="-300" max="300" id="customHorizontalMovement" value = "0">
+								</div>
+								<div class='form-group mb-3'>
+									<label for="customRange" class="form-label">Message top/down movement</label>
+									<input type="range" class="form-range" min="-500" max="500" id="customVerticalMovement" value = "0">
+								</div>
 							</div>
 						</div>
 					</div>
 
-					<div class="card" id="card17">
+					<div class="card" id="card13">
 						<div class="card-header">
 							<h4>Finalize the order</h4>
-							<p>16</p>
+							<p>11</p>
 						</div>
 						<div class="card-body green-background">
 							<div class="row mt-3">
 								<div class="col-7">
 									<p id="order-description">
-										You have opted for a cake with the following description: round shaped, two tiers, for 25-30 persons, chocolate flavor, butter cream red icing, custard filling flavor, sprinkles on the side and custom picture and decorations on the top.
 									</p>
 								</div>
 								<div class="col-5">
@@ -718,7 +659,40 @@
 										<div class="col-auto">Total Value</div>
 										<div class="col-auto ms-auto" id="order-total-value">31.88</div>
 									</div>
-									<button type="button" class="btn btn-primary btn-sm align-right mt-5">Add to cart</button>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-12">
+									<label for="firstName" class="form-label">First Name</label>
+									<input type="text" class="form-control" id="firstName">
+								</div>
+								<div class="col-12">
+									<label for="lastName" class="form-label">Last Name</label>
+									<input type="text" class="form-control" id="lastName">
+								</div>
+								<div class="col-6">
+									<label for="phone" class="form-label">Phone</label>
+									<input type="text" class="form-control" id="phone">
+								</div>
+								<div class="col-6">
+									<label for="phone" class="form-label">Phone</label>
+									<input type="text" class="form-control" id="phone">
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-12">
+									<button id="send-order" type="button" class="btn btn-primary btn-sm mt-5">Send Order</button>
+								</div>
+							</div>
+							<div class="row d-none order-sent pt-2">
+								<div class="col-12">
+									<h5>
+										The order has been sent.
+									</h5>
+									<p>
+										The payment will be made on delivery.
+										You will be contacted shortly to confirm the order and to set the delivery date and hour.
+									</p>
 								</div>
 							</div>
 						</div>
@@ -728,13 +702,26 @@
 				<div class="col">
 					<div id="editor-3d">
 					</div>
-					<div id="editor-buttons">
+					<!-- <div id="editor-buttons">
 						<a href="javascript:resetCamera()" class="btn btn-primary btn-sm">Reset Camera</a>
 						<a href="javascript:resetCustomizations()" class="btn btn-primary btn-sm">Reset Customizations</a>
-					</div>
+					</div> -->
 					<div id= "center-alert-messages">
 						<div id="alert-messages">
 
+
+						</div>
+					</div>
+					<div id="selection-status">
+						<h3 class="">
+							Total price: <span id="total-price">0.00</span> $
+						</h3>
+						<p>
+							Steps done: <span id="current-step">0</span>
+						</p>
+						<div  id="editor-buttons">
+							<a href="javascript:resetCamera()" class="btn btn-primary">Reset Camera</a>
+							<a href="javascript:resetCustomizations()" class="btn btn-primary">Reset Customizations</a>
 
 						</div>
 					</div>
@@ -743,7 +730,7 @@
 		</div>
 
 	</div>
-	<div class="fluid-container fixed-bottom bg-secondary">
+	<!-- <div class="fluid-container fixed-bottom bg-secondary">
 		<div class="container">
 			<div class="align-items-center" id="footer-links">
 				<ul class="row">
@@ -759,7 +746,7 @@
 				</ul>
 			</div>
 		</div>
-	</div>
+	</div> -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js" integrity="sha384-q2kxQ16AaE6UbzuKqyBE9/u/KzioAlnx2maXQHiDX9d4/zp8Ok3f+M7DPm+Ib6IU" crossorigin="anonymous"></script>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
