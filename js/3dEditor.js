@@ -1393,6 +1393,8 @@ function cakePrice() {
 
 // Resolve next:
 
+// clean files, comment code
+// optimize files
 
 // show options descriptions on mouse hover
 // update layout for mobile version
@@ -1403,13 +1405,13 @@ function cakePrice() {
 // add the error message to the destination card
 // clean css to remove not used classes
 // bug set color for all base geoms when selecting a color
+// verify the data has been set before sending the order
+// add support for multi line text
+//try other fonts
 
 // Future:
-// add support for multi line text
 
-//add side materials color multiplier
-//try other fonts
-// text shadow or stroke (compositing flag.....add to multiply)
+
 //wrap in on load function
 //shadow map bias...error fix
 // optimize border geometries

@@ -123,9 +123,7 @@ body, html {
 	background-size: cover;
 }
 
-#editor-3d {
-	background: white;
-}
+
 
 .card {
 	color: white;
@@ -216,30 +214,15 @@ div#card01 {
 	width: 50%;
 	background: #e7eaf0;
 }
-
-#editor-buttons {
-	/* position: fixed;
-	bottom: 40px; */
-}
-
-#editor-buttons a:first-child {
-	/* margin-left: 20px */
-}
-
-#editor-buttons a {
-	border-radius: 20px;
-	/* background: rgba(255, 255, 255, 1); */
-	/* color: black; */
-	border: none;
-	padding: 5px 20px 5px 20px;
-	margin-top: 20px;
-	margin-bottom: 20px;
-}
-
-#editor-buttons a:first-child {
-
-	margin-right: 20px;
-}
+/*
+@media only screen and (max-width: 768px) {
+	#editor-3d {
+		top: 50%;
+		left:0px;
+		height: 50%;
+		width: 100%;
+	}
+} */
 
 #center-alert-messages {
 	position: fixed;
