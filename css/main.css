@@ -26,6 +26,10 @@ body, html {
 .big-icon {
 	font-size: 3rem;
 	line-height: 1rem;
+	padding-left: 30px;
+}
+.big-icon-holder {
+	padding-bottom: 20px;
 }
 
 .navbar-nav>li {
@@ -76,6 +80,13 @@ body, html {
 	margin: 5px;
 	margin-bottom: 10px;
 	margin-top: 10px;
+	transition: background-color ease 1s;
+	transition: color ease .3s;
+}
+
+.circle-buttons-list li.active a {
+	background: #00C9FF;
+	color: white;
 }
 
 #options-strip {
@@ -112,19 +123,24 @@ body, html {
 	background-size: cover;
 }
 
-#editor-3d {
-	background: white;
-}
+
 
 .card {
-	background: #0CC08A;
 	color: white;
 	border-radius: 30px;
+	background: linear-gradient(-90deg, #92FE9D 0%, hsl(126, 98%, 75%) 100%);
 	margin: 50px 30px 50px 0px;
+	overflow: hidden;
+}
+
+div#card01 {
+	margin-top: 0px;
+	background: #1cdaa1 ;
 }
 
 .card-header {
 	padding: 5px 30px 0px 30px;
+	background: #1cdaa1;
 }
 
 .card-header h4 {
@@ -147,11 +163,16 @@ body, html {
 }
 
 .card-body {
-	background: linear-gradient(90deg, #92FE9D 0%, #00C9FF 100%);
+	background: linear-gradient(-90deg, #00C9FF 0%, #92FE9D 100%);
 	box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.5);
 	margin: -1px;
 	border-radius: 0px 0px 30px 30px;
 	padding: 20px 30px 20px 30px;
+	transition: background 1s ease;
+	background-repeat: no-repeat;
+}
+.card.card-done .card-body {
+	background-position: 600px;
 }
 
 .card-body.green-background {
@@ -193,24 +214,42 @@ body, html {
 	width: 50%;
 	background: #e7eaf0;
 }
+/*
+@media only screen and (max-width: 768px) {
+	#editor-3d {
+		top: 50%;
+		left:0px;
+		height: 50%;
+		width: 100%;
+	}
+} */
 
-#editor-buttons {
+#center-alert-messages {
 	position: fixed;
-	bottom: 40px;
+	top: 200px;
+	text-align: center;
+	width: 50%;
 }
 
-#editor-buttons button:first-child {
-	margin-left: 20px
+#selection-status {
+	position:fixed;
+	bottom: 30px;
+	/* right: 30px; */
+	background: #ddd;
+	color:#3A3131;
+	border-radius: 30px;
+	padding: 30px 50px 20px 50px;
+	margin-bottom: 30px;
+	margin-left: 40px;
 }
 
-#editor-buttons button {
-	border-radius: 20px;
-	background: white;
-	color: black;
-	border: none;
-	padding: 5px 20px 5px 20px;
-	margin-left: 20px
+
+
+#alert-messages {
+	display:inline-block;
 }
+
+
 
 .grid-buttons {
 	padding-top: 20px;
@@ -260,6 +299,17 @@ body, html {
 	grid-template-columns: repeat(auto-fill, 70px);
 	grid-gap: 1rem;
 	justify-content: space-between;
+	transition: all 2s ease;
+	max-height: 500px;
+	height:auto;
+	overflow: hidden;
+}
+
+.display-hidden {
+	/* height: 0px; */
+	overflow: hidden;
+	padding: 0px;
+	max-height: 0px;
 }
 
 .grid-colors a {
@@ -295,11 +345,11 @@ body, html {
 }
 
 .grid-colors .grid-color-05 {
-	background: #F1B930;
+	background: #EAE44F;
 }
 
 .grid-colors .grid-color-06 {
-	background: #EAE44F;
+	background: #FFFFFF;
 }
 
 .grid-colors .grid-color-07 {
@@ -324,6 +374,9 @@ body, html {
 
 .grid-colors .grid-color-12 {
 	background: #A76DE7;
+}
+.grid-colors .grid-color-13 {
+	background: #000000;
 }
 
 /* Index page */
@@ -368,22 +421,22 @@ body, html {
 
 .bgimg-5 {
 	background-image: url("../images/cake7.jpg");
-	min-height: 100%;	
+	min-height: 100%;
 }
 
 .bgimg-6 {
 	background-image: url("../images/cake-6.jpg");
-	min-height: 80%;	
+	min-height: 80%;
 }
 
 .bgimg-7 {
 	background-image: url("../images/cake-7.jpg");
-	min-height: 50%;	
+	min-height: 50%;
 }
 
 .bgimg-8 {
 	background-image: url("../images/cake-8.jpg");
-	min-height: 50%;	
+	min-height: 50%;
 }
 
 .border {
@@ -457,5 +510,4 @@ body, html {
     text-align:center;
     padding:3.125em 5em;
     letter-spacing: 1.5625em;
-
 }
