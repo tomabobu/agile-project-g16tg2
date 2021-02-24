@@ -268,7 +268,7 @@ function init() {
 	controls.dampingFactor = 0.1;
 	controls.target = options.orbitPoint;
 	// controls.autoRotate = true;
-	scene.add( new THREE.AxesHelper(500));
+	// scene.add( new THREE.AxesHelper(500));
 
 	window.addEventListener( 'resize', onWindowResize, false );
 
@@ -458,11 +458,23 @@ function instanceCakeTier(geometry, material, addBorderPointsToInstance = true) 
 	instances.push(instance);
 }
 
-function showMessage(message) {
+function showMessage(message, cardId = null) {
+	$('.alert').alert('close');
 	alert = '<div  class="alert alert-danger alert-dismissible fade show in" role="alert">';
 	alert += message;
-	alert += '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>';
-	$('#alert-messages').html(alert);
+	alert += '<button type="button" class="btn-close no-card-fx" data-bs-dismiss="alert" aria-label="Close"></button></div>';
+
+	if (cardId) {
+		if (cardId < 9) {
+			cardName = '#card0' + (cardId + 1);
+		} else {
+			cardName = '#card' + (cardId + 1);
+		}
+		$(cardName + ' .card-body').prepend(alert);
+		console.log(cardName);
+	} else {
+		$('#alert-messages').html(alert);
+	}
 }
 
 
@@ -470,14 +482,14 @@ function checkStep(step) {
 	if (options.step < step) {
 		if (step == 5) {
 			if (options.step < 5) {
-				showMessage("Please choose the cake flavor in step 04");
+				showMessage("Please choose the cake flavor", 4);
 				scrollToAnchor('#card04');
 				return false;
 			}
 		}
 		if ([6, 7 ,8 ,9,10,11].includes(step)) {
 			if (options.step < 6) {
-				showMessage("Please choose the cake icing in step 05");
+				showMessage("Please choose the cake icing", 5);
 				scrollToAnchor('#card05');
 				return false;
 			}
@@ -1249,43 +1261,45 @@ function goToNextStep(step) {
 			}
 
 		}
-		$('.alert').alert('close');
 	}
+	$('.alert').alert('close');
 }
 $('#send-order').on('click', function() {
 	if (checkStep(11)) {
+		goToNextStep(11);
+
 		firstName = $('#firstName').val();
 		lastName = $('#lastName').val();
 		phone = $('#phone').val();
 		email = $('#email').val();
 
 		if (!firstName) {
-			showMessage("Please input a first name in order to finalize the order.");
+			showMessage("Please input a first name in order to finalize the order.", 11);
 			scrollToAnchor('#card11');
 			return false;
 		}
 
 		if (!lastName) {
-			showMessage("Please input a last name in order to finalize the order.");
+			showMessage("Please input a last name in order to finalize the order.", 11);
 			scrollToAnchor('#card11');
 			return false;
 		}
 
 		if (!phone) {
-			showMessage("Please input a phone number in order to finalize the order.");
+			showMessage("Please input a phone number in order to finalize the order.", 11);
 			scrollToAnchor('#card11');
 			return false;
 		}
 
 		if (!email) {
-			showMessage("Please input an email in order to finalize the order.");
+			showMessage("Please input an email in order to finalize the order.", 11);
 			scrollToAnchor('#card11');
 			return false;
 		}
 
 		$('#current-step').html('All steps were done. You will be contacted shortly to confirm the order.')
 		$('.order-sent').removeClass('d-none');
-		$('#card13').addClass('card-done');
+		$('#card12').addClass('card-done');
 	}
 });
 
@@ -1414,8 +1428,11 @@ function cakePrice() {
 	$('#order-total-value').html(parseFloat(price * 1.19).toFixed(2));
 }
 
-// Resolve next:
+// Alert messages are shown in the center of the 3d editor and is not intuitive to what card they are referring to unless you read the message. A solution could be to show the message in the respective card.
 
+
+// Resolve next:
+// mobile layouts
 // add the error message to the destination card
 // clean files, comment code
 // optimize image used
@@ -1425,6 +1442,7 @@ function cakePrice() {
 // update layout for mobile version
 // optimize editor settings for faster performance
 // clean css to remove not used classes
+// screenshots for design upgrade
 
 
 // Future:
