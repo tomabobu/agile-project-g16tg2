@@ -170,13 +170,15 @@ div#card01 {
 	padding: 20px 30px 20px 30px;
 	transition: background 1s ease;
 	background-repeat: no-repeat;
+	color:rgb(0, 75, 126);
 }
 .card.card-done .card-body {
-	background-position: 600px;
+	background-position: 590px;
 }
 
 .card-body.green-background {
-	background: linear-gradient(90deg, #4CD478 0%, #0d967d 100%);
+	background: linear-gradient(-90deg, #0d967d 0%, #92FE9D 100%);
+	background-repeat: no-repeat;
 }
 
 .card-body button {
@@ -462,13 +464,13 @@ div#card01 {
 }
 
 .bgimg-1 .caption {
-   
+
 	transform: scaleX(-1);
 	width: 50%;
 }
 
 .about-me-description {
-     
+
      width: 200px;
      font: italic 1.2em "Fira Sans", serif;
      margin: auto;
