@@ -475,7 +475,7 @@ function checkStep(step) {
 				return false;
 			}
 		}
-		if ([6, 7 ,8 ,9,10].includes(step)) {
+		if ([6, 7 ,8 ,9,10,11].includes(step)) {
 			if (options.step < 6) {
 				showMessage("Please choose the cake icing in step 05");
 				scrollToAnchor('#card05');
@@ -756,6 +756,7 @@ function setMessageFont(materialName = null) {
 		if (materialName) {
 			options.customTopMessage = 'custom message';
 			$('#custom-message-color').removeClass('display-hidden');
+			$('#custom-message-position').removeClass('display-hidden');
 			options.baseMaterial.messageMaterial = materialName;
 			options.customMessage = $('#customMessage').val();
 			options.messageSize = $('#customSize').val();
@@ -772,7 +773,6 @@ function setMessageFont(materialName = null) {
 
 function setMessageColor(color) {
 	if (checkStep(10)) {
-		$('#custom-message-position').removeClass('display-hidden');
 		options.messageColor = color;
 		goToNextStep(11);
 		updateMessageMaterial();
@@ -1220,26 +1220,16 @@ function resetCustomizations() {
 
 	updateMaterials();
 	scrollToAnchor('#card01')
-	//TODO reset checkout form and current step for the top input
+
+	$('#firstName').val('');
+	$('#lastName').val('');
+	$('#phone').val('');
+	$('#email').val('');
 
 	$('.card').removeClass('card-done');
-	$('#current-step').html(0);
+	$('#current-step').html('Steps done: ' + 0);
 }
 
-// function updatePageElementsAndForm() {
-// 	$(".circle-buttons-list ul li").removeClass('active');
-// 	if (options.step > 1) {
-// 		$(".circle-buttons-list ul li:lt("+(options.step-1)+")").addClass('active');
-// 	}
-
-// 	// scroll to next option
-// 	//TODO test with scrolling
-// 	// if (options.step < 10) {
-// 	// 	scrollToAnchor('#card0'+ options.step)
-// 	// } else {
-// 	// 	scrollToAnchor('#card'+ options.step)
-// 	// }
-// }
 
 function scrollToAnchor(anchor) {
 	$('html, body').animate({
@@ -1250,7 +1240,7 @@ function scrollToAnchor(anchor) {
 function goToNextStep(step) {
 	if (step > options.step) {
 		options.step = step;
-		$('#current-step').html(step-1);
+		$('#current-step').html('Steps done: ' + (step-1));
 		for(let i=2; i<= step; i++) {
 			if (i < 10) {
 				$('#card0' + i).addClass('card-done');
@@ -1263,7 +1253,40 @@ function goToNextStep(step) {
 	}
 }
 $('#send-order').on('click', function() {
-	$('.order-sent').removeClass('d-none');
+	if (checkStep(11)) {
+		firstName = $('#firstName').val();
+		lastName = $('#lastName').val();
+		phone = $('#phone').val();
+		email = $('#email').val();
+
+		if (!firstName) {
+			showMessage("Please input a first name in order to finalize the order.");
+			scrollToAnchor('#card11');
+			return false;
+		}
+
+		if (!lastName) {
+			showMessage("Please input a last name in order to finalize the order.");
+			scrollToAnchor('#card11');
+			return false;
+		}
+
+		if (!phone) {
+			showMessage("Please input a phone number in order to finalize the order.");
+			scrollToAnchor('#card11');
+			return false;
+		}
+
+		if (!email) {
+			showMessage("Please input an email in order to finalize the order.");
+			scrollToAnchor('#card11');
+			return false;
+		}
+
+		$('#current-step').html('All steps were done. You will be contacted shortly to confirm the order.')
+		$('.order-sent').removeClass('d-none');
+		$('#card13').addClass('card-done');
+	}
 });
 
 function cakeDescription() {
@@ -1393,38 +1416,36 @@ function cakePrice() {
 
 // Resolve next:
 
+// add the error message to the destination card
 // clean files, comment code
-// optimize files
-
+// optimize image used
+// test textures at 256
+// optimize 3d editor / disable shadows
 // show options descriptions on mouse hover
 // update layout for mobile version
 // optimize editor settings for faster performance
-// show textures based on detected window size (lower textures for mobile)
-// show a cm as reference on the table (or plates);
-// fade icing colors
-// add the error message to the destination card
 // clean css to remove not used classes
-// bug set color for all base geoms when selecting a color
-// verify the data has been set before sending the order
-// add support for multi line text
-//try other fonts
+
 
 // Future:
-
-
 //wrap in on load function
-//shadow map bias...error fix
-// optimize border geometries
-//check shadows for borders
-//TODO set limits on camera rotation
-//use geom instead of instances for base geoms to apply UV offsets for tier variation or side texture scaleU
-//preload materials before switching it (chrome material shown while loading model)
+// show a cm as reference on the table (or plates);
+// fade icing colors
+// add support for multi line text
+// try other fonts
+// show textures based on detected window size (lower textures for mobile)
 //add stereo option
+
+
+
+
+
+
 
 
 //optimizations:
 // If you need to make large groups of objects visible and invisible (or add/remove them from your scene), consider using Layers for best performance.
-//Make your frustum as small as possible for better performance. It’s fine to use a large frustum in development, but once you are fine-tuning your app for deployment, make your frustum as small as possible to gain a few vital FPS.
+// Make your frustum as small as possible for better performance. It’s fine to use a large frustum in development, but once you are fine-tuning your app for deployment, make your frustum as small as possible to gain a few vital FPS.
 // Don’t put things right on the far clipping plane (especially if your far clipping plane is really big), as this can cause flickering.
 
 
