@@ -1031,14 +1031,14 @@ function checkStep(step) {
 		if (step == 5) {
 			if (options.step < 5) {
 				showMessage("Please choose the cake flavor", 4);
-				scrollToAnchor('#card04');
+				scrollToAnchor(4);
 				return false;
 			}
 		}
 		if ([6, 7 ,8 ,9,10,11].includes(step)) {
 			if (options.step < 6) {
 				showMessage("Please choose the cake icing", 5);
-				scrollToAnchor('#card05');
+				scrollToAnchor(5);
 				return false;
 			}
 		}
@@ -1448,7 +1448,7 @@ function resetCustomizations() {
 	updateMaterials();
 
 	//reset the page scroll position
-	scrollToAnchor('#card01')
+	scrollToAnchor(1)
 
 	//reset the cards display
 	$('.card').removeClass('card-done');
@@ -1457,7 +1457,13 @@ function resetCustomizations() {
 }
 
 //function to animate the scrolling to a page anchor
-function scrollToAnchor(anchor) {
+function scrollToAnchor(anchorNum) {
+	var w = $(document).innerWidth();
+	if (w<992) {
+		anchor ="#card" + (anchorNum+1).toString().padStart(2,'0');
+	} else {
+		anchor ="#card" + anchorNum.toString().padStart(2,'0');
+	}
 	$('html, body').animate({
 		'scrollTop':   $(anchor).offset().top
 	  }, 1000);
@@ -1498,26 +1504,26 @@ $('#send-order').on('click', function() {
 		//check that the first name was set
 		if (!firstName) {
 			showMessage("Please input a first name in order to finalize the order.", 11);
-			scrollToAnchor('#card11');
+			scrollToAnchor(11);
 			return false;
 		}
 		//check that the last name was set
 		if (!lastName) {
 			showMessage("Please input a last name in order to finalize the order.", 11);
-			scrollToAnchor('#card11');
+			scrollToAnchor(11);
 			return false;
 		}
 		//check that the phone number was set
 		if (!phone) {
 			showMessage("Please input a phone number in order to finalize the order.", 11);
-			scrollToAnchor('#card11');
+			scrollToAnchor(11);
 			return false;
 		}
 
 		//check that the email was set
 		if (!email) {
 			showMessage("Please input an email in order to finalize the order.", 11);
-			scrollToAnchor('#card11');
+			scrollToAnchor(11);
 			return false;
 		}
 

@@ -318,6 +318,8 @@ div#card01 {
 	max-height: 500px;
 	height:auto;
 	overflow: hidden;
+	padding-left:5px;
+	padding-right:5px;
 }
 
 .display-hidden {
@@ -531,6 +533,10 @@ div#card01 {
 }
 
 @media only screen and (max-width: 992px) {
+	.card {
+		margin-right: 0px;;
+	}
+
 	#card01 .row {
 		padding-left: 20px;
 		padding-right: 20px;
@@ -540,8 +546,17 @@ div#card01 {
 		font-size: 17px;
 		padding-bottom: 10px;
 	}
+
 	.big-icon {
 		padding-left: 0px;
+	}
+	.grid-colors {
+		grid-template-columns: repeat(auto-fill, 33px);
+	}
+	.grid-colors a {
+		width: 33px;
+		height: 33px;
+		box-shadow: 0px 3px 4px rgba(0, 0, 0, 0.3), 0px 1px 4px rgba(0, 0, 0, 0.3);
 	}
 
 	#editor-3d {
@@ -556,6 +571,7 @@ div#card01 {
 		top: calc(50% + 20px);
 		margin-left: 0px;
 		padding: 15px 20px 5px 20px;
+		background: #ffffff;
 	}
 
 	#selection-status p{
@@ -580,19 +596,17 @@ div#card01 {
 		font-size: 15px;
 	}
 
+	.btn-actions {
+		background: #ffffff;
+	}
 
 }
 
 @media only screen and (max-width: 600px) {
 	.container {
-		padding-left: 15px;
-		padding-right: 15px;
+		padding-left: 20px;
+		padding-right: 20px;
 	}
-
-	.card {
-		margin-right: 0px;
-	}
-
 	.card-header h4 {
 		line-height: 35px;
 	}
