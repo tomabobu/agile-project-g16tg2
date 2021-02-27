@@ -1,6 +1,11 @@
 * {
 	font-family: 'Roboto', sans-serif;
 }
+.container {
+	max-width: 1920px;
+	padding-left: 120px;
+	padding-right: 120px;
+}
 
 hr {
 	border-style: solid;
@@ -119,11 +124,9 @@ body, html {
 .custom-cake-form-background {
 	background-image: url("../images/blurredBackground.jpg");
 	background-attachment: fixed;
-	height: 900vh;
-	background-size: cover;
+	height:auto;
+	background-size:cover;
 }
-
-
 
 .card {
 	color: white;
@@ -216,15 +219,7 @@ div#card01 {
 	width: 50%;
 	background: #e7eaf0;
 }
-/*
-@media only screen and (max-width: 768px) {
-	#editor-3d {
-		top: 50%;
-		left:0px;
-		height: 50%;
-		width: 100%;
-	}
-} */
+
 
 #center-alert-messages {
 	position: fixed;
@@ -253,10 +248,12 @@ div#card01 {
 	margin-bottom: 30px;
 }
 
+
 #selection-actions .btn {
 	border-radius: 20px;
 	padding: 10px 30px 10px 30px;
 	margin-right: 20px;
+	margin-top: 10px;
 }
 .btn-actions {
 	background: #ffffff98;
@@ -275,19 +272,12 @@ div#card01 {
 	padding-top: 20px;
 }
 
-
 .grid-buttons {
 	padding-top: 20px;
 	display: grid;
 	grid-template-columns: repeat(auto-fill, 20%);
 	grid-gap: 1rem;
 	justify-content: space-between;
-}
-
-@media only screen and (max-width: 768px) {
-	.grid-buttons {
-		grid-template-columns: repeat(auto-fill, 50%);
-	}
 }
 
 .grid-buttons a {
@@ -331,7 +321,6 @@ div#card01 {
 }
 
 .display-hidden {
-	/* height: 0px; */
 	overflow: hidden;
 	padding: 0px;
 	max-height: 0px;
@@ -466,7 +455,6 @@ div#card01 {
 
 .border {
 	background-color: transparent;
-	/* font-size:1.5625em; */
 	color: #f7f7f7;
 	border: none!important;
 	font-size: 1.5rem;
@@ -481,9 +469,6 @@ div#card01 {
 	text-align: center;
 	color: #000;
     line-height: 2.5;
-	/* font-size: 18px; */
-	/* line-height:40px; */
-	/* font-kerning: 5px; */
 }
 
 .bgimg-1 .caption {
@@ -506,8 +491,6 @@ div#card01 {
 	background-color: #111;
 	color: #fff;
 	padding: 18px;
-	/* font-size: 1.5625em; */
-	/* letter-spacing: 0.625em; */
 }
 
 @media only screen and (max-device-width: 1024px) {
@@ -535,4 +518,104 @@ div#card01 {
     text-align:center;
     padding:3.125em 5em;
     letter-spacing: 1.5625em;
+}
+@media only screen and (max-width: 1300px) {
+	.container {
+		padding-left: 60px;
+		padding-right: 60px;
+	}
+	.grid-buttons a p {
+		/* margin-bottom: 5px; */
+		font-size: 13px;
+	}
+}
+
+@media only screen and (max-width: 992px) {
+	#card01 .row {
+		padding-left: 20px;
+		padding-right: 20px;
+	}
+	#card01 h5 {
+		padding-left: 10px;
+		font-size: 17px;
+		padding-bottom: 10px;
+	}
+	.big-icon {
+		padding-left: 0px;
+	}
+
+	#editor-3d {
+		left: 0px;
+		top: 50%;
+		height: 50%;
+		width: 100%;
+		background: #e7eaf0;
+	}
+
+	#selection-status {
+		top: calc(50% + 20px);
+		margin-left: 0px;
+		padding: 15px 20px 5px 20px;
+	}
+
+	#selection-status p{
+		margin:0px;
+		font-size: 15px;
+	}
+
+	#selection-status h3{
+		font-size: 17px;
+	}
+
+	#selection-actions {
+		bottom: 0px;
+		margin-left: 0px;
+		margin-bottom: 30px;
+		margin-top: 10px;
+	}
+
+	#selection-actions .btn {
+		padding: 5px 15px 5px 15px;
+		margin-right: 10px;
+		font-size: 15px;
+	}
+
+
+}
+
+@media only screen and (max-width: 600px) {
+	.container {
+		padding-left: 15px;
+		padding-right: 15px;
+	}
+
+	.card {
+		margin-right: 0px;
+	}
+
+	.card-header h4 {
+		line-height: 35px;
+	}
+
+	.card-header p {
+		font-size: 40px;
+		line-height: 40px;
+	}
+
+	.card-body {
+		padding: 10px 30px 10px 30px;
+	}
+
+	.grid-buttons {
+		padding-top: 5px;
+	}
+
+	.grid-buttons a p {
+		margin-bottom: 5px;
+		font-size: 10px;
+	}
+	#card12 {
+		margin-bottom:60vh;
+	}
+
 }

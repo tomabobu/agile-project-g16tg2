@@ -17,7 +17,7 @@ $(document).ready(function () {
 			stickyClass();
 		}
 		var scrollTop = $(window).scrollTop();
-		var divam = 7;
+		var divam = 6;
 		$(".custom-cake-form-background").css({
 			"background-position": "0px -" + scrollTop / divam + "px"
 		});
