@@ -236,7 +236,7 @@ div#card01 {
 #selection-status {
 	position:fixed;
 	top: 100px;
-	background: hsla(127, 73%, 88%, 0.8);
+	background: #ffffffbe;
 	color:#3A3131;
 	border-radius: 30px;
 	padding: 35px 50px 20px 50px;

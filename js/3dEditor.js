@@ -1433,7 +1433,6 @@ function cakePrice() {
 
 // Resolve next:
 // mobile layouts
-// add the error message to the destination card
 // clean files, comment code
 // optimize image used
 // test textures at 256
