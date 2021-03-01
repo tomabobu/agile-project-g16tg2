@@ -142,7 +142,7 @@ div#card01 {
 }
 
 .card-header {
-	padding: 5px 30px 0px 30px;
+	padding: 5px 50px 0px 50px;
 	background: #1cdaa1;
 }
 
@@ -170,7 +170,7 @@ div#card01 {
 	box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.5);
 	margin: -1px;
 	border-radius: 0px 0px 30px 30px;
-	padding: 20px 30px 20px 30px;
+	padding: 20px 50px 20px 50px;
 	transition: background 1s ease;
 	background-repeat: no-repeat;
 	color:rgb(0, 75, 126);
@@ -234,7 +234,7 @@ div#card01 {
 	background: #ffffffbe;
 	color:#3A3131;
 	border-radius: 30px;
-	padding: 35px 50px 20px 50px;
+	padding: 17px 40px 12px 40px;
 	margin-left: 90px;
 }
 
@@ -311,7 +311,7 @@ div#card01 {
 	padding-top: 20px;
 	padding-bottom: 30px;
 	display: grid;
-	grid-template-columns: repeat(auto-fill, 70px);
+	grid-template-columns: repeat(auto-fill, 90px);
 	grid-gap: 1rem;
 	justify-content: space-between;
 	transition: all 2s ease;
@@ -329,9 +329,10 @@ div#card01 {
 }
 
 .grid-colors a {
+	margin-bottom: 15px;
 	display: inline-block;
-	width: 60px;
-	height: 60px;
+	width: 70px;
+	height: 70px;
 	background: white;
 	border-radius: 100%;
 	box-shadow: 0px 3px 4px rgba(0, 0, 0, 0.3), 0px 1px 4px rgba(0, 0, 0, 0.3);
@@ -494,6 +495,9 @@ div#card01 {
 	color: #fff;
 	padding: 18px;
 }
+.button-selected {
+	border: 6px solid #08c68d;
+}
 
 @media only screen and (max-device-width: 1024px) {
 	.bgimg-1, .bgimg-2, .bgimg-3 {
@@ -521,18 +525,60 @@ div#card01 {
     padding:3.125em 5em;
     letter-spacing: 1.5625em;
 }
+
+@media only screen and (max-width: 1784px) {
+	.grid-colors {
+		grid-template-columns: repeat(auto-fill, 75px);
+	}
+}
+
+@media only screen and (max-width: 1604px) {
+	.grid-colors {
+		grid-template-columns: repeat(auto-fill, 60px);
+	}
+	.grid-colors a {
+		width: 60px;
+		height: 60px;
+	}
+}
+
+@media only screen and (max-width: 1424px) {
+	.grid-colors {
+		grid-template-columns: repeat(auto-fill, 45px);
+	}
+	.grid-colors a {
+		width: 45px;
+		height: 45px;
+	}
+
+}
+
+@media only screen and (max-width: 1124px) {
+	.grid-colors {
+		grid-gap: 0.5rem;
+		grid-template-columns: repeat(auto-fill, 40px);
+	}
+	.grid-colors a {
+		width: 40px;
+		height: 40px;
+	}
+
+}
+
+
+
 @media only screen and (max-width: 1300px) {
 	.container {
 		padding-left: 60px;
 		padding-right: 60px;
 	}
 	.grid-buttons a p {
-		/* margin-bottom: 5px; */
 		font-size: 13px;
 	}
 }
 
-@media only screen and (max-width: 992px) {
+
+@media only screen and (max-width: 991px) {
 	.card {
 		margin-right: 0px;;
 	}
@@ -551,11 +597,11 @@ div#card01 {
 		padding-left: 0px;
 	}
 	.grid-colors {
-		grid-template-columns: repeat(auto-fill, 33px);
+		grid-template-columns: repeat(auto-fill, 50px);
 	}
 	.grid-colors a {
-		width: 33px;
-		height: 33px;
+		width: 50px;
+		height: 50px;
 		box-shadow: 0px 3px 4px rgba(0, 0, 0, 0.3), 0px 1px 4px rgba(0, 0, 0, 0.3);
 	}
 
@@ -602,6 +648,43 @@ div#card01 {
 
 }
 
+@media only screen and (max-width: 815px) {
+	.grid-colors {
+		grid-gap: 0.5rem;
+		grid-template-columns: repeat(auto-fill, 80px);
+	}
+	.grid-colors a {
+		width: 60px;
+		height: 60px;
+	}
+
+}
+
+@media only screen and (max-width: 750px) {
+	.grid-colors {
+		grid-gap: 0.5rem;
+		grid-template-columns: repeat(auto-fill, 70px);
+	}
+	.grid-colors a {
+		width: 60px;
+		height: 60px;
+	}
+
+}
+
+@media only screen and (max-width: 690px) {
+	.grid-colors {
+		grid-gap: 0.5rem;
+		grid-template-columns: repeat(auto-fill, 50px);
+	}
+	.grid-colors a {
+		width: 50px;
+		height: 50px;
+	}
+
+}
+
+
 @media only screen and (max-width: 600px) {
 	.container {
 		padding-left: 20px;
@@ -630,6 +713,15 @@ div#card01 {
 	}
 	#card12 {
 		margin-bottom:60vh;
+	}
+
+	.grid-colors {
+		grid-gap: 0.5rem;
+		grid-template-columns: repeat(auto-fill, 30px);
+	}
+	.grid-colors a {
+		width: 30px;
+		height: 30px;
 	}
 
 }

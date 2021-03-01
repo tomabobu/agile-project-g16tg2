@@ -455,8 +455,8 @@ function setBorder(type, position) {
 			}
 			$('#top-border-color').removeClass('display-hidden');
 			//update current step number
-			goToNextStep(7);
 			options.topBorder = type;
+			goToNextStep(7);
 			updateEditor();
 		}
 	}
@@ -746,10 +746,10 @@ function cakeDescription() {
 	if (options.icing) {
 		description += ', ' + options.icingColor + ' ' + options.icing;
 	}
-	if (options.topBorderName) {
+	if (options.topBorder) {
 		description += ', ' + options.topBorderColorName + ' ' + options.topBorderName + ' top border';
 	}
-	if (options.bottomBorderName) {
+	if (options.bottomBorder) {
 		description += ', ' + options.bottomBorderColorName + ' ' + options.bottomBorderName + ' top border';
 	}
 	if (options.sideMaterialName) {
@@ -828,10 +828,10 @@ function cakePrice() {
 		}
 
 		//price update based on the selection of top or bottom borders
-		if (options.topBorderName) {
+		if (options.topBorder) {
 			price = price * 1.05;
 		}
-		if (options.bottomBorderName) {
+		if (!!options.bottomBorder) {
 			price = price * 1.05;
 		}
 
@@ -1030,16 +1030,28 @@ function checkStep(step) {
 	if (options.step < step) {
 		if (step == 5) {
 			if (options.step < 5) {
-				showMessage("Please choose the cake flavor", 4);
-				scrollToAnchor(4);
-				return false;
+				if (checkStep(4)) {
+					showMessage("Please choose the cake flavor", 4);
+					scrollToAnchor(4);
+					unselectOptions(step)
+					return false;
+				} else {
+					unselectOptions(step)
+					return false;
+				}
 			}
 		}
 		if ([6, 7 ,8 ,9,10,11].includes(step)) {
 			if (options.step < 6) {
-				showMessage("Please choose the cake icing", 5);
-				scrollToAnchor(5);
-				return false;
+				if (checkStep(5)) {
+					showMessage("Please choose the cake icing", 5);
+					scrollToAnchor(5);
+					unselectOptions(step)
+					return false;
+				} else {
+					unselectOptions(step)
+					return false;
+				}
 			}
 		}
 	}
@@ -1459,13 +1471,9 @@ function resetCustomizations() {
 //function to animate the scrolling to a page anchor
 function scrollToAnchor(anchorNum) {
 	var w = $(document).innerWidth();
-	if (w<992) {
-		anchor ="#card" + (anchorNum+1).toString().padStart(2,'0');
-	} else {
-		anchor ="#card" + anchorNum.toString().padStart(2,'0');
-	}
+	anchor ="#card" + (anchorNum+1).toString().padStart(2,'0');
 	$('html, body').animate({
-		'scrollTop':   $(anchor).offset().top
+		'scrollTop':   ($(anchor).offset().top - 60)
 	  }, 1000);
 }
 
@@ -1474,7 +1482,6 @@ function goToNextStep(step) {
 	if (step > options.step) {
 		options.step = step;
 		//update the step indicator
-		$('#current-step').html('Steps done: ' + (step-1));
 		for(let i=2; i<= step; i++) {
 			//update the cards as done
 			if (i < 10) {
@@ -1569,4 +1576,23 @@ function loadTextTexture(txt, size, horizontalOffset, verticalOffset, fontName, 
 		textures['customText'].needsUpdate = true;
 		return textures['customText'];
 	}
+}
+
+//signal that an option was selected
+$('.card-body a').on('click', function(){
+	console.log()
+	if ($(this).children('img').length) {
+		$(this).siblings().children('img').removeClass('button-selected');
+		$(this).children('img').addClass('button-selected');
+	} else {
+		$(this).siblings().removeClass('button-selected');
+		$(this).addClass('button-selected');
+	}
+});
+
+//function to unselect options if current step is invalid
+function unselectOptions(step) {
+	cardId ="#card" + (step+1).toString().padStart(2,'0');
+	$(cardId + ' a').removeClass('button-selected');
+	$(cardId + ' img').removeClass('button-selected');
 }
