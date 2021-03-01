@@ -308,11 +308,13 @@ div#card01 {
 }
 
 .grid-colors {
+
 	padding-top: 20px;
 	padding-bottom: 30px;
 	display: grid;
-	grid-template-columns: repeat(auto-fill, 90px);
-	grid-gap: 1rem;
+	grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr ;
+	grid-template-rows: 1fr 1fr;
+	grid-gap: 3rem;
 	justify-content: space-between;
 	transition: all 2s ease;
 	max-height: 500px;
@@ -320,6 +322,19 @@ div#card01 {
 	overflow: hidden;
 	padding-left:5px;
 	padding-right:5px;
+}
+
+.grid-colors::before {
+    content: '';
+    width: 0;
+    padding-bottom: 100%;
+    grid-row: 1 / 1;
+    grid-column: 1 / 1;
+}
+
+.grid-colors > *:first-child{
+    grid-row: 1 / 1;
+    grid-column: 1 / 1;
 }
 
 .display-hidden {
@@ -331,8 +346,8 @@ div#card01 {
 .grid-colors a {
 	margin-bottom: 15px;
 	display: inline-block;
-	width: 70px;
-	height: 70px;
+	width: 100%;
+	height: 100%;
 	background: white;
 	border-radius: 100%;
 	box-shadow: 0px 3px 4px rgba(0, 0, 0, 0.3), 0px 1px 4px rgba(0, 0, 0, 0.3);
@@ -526,46 +541,12 @@ div#card01 {
     letter-spacing: 1.5625em;
 }
 
-@media only screen and (max-width: 1784px) {
+
+@media only screen and (max-width: 1700px) {
 	.grid-colors {
-		grid-template-columns: repeat(auto-fill, 75px);
+		grid-gap: 2rem;
 	}
 }
-
-@media only screen and (max-width: 1604px) {
-	.grid-colors {
-		grid-template-columns: repeat(auto-fill, 60px);
-	}
-	.grid-colors a {
-		width: 60px;
-		height: 60px;
-	}
-}
-
-@media only screen and (max-width: 1424px) {
-	.grid-colors {
-		grid-template-columns: repeat(auto-fill, 45px);
-	}
-	.grid-colors a {
-		width: 45px;
-		height: 45px;
-	}
-
-}
-
-@media only screen and (max-width: 1124px) {
-	.grid-colors {
-		grid-gap: 0.5rem;
-		grid-template-columns: repeat(auto-fill, 40px);
-	}
-	.grid-colors a {
-		width: 40px;
-		height: 40px;
-	}
-
-}
-
-
 
 @media only screen and (max-width: 1300px) {
 	.container {
@@ -575,7 +556,14 @@ div#card01 {
 	.grid-buttons a p {
 		font-size: 13px;
 	}
+	.grid-colors {
+		grid-gap: 1rem;
+	}
+	.grid-colors {
+		grid-gap: 1rem;
+	}
 }
+
 
 
 @media only screen and (max-width: 991px) {
@@ -596,14 +584,7 @@ div#card01 {
 	.big-icon {
 		padding-left: 0px;
 	}
-	.grid-colors {
-		grid-template-columns: repeat(auto-fill, 50px);
-	}
-	.grid-colors a {
-		width: 50px;
-		height: 50px;
-		box-shadow: 0px 3px 4px rgba(0, 0, 0, 0.3), 0px 1px 4px rgba(0, 0, 0, 0.3);
-	}
+
 
 	#editor-3d {
 		left: 0px;
@@ -648,42 +629,6 @@ div#card01 {
 
 }
 
-@media only screen and (max-width: 815px) {
-	.grid-colors {
-		grid-gap: 0.5rem;
-		grid-template-columns: repeat(auto-fill, 80px);
-	}
-	.grid-colors a {
-		width: 60px;
-		height: 60px;
-	}
-
-}
-
-@media only screen and (max-width: 750px) {
-	.grid-colors {
-		grid-gap: 0.5rem;
-		grid-template-columns: repeat(auto-fill, 70px);
-	}
-	.grid-colors a {
-		width: 60px;
-		height: 60px;
-	}
-
-}
-
-@media only screen and (max-width: 690px) {
-	.grid-colors {
-		grid-gap: 0.5rem;
-		grid-template-columns: repeat(auto-fill, 50px);
-	}
-	.grid-colors a {
-		width: 50px;
-		height: 50px;
-	}
-
-}
-
 
 @media only screen and (max-width: 600px) {
 	.container {
@@ -713,15 +658,6 @@ div#card01 {
 	}
 	#card12 {
 		margin-bottom:60vh;
-	}
-
-	.grid-colors {
-		grid-gap: 0.5rem;
-		grid-template-columns: repeat(auto-fill, 30px);
-	}
-	.grid-colors a {
-		width: 30px;
-		height: 30px;
 	}
 
 }
