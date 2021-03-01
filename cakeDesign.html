@@ -117,7 +117,7 @@
 					</div>
 					<div class="card" id="card04">
 						<div class="card-header">
-							<h4>Number of portions</h4>
+							<h4>Number of portions (cake size)</h4>
 							<p>03</p>
 						</div>
 						<div class="card-body">
@@ -265,7 +265,7 @@
 								<a href="javascript:setBorder( null , 'top')">
 									<img src="./images/thumbs/thumb-(52).jpg" alt="Cake" class="rounded-circle">
 									<p>
-										No top border
+										Remove top border
 									</p>
 								</a>
 							</div>
@@ -337,7 +337,7 @@
 								<a href="javascript:setBorder(null, 'bottom')">
 									<img src="./images/thumbs/thumb-(52).jpg" alt="Cake" class="rounded-circle">
 									<p>
-										No bottom border
+										Remove bottom border
 									</p>
 								</a>
 							</div>
@@ -465,13 +465,13 @@
 								<a href="javascript:setTopMaterial('top08')">
 									<img src="./images/thumbs/thumb-(2).jpg" alt="Cake" class="rounded-circle">
 									<p>
-										Use no image
+										Theme 08
 									</p>
 								</a>
 								<a href="javascript:setTopMaterial('')">
 									<img src="./images/thumbs/thumb-(53).jpg" alt="Cake" class="rounded-circle">
 									<p>
-										Use no image
+										Remove image
 									</p>
 								</a>
 							</div>
@@ -485,7 +485,7 @@
 						<div class="card-body text-dark">
 							<div class='form-group mb-3'>
 								<label for="customMessage" class="form-label">Message</label>
-								<input type="text" class="form-control" id="customMessage" placeholder="Message on the cake" value="Happy Birthday!">
+								<input type="text" class="form-control" id="customMessage" placeholder="Message on the cake" value="Happy Birthday!"  maxlength="35">
 							</div>
 							<div class='grid-buttons'>
 								<a href="javascript:setMessageFont('Pacifico')">
@@ -643,9 +643,6 @@
 						<h3 class="">
 							Total price: <span id="total-price">0.00</span> $
 						</h3>
-						<p>
-							<span id="current-step">Steps done: 0</span>
-						</p>
 					</div>
 					<div id="selection-actions">
 						<div  id="editor-buttons">
