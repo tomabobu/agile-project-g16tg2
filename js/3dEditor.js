@@ -1533,6 +1533,11 @@ $('#send-order').on('click', function() {
 			scrollToAnchor(11);
 			return false;
 		}
+		if (!validateEmail(email)) {
+			showMessage("Please input an email in the correct format.", 11);
+			scrollToAnchor(11);
+			return false;
+		}
 
 		//update the form message
 		$('#current-step').html('All steps were done. You will be contacted shortly to confirm the order.')
@@ -1595,4 +1600,14 @@ function unselectOptions(step) {
 	cardId ="#card" + (step+1).toString().padStart(2,'0');
 	$(cardId + ' a').removeClass('button-selected');
 	$(cardId + ' img').removeClass('button-selected');
+}
+
+//function to validate email
+function validateEmail(mail)
+{
+ if (/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(mail))
+  {
+    return (true)
+  }
+    return (false)
 }
