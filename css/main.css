@@ -412,7 +412,6 @@ div#card01 {
 }
 
 /* Index page */
-
 .header-text-box {
 	color: #777;
 	background-color: white;
@@ -433,7 +432,7 @@ div#card01 {
 .bgimg-1 {
 	background-image: url("../images/cake1.jpg");
 	min-height: 100%;
-	transform: scaleX(-1);
+	/*	transform: scaleX(-1);*/
 }
 
 .bgimg-2 {
@@ -442,7 +441,7 @@ div#card01 {
 }
 
 .bgimg-3 {
-	background-image: url("../images/cake3.jpg");
+	background-image: url("../images/farm.jpg");
 	min-height: 400px;
 }
 
@@ -473,8 +472,9 @@ div#card01 {
 
 .border {
 	background-color: transparent;
+	/* font-size:1.5625em; */
 	color: #f7f7f7;
-	border: none!important;
+	border: none !important;
 	font-size: 1.5rem;
 	letter-spacing: 0.75rem;
 }
@@ -486,22 +486,25 @@ div#card01 {
 	width: 100%;
 	text-align: center;
 	color: #000;
-    line-height: 2.5;
+	line-height: 2.5;
+	/* font-size: 18px; */
+	/* line-height:40px; */
+	/* font-kerning: 5px; */
 }
 
 .bgimg-1 .caption {
-
-	transform: scaleX(-1);
+	padding: 10px;
 	width: 50%;
+	float: right;
 }
 
-.about-me-description {
 
-     width: 200px;
-     font: italic 1.2em "Fira Sans", serif;
-     margin: auto;
-     padding: 10px;
-    }
+.about-me-description {
+	width: 200px;
+	font: italic 1.2em "Fira Sans", serif;
+	margin: auto;
+	padding: 10px;
+}
 
 
 
@@ -509,9 +512,8 @@ div#card01 {
 	background-color: #111;
 	color: #fff;
 	padding: 18px;
-}
-.button-selected {
-	border: 6px solid #08c68d;
+	/* font-size: 1.5625em; */
+	/* letter-spacing: 0.625em; */
 }
 
 @media only screen and (max-device-width: 1024px) {
@@ -521,27 +523,25 @@ div#card01 {
 }
 
 .divider-bar {
-    position: relative;
-    color:#ddd;
-    background-color:#282E34;
-    text-align:center;
-    padding:3.125em 5em;
+	position: relative;
+	color: #ddd;
+	background-color: #282E34;
+	text-align: center;
+	padding: 3.125em 5em;
+}
 
-}
-.divider-bar a {
-	text-decoration: none;
-}
+	.divider-bar a {
+		text-decoration: none;
+	}
 
 .divider-bar-2 {
-    position: relative;
-    color:#ddd;
-    background-color:#282E34;
-    text-align:center;
-    padding:3.125em 5em;
-    letter-spacing: 1.5625em;
+	position: relative;
+	color: #ddd;
+	background-color: #282E34;
+	text-align: center;
+	padding: 3.125em 5em;
+	letter-spacing: 1.5625em;
 }
-
-
 @media only screen and (max-width: 1700px) {
 	.grid-colors {
 		grid-gap: 2rem;
