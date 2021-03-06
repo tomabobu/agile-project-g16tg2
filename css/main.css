@@ -520,6 +520,11 @@ div#card01 h5{
 	/* letter-spacing: 0.625em; */
 }
 
+
+.button-selected {
+	border: 6px solid #08c68d;
+}
+
 @media only screen and (max-device-width: 1024px) {
 	.bgimg-1, .bgimg-2, .bgimg-3 {
 		background-attachment: scroll;
