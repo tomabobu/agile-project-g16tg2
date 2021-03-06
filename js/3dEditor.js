@@ -1,3 +1,5 @@
+
+
 // initial data setup
 let controls, camera, scene, renderer;
 let textureLoader, textureEquirec;
@@ -14,48 +16,48 @@ var textureSize = 1024;
 var options = {};
 var maxLights = 5;
 var sizes = {
-	'small' : [0.65, 0.75, 0.65],
-	'medium':[0.85, 0.85, 0.85],
-	'big':[1.1, 0.9, 1.1]
+	'small': [0.65, 0.75, 0.65],
+	'medium': [0.85, 0.85, 0.85],
+	'big': [1.1, 0.9, 1.1]
 };
 
 //function to load default settings
 function loadDefaultCustomizations() {
 	options = {
 		'step': 1,
-		'initialSetup' : true,
-		'baseCake' : 'Cake_round',
-		'baseHeight' : 50,
-		'baseMatrix' : new THREE.Matrix4().makeScale(0.85,0.85,0.85),
-		'tierHeight' : 50,
-		'tierScaling' : 0.22,
-		'tierBorderScaling' : 0.04,
-		'numberOfTiers' : 1,
-		'numberOfPortions' : '20-35',
-		'icingColor' : 'white',
-		'topBorderColorName' : 'white',
-		'bottomBorderColorName' : 'white',
-		'orbitPoint' : new THREE.Vector3( 0, 50 / 2, 0 ),
-		'materialsUsed' : [],
-		'baseColor' : 0xFFFFFF,
-		'topBorderColor' : 0xFFFFFF,
-		'bottomBorderColor' : 0xFFFFFF,
-		'topBorder' : null,
-		'bottomBorder' : null,
-		'cakeSize' : 'medium',
-		'borderInstancesReductionRate' : 0.2, //upper tiers need fewer instances
-		'bottomBorderInstancesIncreaseRate' : 0.2, // bottom border needs more instances than the top
-		'smallNrInst' : 65,
-		'mediumNrInst' : 80,
-		'bigNrInst' : 95,
-		'topBorderRadiusScale' : 0.95,
-		'bottomBorderRadiusScale' : 0.987,
-		'baseMaterial' : {},
-		'messageColor' : 0x000000,
-		'customMessage' : 'Happy Birthday!',
-		'messageFont' : 'Pacifico',
-		'messageSize' : 100,
-		'messageHorizontalOffset' : 0,
+		'initialSetup': true,
+		'baseCake': 'Cake_round',
+		'baseHeight': 50,
+		'baseMatrix': new THREE.Matrix4().makeScale(0.85, 0.85, 0.85),
+		'tierHeight': 50,
+		'tierScaling': 0.22,
+		'tierBorderScaling': 0.04,
+		'numberOfTiers': 1,
+		'numberOfPortions': '20-35',
+		'icingColor': 'white',
+		'topBorderColorName': 'white',
+		'bottomBorderColorName': 'white',
+		'orbitPoint': new THREE.Vector3(0, 50 / 2, 0),
+		'materialsUsed': [],
+		'baseColor': 0xFFFFFF,
+		'topBorderColor': 0xFFFFFF,
+		'bottomBorderColor': 0xFFFFFF,
+		'topBorder': null,
+		'bottomBorder': null,
+		'cakeSize': 'medium',
+		'borderInstancesReductionRate': 0.2, //upper tiers need fewer instances
+		'bottomBorderInstancesIncreaseRate': 0.2, // bottom border needs more instances than the top
+		'smallNrInst': 65,
+		'mediumNrInst': 80,
+		'bigNrInst': 95,
+		'topBorderRadiusScale': 0.95,
+		'bottomBorderRadiusScale': 0.987,
+		'baseMaterial': {},
+		'messageColor': 0x000000,
+		'customMessage': 'Happy Birthday!',
+		'messageFont': 'Pacifico',
+		'messageSize': 100,
+		'messageHorizontalOffset': 0,
 		'messageVerticalOffset': 0,
 	};
 }
@@ -63,27 +65,27 @@ loadDefaultCustomizations();
 
 //a set of 300 predetermined random rotations used on border instances
 var randomRotations = [];
-for(let i=0;i<300;i++) {
-	randomRotations.push(Math.random()*2*Math.PI);
+for (let i = 0; i < 300; i++) {
+	randomRotations.push(Math.random() * 2 * Math.PI);
 }
 
 //using WebFont to load Google fonts that will be used later to write on the cake
 WebFont.load({
 	google: {
-	  families: ['Pacifico','Great Vibes', 'Dancing Script']
+		families: ['Pacifico', 'Great Vibes', 'Dancing Script']
 	},
-	active: function() {
+	active: function () {
 		//after the fonts are loaded, init the 3d editor and start animating
 		init();
 		animate();
 	}
-  });
+});
 
 //init function to start loading the THREE objects used in the 3d editor
 function init() {
 	//Setup camera
-	camera = new THREE.PerspectiveCamera( 70, window.innerWidth / (2*window.innerHeight), 1, 100000 );
-	camera.position.set( 0, 200, 300 );
+	camera = new THREE.PerspectiveCamera(70, window.innerWidth / (2 * window.innerHeight), 1, 100000);
+	camera.position.set(0, 200, 300);
 
 	// Setup scene
 	scene = new THREE.Scene();
@@ -96,7 +98,7 @@ function init() {
 	textureLoader = new THREE.TextureLoader();
 
 	//Setup environment texture
-	textureEquirec = textureLoader.load( './images/Classic-Kitchen-03.jpg' );
+	textureEquirec = textureLoader.load('./images/Classic-Kitchen-03.jpg');
 	textureEquirec.mapping = THREE.EquirectangularReflectionMapping;
 	textureEquirec.encoding = THREE.sRGBEncoding;
 	scene.background = textureEquirec;
@@ -104,8 +106,8 @@ function init() {
 
 	//Setup renderer
 	renderer = new THREE.WebGLRenderer();
-	renderer.setPixelRatio( window.devicePixelRatio );
-	renderer.setSize( window.innerWidth/2, window.innerHeight );
+	renderer.setPixelRatio(window.devicePixelRatio);
+	renderer.setSize(window.innerWidth / 2, window.innerHeight);
 	renderer.outputEncoding = THREE.sRGBEncoding;
 	$('#editor-3d').append(renderer.domElement);
 
@@ -113,71 +115,71 @@ function init() {
 	renderer.outputEncoding = THREE.sRGBEncoding;
 
 	//Load default materials
-	materials['dafaultLambert'] = new THREE.MeshStandardMaterial( {
+	materials['dafaultLambert'] = new THREE.MeshStandardMaterial({
 		color: 0xffffff,
-		envMapIntensity : 1,
-		refractionRatio : 2,
+		envMapIntensity: 1,
+		refractionRatio: 2,
 		metalness: 0,
 		roughness: 0.9,
-		envMap : textureEquirec,
+		envMap: textureEquirec,
 		side: THREE.FrontSide
 	});
-	materials['defaultTopBorder'] = new THREE.MeshStandardMaterial( {
+	materials['defaultTopBorder'] = new THREE.MeshStandardMaterial({
 		color: 0xffffff,
-		envMapIntensity : 1,
-		refractionRatio : 2,
+		envMapIntensity: 1,
+		refractionRatio: 2,
 		metalness: 0,
 		roughness: 0.2,
-		envMapIntensity : 1.7,
-		envMap : textureEquirec,
+		envMapIntensity: 1.7,
+		envMap: textureEquirec,
 		side: THREE.FrontSide
 	});
-	materials['defaultBottomBorder'] = new THREE.MeshStandardMaterial( {
+	materials['defaultBottomBorder'] = new THREE.MeshStandardMaterial({
 		color: 0xffffff,
-		envMapIntensity : 1,
-		refractionRatio : 2,
+		envMapIntensity: 1,
+		refractionRatio: 2,
 		metalness: 0,
 		roughness: 0.2,
-		envMapIntensity : 1.7,
-		envMap : textureEquirec,
+		envMapIntensity: 1.7,
+		envMap: textureEquirec,
 		side: THREE.FrontSide
 	});
 
 	//loading the texture for the table and setting up the material
-	textures['concrete'] = textureLoader.load( './images/concrete.jpg' );
-	materials['defaultTable'] = new THREE.MeshStandardMaterial( {
-		map:textures['concrete'],
-		envMapIntensity : 1.5,
+	textures['concrete'] = textureLoader.load('./images/concrete.jpg');
+	materials['defaultTable'] = new THREE.MeshStandardMaterial({
+		map: textures['concrete'],
+		envMapIntensity: 1.5,
 		metalness: 0,
 		roughness: 0.3,
-		envMap : textureEquirec,
-	} );
+		envMap: textureEquirec,
+	});
 
 	numLights = 0;
 
 	//Loading models and lights from the .gltf file created in Cinema4D
 	loader = new THREE.GLTFLoader();
-	loader.load( './assets/base.gltf', function ( gltf ) {
+	loader.load('./assets/base.gltf', function (gltf) {
 		gltf.scene.children.forEach(element => {
 			//loading the lights
 			if (element.name == "Lights") {
 				lightsGroup = element.children;
-				lightsGroup.forEach( light => {
-						//importing not more than the set number of maxLights
-						if (numLights < maxLights) {
-							//add each light with position and color data stored in the .gltf file
-							newLight = new THREE.SpotLight("#" + light.name.split("_")[0], 1.65/maxLights);
-							newLight.position.set(light.position.x, light.position.y , light.position.z);
-							newLight.castShadow = false;
-							newLight.penumbra  = 1;
-							newLight.angle = Math.PI/6;
-							lights.push(newLight);
-						}
-						numLights++;
+				lightsGroup.forEach(light => {
+					//importing not more than the set number of maxLights
+					if (numLights < maxLights) {
+						//add each light with position and color data stored in the .gltf file
+						newLight = new THREE.SpotLight("#" + light.name.split("_")[0], 1.65 / maxLights);
+						newLight.position.set(light.position.x, light.position.y, light.position.z);
+						newLight.castShadow = false;
+						newLight.penumbra = 1;
+						newLight.angle = Math.PI / 6;
+						lights.push(newLight);
+					}
+					numLights++;
 				});
 			}
 			//loading the cake models
-			if(element.name.startsWith("Cake")) {
+			if (element.name.startsWith("Cake")) {
 				//load each cake type
 				cakeName = element.name;
 				cakeModels[cakeName] = [];
@@ -187,7 +189,7 @@ function init() {
 				cakeModels[cakeName].material = materials['dafaultLambert'];
 				if (cakeModels[cakeName].children.length) {
 					cakeModels[cakeName].children.forEach(child => {
-						if ( child.isMesh ) {
+						if (child.isMesh) {
 							child.castShadow = false;
 							child.receiveShadow = false;
 						}
@@ -199,49 +201,49 @@ function init() {
 				cakeModels[cakeName].bottomBorder = createCurve(cakeName, 'bottom');
 
 				//setting to not cast shadows
-				if ( cakeModels[cakeName].isMesh ) {
+				if (cakeModels[cakeName].isMesh) {
 					cakeModels[cakeName].castShadow = false;
 					cakeModels[cakeName].receiveShadow = false;
 				}
 			}
 
 			//loading the borders geometries
-			if(element.name.startsWith("Borders")) {
+			if (element.name.startsWith("Borders")) {
 				//load each border geometry
-				element.children.forEach( border => {
+				element.children.forEach(border => {
 					//loading as top border
 					borderName = border.name;
-					borderModels[borderName+"top"] = [];
-					borderModels[borderName+"top"] = border;
-					borderModels[borderName+"top"].name = borderName;
+					borderModels[borderName + "top"] = [];
+					borderModels[borderName + "top"] = border;
+					borderModels[borderName + "top"].name = borderName;
 
 					//setting default material
-					borderModels[borderName+"top"].material = materials['defaultTopBorder'];
-					if ( borderModels[borderName+"top"].isMesh ) {
-						borderModels[borderName+"top"].castShadow = false;
-						borderModels[borderName+"top"].receiveShadow = false;
+					borderModels[borderName + "top"].material = materials['defaultTopBorder'];
+					if (borderModels[borderName + "top"].isMesh) {
+						borderModels[borderName + "top"].castShadow = false;
+						borderModels[borderName + "top"].receiveShadow = false;
 					}
 
 					//loading as bottom border
-					borderModels[borderName+"bottom"] = [];
-					borderModels[borderName+"bottom"] = border.clone();
-					borderModels[borderName+"bottom"].name = borderName;
+					borderModels[borderName + "bottom"] = [];
+					borderModels[borderName + "bottom"] = border.clone();
+					borderModels[borderName + "bottom"].name = borderName;
 
 					//setting default material
-					borderModels[borderName+"bottom"].material = materials['defaultBottomBorder'];
-					if ( borderModels[borderName+"bottom"].isMesh ) {
-						borderModels[borderName+"bottom"].castShadow = false;
-						borderModels[borderName+"bottom"].receiveShadow = false;
+					borderModels[borderName + "bottom"].material = materials['defaultBottomBorder'];
+					if (borderModels[borderName + "bottom"].isMesh) {
+						borderModels[borderName + "bottom"].castShadow = false;
+						borderModels[borderName + "bottom"].receiveShadow = false;
 					}
 				});
 			}
 			//loading the table geometry
-			if(element.name == "Table") {
+			if (element.name == "Table") {
 				tableModel = element;
 				//setting default material
 				tableModel.material = materials['defaultTable']
 				//setting to not cast shadows
-				if ( tableModel.isMesh ) {
+				if (tableModel.isMesh) {
 					tableModel.castShadow = false;
 					tableModel.receiveShadow = false;
 				}
@@ -252,12 +254,12 @@ function init() {
 		detectWindowSize();
 		//update the editor view
 		updateEditor();
-	}, undefined, function ( error ) {
-		console.error( error );
-	} );
+	}, undefined, function (error) {
+		console.error(error);
+	});
 
 	//setup editor controls
-	controls = new THREE.OrbitControls( camera, renderer.domElement );
+	controls = new THREE.OrbitControls(camera, renderer.domElement);
 	controls.minDistance = 150;
 	controls.maxDistance = 800;
 	controls.enableDamping = true;
@@ -265,37 +267,37 @@ function init() {
 	controls.target = options.orbitPoint;
 
 	//add event listener for window resize
-	window.addEventListener( 'resize', detectWindowSize, false );
+	window.addEventListener('resize', detectWindowSize, false);
 }
 
 //sets the renderer settings based on window size and editor placement
 function detectWindowSize() {
 	var w = $(document).innerWidth();
-	if (w<992) {
+	if (w < 992) {
 		//for mobile devices, the editor is at the bottom half of the screen
-		camera.aspect = (window.innerWidth * 2) /  window.innerHeight;
+		camera.aspect = (window.innerWidth * 2) / window.innerHeight;
 		camera.updateProjectionMatrix();
-		renderer.setSize( window.innerWidth, window.innerHeight/2 );
+		renderer.setSize(window.innerWidth, window.innerHeight / 2);
 	} else {
 		//for desktop devices, the editor is at the right half of the screen
-		camera.aspect = window.innerWidth / ( 2* window.innerHeight);
+		camera.aspect = window.innerWidth / (2 * window.innerHeight);
 		camera.updateProjectionMatrix();
-		renderer.setSize( window.innerWidth/2, window.innerHeight );
+		renderer.setSize(window.innerWidth / 2, window.innerHeight);
 	}
 
 }
 
 //function that is called each frame by three js
 function animate() {
-	requestAnimationFrame( animate );
+	requestAnimationFrame(animate);
 	controls.update();
 	render();
 }
 
 //function to render the scene
 function render() {
-	camera.lookAt( options.orbitPoint );
-	renderer.render( scene, camera );
+	camera.lookAt(options.orbitPoint);
+	renderer.render(scene, camera);
 }
 
 // function to set base model based on attribute
@@ -332,7 +334,7 @@ function setBaseScale(size) {
 		if (size == 'big') {
 			options.numberOfPortions = '35-45';
 		}
-		options.baseMatrix =  new THREE.Matrix4().makeScale(sizes[size][0], sizes[size][1], sizes[size][2]);
+		options.baseMatrix = new THREE.Matrix4().makeScale(sizes[size][0], sizes[size][1], sizes[size][2]);
 		//update current step number
 		goToNextStep(4);
 		updateEditor();
@@ -340,7 +342,7 @@ function setBaseScale(size) {
 }
 
 //resets the base color and base materials
-function resetBaseColorAndSetBaseMaterial(firstMaterialName, secondMaterialName, scaleUFirst= 1, scaleVFirst=1, scaleUSecond = 1, scaleVSecond = 1,  roughness= 1.3, envMapIntensity = 1.5) {
+function resetBaseColorAndSetBaseMaterial(firstMaterialName, secondMaterialName, scaleUFirst = 1, scaleVFirst = 1, scaleUSecond = 1, scaleVSecond = 1, roughness = 1.3, envMapIntensity = 1.5) {
 	//check if action is available based on current step
 	if (checkStep(4)) {
 		//reset color to white
@@ -356,12 +358,12 @@ function resetBaseColorAndSetBaseMaterial(firstMaterialName, secondMaterialName,
 		}
 		//update current step number
 		goToNextStep(5);
-		setMaterial(firstMaterialName, secondMaterialName, scaleUFirst, scaleVFirst,scaleUSecond,scaleVSecond,  roughness, envMapIntensity);
+		setMaterial(firstMaterialName, secondMaterialName, scaleUFirst, scaleVFirst, scaleUSecond, scaleVSecond, roughness, envMapIntensity);
 	}
 }
 
 //set the base material based on attributes sent
-function setBaseMaterial(firstMaterialName, secondMaterialName, scaleUFirst= 1, scaleVFirst= 1, scaleUSecond = 1,scaleVSecond = 1,  roughness= 1.3, envMapIntensity = 1.5) {
+function setBaseMaterial(firstMaterialName, secondMaterialName, scaleUFirst = 1, scaleVFirst = 1, scaleUSecond = 1, scaleVSecond = 1, roughness = 1.3, envMapIntensity = 1.5) {
 	//check if action is available based on current step
 	if (checkStep(5)) {
 		if (firstMaterialName == 'fondant_icing') {
@@ -376,47 +378,47 @@ function setBaseMaterial(firstMaterialName, secondMaterialName, scaleUFirst= 1, 
 		$('#base-material-color').removeClass('display-hidden');
 		//update current step number
 		goToNextStep(6);
-		setMaterial(firstMaterialName, secondMaterialName, scaleUFirst, scaleVFirst, scaleUSecond,scaleVSecond,  roughness, envMapIntensity);
+		setMaterial(firstMaterialName, secondMaterialName, scaleUFirst, scaleVFirst, scaleUSecond, scaleVSecond, roughness, envMapIntensity);
 	}
 }
 
 //function to return color name based on predefined hex values
 function getColorName(color) {
 	switch (color) {
-		case(0xff3377):
+		case (0xff3377):
 			return 'pink';
 			break;
-		case(0xff2424):
+		case (0xff2424):
 			return 'red';
 			break;
-		case(0xff6d38):
+		case (0xff6d38):
 			return 'orange';
 			break;
-		case(0xff9429):
+		case (0xff9429):
 			return 'orange yellow';
 			break;
-		case(0xfff838):
+		case (0xfff838):
 			return 'yellow';
 			break;
-		case(0xffffff):
+		case (0xffffff):
 			return 'white';
 			break;
-		case(0x53ff0f):
+		case (0x53ff0f):
 			return 'light green';
 			break;
-		case(0x2eff85):
+		case (0x2eff85):
 			return 'pale green';
 			break;
-		case(0x00cc8f):
+		case (0x00cc8f):
 			return 'green';
 			break;
-		case(0x2e85ff):
+		case (0x2e85ff):
 			return 'blue';
 			break;
-		case(0x4766ff):
+		case (0x4766ff):
 			return 'blue violet';
 			break;
-		case(0xa857ff):
+		case (0xa857ff):
 			return 'violet';
 			break;
 	}
@@ -540,7 +542,7 @@ function setSideMaterial(materialName) {
 
 //get the picture theme name based on the predefined theme image name
 function getThemeName(materialName) {
-	switch(materialName) {
+	switch (materialName) {
 		case 'top02':
 			return 'Mickey Mouse';
 			break
@@ -592,14 +594,14 @@ function selectYourPhoto() {
 }
 
 //function to load the selected file into a ThreeJs texture
-$('#customFile').on('change', function (event){
+$('#customFile').on('change', function (event) {
 	//the file selected
 	var userImage = event.target.files[0];
 	//set the options to signal that there is a custom photo selected
 	options.topPhotoName = 'custom '
 	options.baseMaterial.customImage = 'customFile';
 	//create an object url
-	var userImageURL = URL.createObjectURL( userImage );
+	var userImageURL = URL.createObjectURL(userImage);
 	//load the object url with the texture loader
 	textures['customFile'] = textureLoader.load(userImageURL);
 	textureLoader.setCrossOrigin("");
@@ -651,7 +653,7 @@ function setMessageColor(color) {
 }
 
 //event listener to update the message while typing in the input field of changing the message position
-$('#customSize, #customHorizontalMovement, #customVerticalMovement').on('input', function() {
+$('#customSize, #customHorizontalMovement, #customVerticalMovement').on('input', function () {
 	//check if action is available based on current step
 	if (checkStep(10)) {
 		//update current step number
@@ -665,7 +667,7 @@ $('#customSize, #customHorizontalMovement, #customVerticalMovement').on('input',
 function addBorderPoints(position, transform = null, instanceIndex = 0) {
 	//add adaptive scaling for top border on all tiers
 	if (position == 'top' && transform) {
-		scaleMatrix =  new THREE.Matrix4().makeScale(1- instanceIndex* options.tierBorderScaling, 1, 1 - instanceIndex*options.tierBorderScaling);
+		scaleMatrix = new THREE.Matrix4().makeScale(1 - instanceIndex * options.tierBorderScaling, 1, 1 - instanceIndex * options.tierBorderScaling);
 		transform.multiply(scaleMatrix);
 	}
 	//for the top border get the curve topBorder from the current cake model
@@ -684,7 +686,7 @@ function addBorderPoints(position, transform = null, instanceIndex = 0) {
 		numPoints = parseInt(options.smallNrInst * (1 - instanceIndex * options.borderInstancesReductionRate) * nrMultiplier);
 	}
 	if (options.cakeSize == 'medium') {
-		numPoints =  parseInt(options.mediumNrInst * (1 - instanceIndex * options.borderInstancesReductionRate) * nrMultiplier);
+		numPoints = parseInt(options.mediumNrInst * (1 - instanceIndex * options.borderInstancesReductionRate) * nrMultiplier);
 	}
 	if (options.cakeSize == 'big') {
 		numPoints = parseInt(options.bigNrInst * (1 - instanceIndex * options.borderInstancesReductionRate) * nrMultiplier);
@@ -692,10 +694,10 @@ function addBorderPoints(position, transform = null, instanceIndex = 0) {
 
 	//get the points from the curve in 2D space
 	const points = curve.getSpacedPoints(numPoints);
-	baseMatrix =  options.baseMatrix.clone();
+	baseMatrix = options.baseMatrix.clone();
 	//transform each point based on the position top or bottom
 	points.forEach(element => {
-		if  (position == 'top') {
+		if (position == 'top') {
 			//create a 3D point from a 2D one
 			point = new THREE.Vector3(element.x, 50, element.y)
 			//transform the point if a transform matrix was passed
@@ -741,7 +743,7 @@ function cakeDescription() {
 	}
 	description += ', ' + options.numberOfPortions + ' portions';
 	if (options.cakeFlavor) {
-		description += ', '+ options.cakeFlavor;
+		description += ', ' + options.cakeFlavor;
 	}
 	if (options.icing) {
 		description += ', ' + options.icingColor + ' ' + options.icing;
@@ -784,13 +786,13 @@ function cakePrice() {
 
 		//price update  based on the number of selected tiers
 		tierPrice = price;
-		for(let i=2;i<= options.numberOfTiers; i++) {
+		for (let i = 2; i <= options.numberOfTiers; i++) {
 			tierPrice = tierPrice * 0.7;
-			price +=tierPrice;
+			price += tierPrice;
 		}
 
 		//price update from the selected size
-		switch ( options.numberOfPortions) {
+		switch (options.numberOfPortions) {
 			case '12-15':
 				price = price * 0.55;
 				break;
@@ -909,7 +911,7 @@ function updateEditor() {
 			material = Object.create(cakeModels[options.baseCake].material);
 			//create instance for each children if found
 			if (cakeModels[options.baseCake].children.length) {
-				for (let i = 0; i< cakeModels[options.baseCake].children.length; i++) {
+				for (let i = 0; i < cakeModels[options.baseCake].children.length; i++) {
 					instanceCakeTier(cakeModels[options.baseCake].children[i].geometry, Object.create(cakeModels[options.baseCake].children[i].material), true);
 				}
 			} else {
@@ -922,17 +924,17 @@ function updateEditor() {
 		//add top border instances
 		if (topBorderPoints.length) {
 			//get the border geometry and material
-			geometry = borderModels[options.topBorder+"top"].geometry;
-			material = Object.create(borderModels[options.topBorder+"top"].material);
+			geometry = borderModels[options.topBorder + "top"].geometry;
+			material = Object.create(borderModels[options.topBorder + "top"].material);
 			//create the instances
 			instance = new THREE.InstancedMesh(geometry, material, topBorderPoints.length);
-			instance.instanceMatrix.setUsage( THREE.DynamicDrawUsage );
+			instance.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
 			//transform each instance to match the position found in the points array
-			for (i=0; i<topBorderPoints.length; i++) {
-				translateMatrix =  new THREE.Matrix4().makeTranslation(topBorderPoints[i].x, topBorderPoints[i].y, topBorderPoints[i].z);
-				rotationMatrix =  new THREE.Matrix4().makeRotationY(randomRotations[i]);
+			for (i = 0; i < topBorderPoints.length; i++) {
+				translateMatrix = new THREE.Matrix4().makeTranslation(topBorderPoints[i].x, topBorderPoints[i].y, topBorderPoints[i].z);
+				rotationMatrix = new THREE.Matrix4().makeRotationY(randomRotations[i]);
 				translateMatrix.multiply(rotationMatrix);
-				instance.setMatrixAt( i-1, translateMatrix );
+				instance.setMatrixAt(i - 1, translateMatrix);
 			}
 			instance.instanceMatrix.needsUpdate = true;
 			//add the instances to the scene
@@ -944,17 +946,17 @@ function updateEditor() {
 		//add bottom border instance
 		if (bottomBorderPoints.length) {
 			//get the border geometry and material
-			geometry = borderModels[options.bottomBorder+"bottom"].geometry;
-			material = Object.create(borderModels[options.bottomBorder+"bottom"].material);
+			geometry = borderModels[options.bottomBorder + "bottom"].geometry;
+			material = Object.create(borderModels[options.bottomBorder + "bottom"].material);
 			//create the instances
 			instance = new THREE.InstancedMesh(geometry, material, bottomBorderPoints.length);
-			instance.instanceMatrix.setUsage( THREE.DynamicDrawUsage );
+			instance.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
 			//transform each instance to match the position found in the points array
-			for (i=0; i<bottomBorderPoints.length; i++) {
-				translateMatrix =  new THREE.Matrix4().makeTranslation(bottomBorderPoints[i].x, bottomBorderPoints[i].y, bottomBorderPoints[i].z);
-				rotationMatrix =  new THREE.Matrix4().makeRotationY(randomRotations[i]);
+			for (i = 0; i < bottomBorderPoints.length; i++) {
+				translateMatrix = new THREE.Matrix4().makeTranslation(bottomBorderPoints[i].x, bottomBorderPoints[i].y, bottomBorderPoints[i].z);
+				rotationMatrix = new THREE.Matrix4().makeRotationY(randomRotations[i]);
 				translateMatrix.multiply(rotationMatrix);
-				instance.setMatrixAt( i-1, translateMatrix );
+				instance.setMatrixAt(i - 1, translateMatrix);
 			}
 			instance.instanceMatrix.needsUpdate = true;
 			//add the instances to the scene
@@ -963,7 +965,7 @@ function updateEditor() {
 			instances.push(instance);
 		}
 		//update the camera orbit point to fit in all the tiers of the cake
-		options.orbitPoint.y = (options.baseHeight + (options.numberOfTiers -1 )* options.tierHeight) /2;
+		options.orbitPoint.y = (options.baseHeight + (options.numberOfTiers - 1) * options.tierHeight) / 2;
 	}
 
 }
@@ -971,17 +973,17 @@ function updateEditor() {
 //function to create multiple instance from a base geometry
 function instanceCakeTier(geometry, material, addBorderPointsToInstance = true) {
 	//create the instances
-	instance = new THREE.InstancedMesh(geometry, material, options.numberOfTiers-1);
-	instance.instanceMatrix.setUsage( THREE.DynamicDrawUsage );
+	instance = new THREE.InstancedMesh(geometry, material, options.numberOfTiers - 1);
+	instance.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
 
-	for (i=1; i<options.numberOfTiers; i++) {
+	for (i = 1; i < options.numberOfTiers; i++) {
 		//transform each tier to have the right size and position
 		transform = options.baseMatrix.clone();
-		translateMatrix =  new THREE.Matrix4().makeTranslation(0, i*options.tierHeight, 0 );
-		scaleMatrix =  new THREE.Matrix4().makeScale(1- i* options.tierScaling, 1, 1 - i*options.tierScaling);
+		translateMatrix = new THREE.Matrix4().makeTranslation(0, i * options.tierHeight, 0);
+		scaleMatrix = new THREE.Matrix4().makeScale(1 - i * options.tierScaling, 1, 1 - i * options.tierScaling);
 		transform.multiply(translateMatrix);
 		transform.multiply(scaleMatrix);
-		instance.setMatrixAt( i-1, transform );
+		instance.setMatrixAt(i - 1, transform);
 		//add the border points for each tier
 		if (addBorderPointsToInstance) {
 			if (options.bottomBorder) {
@@ -996,7 +998,7 @@ function instanceCakeTier(geometry, material, addBorderPointsToInstance = true) 
 	}
 	instance.instanceMatrix.needsUpdate = true;
 	//add the instances to the scene
-	scene.add( instance );
+	scene.add(instance);
 	//save reference to the instances for later usage
 	instances.push(instance);
 }
@@ -1041,7 +1043,7 @@ function checkStep(step) {
 				}
 			}
 		}
-		if ([6, 7 ,8 ,9,10,11].includes(step)) {
+		if ([6, 7, 8, 9, 10, 11].includes(step)) {
 			if (options.step < 6) {
 				if (checkStep(5)) {
 					showMessage("Please choose the cake icing", 5);
@@ -1059,7 +1061,7 @@ function checkStep(step) {
 }
 
 //function to set material and update the editor
-function setMaterial(firstMaterialName, secondMaterialName, scaleUFirst= 1, scaleVFirst= 1, scaleUSecond = 1,scaleVSecond = 1,  roughness= 1.3, envMapIntensity = 1.5) {
+function setMaterial(firstMaterialName, secondMaterialName, scaleUFirst = 1, scaleVFirst = 1, scaleUSecond = 1, scaleVSecond = 1, roughness = 1.3, envMapIntensity = 1.5) {
 	//update the options setting
 	options.baseMaterial.firstMaterialName = firstMaterialName;
 	options.baseMaterial.secondMaterialName = secondMaterialName;
@@ -1074,76 +1076,76 @@ function setMaterial(firstMaterialName, secondMaterialName, scaleUFirst= 1, scal
 }
 
 //function to load a texture based on name
-function loadTexture(name, suffix,  scaleU, scaleV) {
+function loadTexture(name, suffix, scaleU, scaleV) {
 	fullName = name + suffix;
 	if (!(fullName in textures)) {
-		textures[fullName] = textureLoader.load( './images/materials/'+name+'/'+ fullName + '.jpg',
-		// onLoad callback
-		function ( texture ) {},
-		// onProgress callback currently not supported
-		undefined,
-		// onError callback
-		function ( err ) {
-			console.log( name+'/'+ fullName+'.jpg - texture not found.' );
-			return null;
-		});
+		textures[fullName] = textureLoader.load('./images/materials/' + name + '/' + fullName + '.jpg',
+			// onLoad callback
+			function (texture) { },
+			// onProgress callback currently not supported
+			undefined,
+			// onError callback
+			function (err) {
+				console.log(name + '/' + fullName + '.jpg - texture not found.');
+				return null;
+			});
 
 		//set the texture wrap
 		textures[fullName].wrapS = THREE.RepeatWrapping;
 		textures[fullName].wrapT = THREE.RepeatWrapping;
-		textures[fullName].repeat.set(scaleU,scaleV );
+		textures[fullName].repeat.set(scaleU, scaleV);
 	}
 	return textures[fullName];
 }
 
 //function to load material
-function loadMaterial(name, scaleU = 1, scaleV = 1, roughness= 1.3, envMapIntensity = 1.5) {
+function loadMaterial(name, scaleU = 1, scaleV = 1, roughness = 1.3, envMapIntensity = 1.5) {
 	//load textures
 	let diffuse = glossiness = normal = true;
 	diffuse = loadTexture(name, '_diffuse', scaleU, scaleV);
 	diffuse.encoding = THREE.sRGBEncoding;
-	normal =  loadTexture(name, '_normal', scaleU, scaleV);
+	normal = loadTexture(name, '_normal', scaleU, scaleV);
 
 	//create the material
-	materials[name+scaleU+scaleV] = new THREE.MeshStandardMaterial( {
+	materials[name + scaleU + scaleV] = new THREE.MeshStandardMaterial({
 		color: options['baseColor'],
 		map: diffuse,
 		normalMap: normal,
-		normalScale: new THREE.Vector2( 1, 1 ),
+		normalScale: new THREE.Vector2(1, 1),
 		roughness: roughness,
 		metalness: 0,
-		envMap : textureEquirec,
-		envMapIntensity : envMapIntensity,
+		envMap: textureEquirec,
+		envMapIntensity: envMapIntensity,
 		side: THREE.FrontSide
-	} );
+	});
 }
 
 //function to load the top material used for photos
-function loadTopMaterial(topName, name = null, scaleU = 1, scaleV = 1, roughness= 1.3, envMapIntensity = 1.5) {
+function loadTopMaterial(topName, name = null, scaleU = 1, scaleV = 1, roughness = 1.3, envMapIntensity = 1.5) {
 	//load the textures
 	let diffuse = glossiness = normal = true;
 	diffuse = loadTexture(topName, '', 1, 1);
 	diffuse.encoding = THREE.sRGBEncoding;
-	alpha = loadTexture('topAlpha','_' + options.baseCake, 1,1);
+	alpha = loadTexture('topAlpha', '_' + options.baseCake, 1, 1);
 	if (name) {
-		normal =  loadTexture(name, '_normal', scaleU, scaleV);
+		normal = loadTexture(name, '_normal', scaleU, scaleV);
 	}
 	//create the material
-	materials[topName] = new THREE.MeshStandardMaterial( {
+	materials[topName] = new THREE.MeshStandardMaterial({
 		displacementMap: alpha,
-		displacementScale : 0.1,
-		displacementBias :0.1,
+		displacementScale: 0.1,
+		displacementBias: 0.1,
 		alphaMap: alpha,
 		transparent: true,
 		color: 0xffffff,
 		map: diffuse,
 		normalScale: new THREE.Vector2(0.5, 0.5),
-		roughness: roughness/2,
+		roughness: roughness / 2,
 		metalness: 0,
-		envMap : textureEquirec,
-		envMapIntensity : envMapIntensity*1.2,
+		envMap: textureEquirec,
+		envMapIntensity: envMapIntensity * 1.2,
 		side: THREE.FrontSide
-	} );
+	});
 
 	if (name) {
 		materials[topName].normalMap = normal;
@@ -1151,81 +1153,81 @@ function loadTopMaterial(topName, name = null, scaleU = 1, scaleV = 1, roughness
 }
 
 //function to load material for the top message
-function loadTopMessage(roughness= 1.3, envMapIntensity = 1.5) {
+function loadTopMessage(roughness = 1.3, envMapIntensity = 1.5) {
 	//load alpha texture
-	alpha = loadTextTexture(options.customMessage, options.messageSize, options.messageHorizontalOffset, options.messageVerticalOffset,  options.baseMaterial.messageMaterial, textureSize);
+	alpha = loadTextTexture(options.customMessage, options.messageSize, options.messageHorizontalOffset, options.messageVerticalOffset, options.baseMaterial.messageMaterial, textureSize);
 	//create the material
-	materials['customText'] = new THREE.MeshStandardMaterial( {
+	materials['customText'] = new THREE.MeshStandardMaterial({
 		displacementMap: alpha,
-		displacementScale : 0.2,
-		displacementBias :0.2,
+		displacementScale: 0.2,
+		displacementBias: 0.2,
 		alphaMap: alpha,
 		transparent: true,
 		color: options.messageColor,
 		normalScale: new THREE.Vector2(0.5, 0.5),
-		roughness: roughness/2,
+		roughness: roughness / 2,
 		metalness: 0,
-		envMap : textureEquirec,
-		envMapIntensity : envMapIntensity*1.2,
+		envMap: textureEquirec,
+		envMapIntensity: envMapIntensity * 1.2,
 		side: THREE.FrontSide
-	} );
+	});
 	materials['customText'].color.convertSRGBToLinear();
 }
 
 //function to load side materials
-function loadSideMaterial(topName, scaleU = 1, scaleV = 1, roughness= 1.3, envMapIntensity = 1.5) {
+function loadSideMaterial(topName, scaleU = 1, scaleV = 1, roughness = 1.3, envMapIntensity = 1.5) {
 	//load the textures
 	let diffuse = glossiness = normal = true;
 	diffuse = loadTexture(topName, '_diffuse', scaleU, scaleV);
 	diffuse.encoding = THREE.sRGBEncoding;
-	alpha = loadTexture(topName,'_alpha', scaleU, scaleV);
-	normal =  loadTexture(topName, '_normal', scaleU, scaleV);
+	alpha = loadTexture(topName, '_alpha', scaleU, scaleV);
+	normal = loadTexture(topName, '_normal', scaleU, scaleV);
 
 	//create the material
-	materials[topName] = new THREE.MeshStandardMaterial( {
+	materials[topName] = new THREE.MeshStandardMaterial({
 		displacementMap: alpha,
-		displacementScale : 0.1,
-		displacementBias :0.1,
+		displacementScale: 0.1,
+		displacementBias: 0.1,
 		alphaMap: alpha,
 		transparent: true,
 		color: 0xffffff,
 		map: diffuse,
 		normalMap: normal,
 		normalScale: new THREE.Vector2(1, 1),
-		roughness: roughness/2,
+		roughness: roughness / 2,
 		metalness: 0,
-		envMap : textureEquirec,
-		envMapIntensity : envMapIntensity*1.2,
+		envMap: textureEquirec,
+		envMapIntensity: envMapIntensity * 1.2,
 		side: THREE.FrontSide
-	} );
+	});
 }
 
 //function to load custom image
-function loadTopCustomFile(name = null, scaleU = 1, scaleV = 1, roughness= 1.3, envMapIntensity = 1.5) {
+function loadTopCustomFile(name = null, scaleU = 1, scaleV = 1, roughness = 1.3, envMapIntensity = 1.5) {
 	//load textures
 	let diffuse = glossiness = normal = true;
 	diffuse = textures['customFile'];
 	diffuse.encoding = THREE.sRGBEncoding;
-	alpha = loadTexture('topAlpha','_' + options.baseCake, 1,1);
+	alpha = loadTexture('topAlpha', '_' + options.baseCake, 1, 1);
 	if (name) {
-		normal =  loadTexture(name, '_normal', scaleU, scaleV);
+		normal = loadTexture(name, '_normal', scaleU, scaleV);
 	}
 	//create the materials
-	materials['customFile'] = new THREE.MeshStandardMaterial( {
+	materials['customFile'] = new THREE.MeshStandardMaterial({
 		displacementMap: alpha,
-		displacementScale : 0.1,
-		displacementBias :0.1,
+		displacementScale: 0.1,
+		displacementBias: 0.1,
 		alphaMap: alpha,
 		transparent: true,
 		color: 0xffffff,
 		map: diffuse,
 		normalScale: new THREE.Vector2(0.5, 0.5),
-		roughness: roughness/2,
+		roughness: roughness / 2,
 		metalness: 0,
-		envMap : textureEquirec,
-		envMapIntensity : envMapIntensity*1.2,
+		envMap: textureEquirec,
+		envMapIntensity: envMapIntensity * 1.2,
 		side: THREE.FrontSide
-	} );
+	});
 	if (name) {
 		materials['customFile'].normalMap = normal;
 	}
@@ -1243,8 +1245,8 @@ function updateMaterials() {
 	}
 	//load the second material if it was set
 	if (settings.secondMaterialName) {
-		if (!((settings.secondMaterialName +settings.scaleUSecond + settings.scaleVSecond) in materials)) {
-			loadMaterial(settings.secondMaterialName, settings.scaleUSecond, settings.scaleVSecond,  settings.roughness, settings.envMapIntensity);
+		if (!((settings.secondMaterialName + settings.scaleUSecond + settings.scaleVSecond) in materials)) {
+			loadMaterial(settings.secondMaterialName, settings.scaleUSecond, settings.scaleVSecond, settings.roughness, settings.envMapIntensity);
 		}
 	}
 
@@ -1255,11 +1257,11 @@ function updateMaterials() {
 
 	//load the custom image material
 	if (settings.customImage) {
-		if  (settings.secondMaterialName) {
-			loadTopCustomFile(settings.secondMaterialName, settings.scaleUSecond, settings.scaleVSecond,  settings.roughness, settings.envMapIntensity);
-		}else {
+		if (settings.secondMaterialName) {
+			loadTopCustomFile(settings.secondMaterialName, settings.scaleUSecond, settings.scaleVSecond, settings.roughness, settings.envMapIntensity);
+		} else {
 			if (settings.firstMaterialName) {
-				loadTopCustomFile( settings.firstMaterialName, settings.scaleUFirst, settings.scaleVFirst, settings.roughness, settings.envMapIntensity);
+				loadTopCustomFile(settings.firstMaterialName, settings.scaleUFirst, settings.scaleVFirst, settings.roughness, settings.envMapIntensity);
 			} else {
 				loadTopCustomFile();
 			}
@@ -1267,13 +1269,13 @@ function updateMaterials() {
 	} else {
 		if (settings.topMaterial) {
 			if (settings.topMaterial) {
-				if  (settings.secondMaterialName) {
-					loadTopMaterial(settings.topMaterial, settings.secondMaterialName, settings.scaleUSecond, settings.scaleVSecond,  settings.roughness, settings.envMapIntensity)
+				if (settings.secondMaterialName) {
+					loadTopMaterial(settings.topMaterial, settings.secondMaterialName, settings.scaleUSecond, settings.scaleVSecond, settings.roughness, settings.envMapIntensity)
 				} else {
 					if (settings.firstMaterialName) {
-						loadTopMaterial( settings.topMaterial, settings.firstMaterialName, settings.scaleUFirst, settings.scaleVFirst, settings.roughness, settings.envMapIntensity)
+						loadTopMaterial(settings.topMaterial, settings.firstMaterialName, settings.scaleUFirst, settings.scaleVFirst, settings.roughness, settings.envMapIntensity)
 					} else {
-						loadTopMaterial( settings.topMaterial);
+						loadTopMaterial(settings.topMaterial);
 					}
 				}
 			}
@@ -1286,20 +1288,20 @@ function updateMaterials() {
 	}
 
 	//set loaded materials to all base geometries
-	setMaterialToAllBaseGeoms(settings.firstMaterialName + settings.scaleUFirst+ settings.scaleVFirst, settings.secondMaterialName + settings.scaleUSecond + settings.scaleVSecond);
+	setMaterialToAllBaseGeoms(settings.firstMaterialName + settings.scaleUFirst + settings.scaleVFirst, settings.secondMaterialName + settings.scaleUSecond + settings.scaleVSecond);
 	//update the editor to reflect the changes
 	updateEditor();
 }
 
 //function to set a material to all base geometries
-function setMaterialToAllBaseGeoms(firstMaterialName, secondMaterialName= false) {
-	for( cake in cakeModels) {
-		while (cakeModels[cake].children.length > 2 ){
+function setMaterialToAllBaseGeoms(firstMaterialName, secondMaterialName = false) {
+	for (cake in cakeModels) {
+		while (cakeModels[cake].children.length > 2) {
 			cakeModels[cake].remove(cakeModels[cake].children[2]);
 		}
 	}
 	//for all cake models update materials
-	for( cake in cakeModels) {
+	for (cake in cakeModels) {
 		if (settings.firstMaterialName) {
 			options['materialsUsed'] = [firstMaterialName];
 			cakeModels[cake].material = materials[firstMaterialName];
@@ -1342,7 +1344,7 @@ function setMaterialToAllBaseGeoms(firstMaterialName, secondMaterialName= false)
 
 		// top material
 		if (settings.customImage) {
-			newTopObject.material =  materials['customFile'];
+			newTopObject.material = materials['customFile'];
 			cakeModels[cake].add(newTopObject);
 			messagePos = 4;
 		} else {
@@ -1362,17 +1364,17 @@ function setMaterialToAllBaseGeoms(firstMaterialName, secondMaterialName= false)
 }
 
 //function to create a rounded rectangle curve
-function roundedRect( ctx, x, y, width, height, radius ) {
+function roundedRect(ctx, x, y, width, height, radius) {
 	//create lines for the sides and the rounded corners
-	ctx.moveTo( x, y + radius );
-	ctx.lineTo( x, y + height - radius );
-	ctx.quadraticCurveTo( x, y + height, x + radius, y + height );
-	ctx.lineTo( x + width - radius, y + height );
-	ctx.quadraticCurveTo( x + width, y + height, x + width, y + height - radius );
-	ctx.lineTo( x + width, y + radius );
-	ctx.quadraticCurveTo( x + width, y, x + width - radius, y );
-	ctx.lineTo( x + radius, y );
-	ctx.quadraticCurveTo( x, y, x, y + radius );
+	ctx.moveTo(x, y + radius);
+	ctx.lineTo(x, y + height - radius);
+	ctx.quadraticCurveTo(x, y + height, x + radius, y + height);
+	ctx.lineTo(x + width - radius, y + height);
+	ctx.quadraticCurveTo(x + width, y + height, x + width, y + height - radius);
+	ctx.lineTo(x + width, y + radius);
+	ctx.quadraticCurveTo(x + width, y, x + width - radius, y);
+	ctx.lineTo(x + radius, y);
+	ctx.quadraticCurveTo(x, y, x, y + radius);
 }
 
 //function to create the curves used for borders based on the cake type and position
@@ -1400,10 +1402,10 @@ function createCurve(type, position) {
 	}
 	//create the curve based on cake type
 	if (type == 'Cake_round') {
-		curve = new THREE.EllipseCurve(0, 0, l1, l2, 0,  2 * Math.PI, false, 90 );
+		curve = new THREE.EllipseCurve(0, 0, l1, l2, 0, 2 * Math.PI, false, 90);
 	} else if (type == 'Cake_square' || type == 'Cake_sheet') {
 		curve = new THREE.Shape();
-		roundedRect(curve, -l1/2, -l2/2, l1, l2, 10 );
+		roundedRect(curve, -l1 / 2, -l2 / 2, l1, l2, 10);
 	}
 	return curve;
 }
@@ -1471,10 +1473,10 @@ function resetCustomizations() {
 //function to animate the scrolling to a page anchor
 function scrollToAnchor(anchorNum) {
 	var w = $(document).innerWidth();
-	anchor ="#card" + (anchorNum+1).toString().padStart(2,'0');
+	anchor = "#card" + (anchorNum + 1).toString().padStart(2, '0');
 	$('html, body').animate({
-		'scrollTop':   ($(anchor).offset().top - 60)
-	  }, 1000);
+		'scrollTop': ($(anchor).offset().top - 60)
+	}, 1000);
 }
 
 //function to update current step
@@ -1482,7 +1484,7 @@ function goToNextStep(step) {
 	if (step > options.step) {
 		options.step = step;
 		//update the step indicator
-		for(let i=2; i<= step; i++) {
+		for (let i = 2; i <= step; i++) {
 			//update the cards as done
 			if (i < 10) {
 				$('#card0' + i).addClass('card-done');
@@ -1497,7 +1499,7 @@ function goToNextStep(step) {
 }
 
 //function to send order
-$('#send-order').on('click', function() {
+$('#send-order').on('click', function () {
 	//check if action is available based on current step
 	if (checkStep(11)) {
 		//update current step number
@@ -1539,14 +1541,21 @@ $('#send-order').on('click', function() {
 			return false;
 		}
 
-		//update the form message
-		$('#current-step').html('All steps were done. You will be contacted shortly to confirm the order.')
-		$('.order-sent').removeClass('d-none');
+
 		//update the card display
 		$('#card12').addClass('card-done');
+
+		$('#orderSuccess').modal({backdrop: 'static', keyboard: false, focus: true});
+		$('#orderSuccess').modal('show');
+
 	}
 });
 
+//function called after the button on the order sent modal was clicked
+$('.success-acknowledged').on('click', function () {
+	resetCustomizations();
+	$('#orderSuccess').modal('hide');
+});
 
 
 //function to load a string text as a texture
@@ -1565,27 +1574,26 @@ function loadTextTexture(txt, size, horizontalOffset, verticalOffset, fontName, 
 
 	//fill in the text
 	g.fillStyle = 'white';
-	g.fillText(txt, textureSize/2-txtWidth/2 + horizontalOffset , textureSize/2+ txtHeight/2 + verticalOffset);
+	g.fillText(txt, textureSize / 2 - txtWidth / 2 + horizontalOffset, textureSize / 2 + txtHeight / 2 + verticalOffset);
 	//if stroke is wanted, add a stroke to the canvas
 	if (stroke) {
 		g.strokeStyle = 'white';
 		g.lineWidth = stroke;
-		g.strokeText(txt, textureSize/2-txtWidth/2 + horizontalOffset , textureSize/2+ txtHeight/2 + verticalOffset);
+		g.strokeText(txt, textureSize / 2 - txtWidth / 2 + horizontalOffset, textureSize / 2 + txtHeight / 2 + verticalOffset);
 		//saving canvas contents that will be used for a texture
-		textures['customTextStroke'] = new THREE.Texture(bitmap) ;
+		textures['customTextStroke'] = new THREE.Texture(bitmap);
 		textures['customTextStroke'].needsUpdate = true;
 		return textures['customTextStroke'];
 	} else {
 		//saving canvas contents that will be used for a texture
-		textures['customText'] = new THREE.Texture(bitmap) ;
+		textures['customText'] = new THREE.Texture(bitmap);
 		textures['customText'].needsUpdate = true;
 		return textures['customText'];
 	}
 }
 
 //signal that an option was selected
-$('.card-body a').on('click', function(){
-	console.log()
+$('.card-body a').on('click', function () {
 	if ($(this).children('img').length) {
 		$(this).siblings().children('img').removeClass('button-selected');
 		$(this).children('img').addClass('button-selected');
@@ -1597,17 +1605,16 @@ $('.card-body a').on('click', function(){
 
 //function to unselect options if current step is invalid
 function unselectOptions(step) {
-	cardId ="#card" + (step+1).toString().padStart(2,'0');
+	cardId = "#card" + (step + 1).toString().padStart(2, '0');
 	$(cardId + ' a').removeClass('button-selected');
 	$(cardId + ' img').removeClass('button-selected');
 }
 
+
 //function to validate email
-function validateEmail(mail)
-{
- if (/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(mail))
-  {
-    return (true)
-  }
-    return (false)
+function validateEmail(mail) {
+	if (/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(mail)) {
+		return (true)
+	}
+	return (false)
 }
