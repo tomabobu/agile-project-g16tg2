@@ -1545,7 +1545,7 @@ $('#send-order').on('click', function () {
 		//update the card display
 		$('#card12').addClass('card-done');
 
-		$('#orderSuccess').modal({backdrop: 'static', keyboard: false});
+		$('#orderSuccess').modal({backdrop: 'static', keyboard: false, focus: true});
 		$('#orderSuccess').modal('show');
 
 	}
@@ -1594,7 +1594,6 @@ function loadTextTexture(txt, size, horizontalOffset, verticalOffset, fontName, 
 
 //signal that an option was selected
 $('.card-body a').on('click', function () {
-	console.log('trece');
 	if ($(this).children('img').length) {
 		$(this).siblings().children('img').removeClass('button-selected');
 		$(this).children('img').addClass('button-selected');

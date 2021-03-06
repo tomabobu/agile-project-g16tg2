@@ -635,6 +635,9 @@ div#card01 h5{
 	.btn-actions {
 		background: #ffffff;
 	}
+	#card12 {
+		margin-bottom:60vh;
+	}
 
 }
 
@@ -664,9 +667,6 @@ div#card01 h5{
 	.grid-buttons a p {
 		margin-bottom: 5px;
 		font-size: 10px;
-	}
-	#card12 {
-		margin-bottom:60vh;
 	}
 
 }
