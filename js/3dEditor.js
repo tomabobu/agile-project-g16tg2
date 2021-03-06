@@ -1,141 +1,3 @@
-$(document).ready(function () {
-
-
-	loadDefaultCustomizations();
-
-	//a set of 300 predetermined random rotations used on border instances
-	var randomRotations = [];
-	for (let i = 0; i < 300; i++) {
-		randomRotations.push(Math.random() * 2 * Math.PI);
-	}
-
-	//using WebFont to load Google fonts that will be used later to write on the cake
-	WebFont.load({
-		google: {
-			families: ['Pacifico', 'Great Vibes', 'Dancing Script']
-		},
-		active: function () {
-			//after the fonts are loaded, init the 3d editor and start animating
-			init();
-			animate();
-		}
-	});
-
-
-
-	//function to load the selected file into a ThreeJs texture
-	$('#customFile').on('change', function (event) {
-		//the file selected
-		var userImage = event.target.files[0];
-		//set the options to signal that there is a custom photo selected
-		options.topPhotoName = 'custom '
-		options.baseMaterial.customImage = 'customFile';
-		//create an object url
-		var userImageURL = URL.createObjectURL(userImage);
-		//load the object url with the texture loader
-		textures['customFile'] = textureLoader.load(userImageURL);
-		textureLoader.setCrossOrigin("");
-		//update current step number
-		goToNextStep(10);
-		//update the materials and the scene to show the newly loaded image
-		updateMaterials();
-	});
-
-
-
-	//event listener to update the message while typing in the input field of changing the message position
-	$('#customSize, #customHorizontalMovement, #customVerticalMovement').on('input', function () {
-		//check if action is available based on current step
-		if (checkStep(10)) {
-			//update current step number
-			goToNextStep(11);
-			//update the material used for the message
-			updateMessageMaterial();
-		}
-	});
-
-
-
-	//function to update the custom message material while editing the input field
-	$('#customMessage').on('keyup', updateMessageMaterial);
-
-
-
-	//function to send order
-	$('#send-order').on('click', function () {
-		//check if action is available based on current step
-		if (checkStep(11)) {
-			//update current step number
-			goToNextStep(11);
-
-			firstName = $('#firstName').val();
-			lastName = $('#lastName').val();
-			phone = $('#phone').val();
-			email = $('#email').val();
-
-			//check that the first name was set
-			if (!firstName) {
-				showMessage("Please input a first name in order to finalize the order.", 11);
-				scrollToAnchor(11);
-				return false;
-			}
-			//check that the last name was set
-			if (!lastName) {
-				showMessage("Please input a last name in order to finalize the order.", 11);
-				scrollToAnchor(11);
-				return false;
-			}
-			//check that the phone number was set
-			if (!phone) {
-				showMessage("Please input a phone number in order to finalize the order.", 11);
-				scrollToAnchor(11);
-				return false;
-			}
-
-			//check that the email was set
-			if (!email) {
-				showMessage("Please input an email in order to finalize the order.", 11);
-				scrollToAnchor(11);
-				return false;
-			}
-			if (!validateEmail(email)) {
-				showMessage("Please input an email in the correct format.", 11);
-				scrollToAnchor(11);
-				return false;
-			}
-
-
-			//update the card display
-			$('#card12').addClass('card-done');
-
-			$('#orderSuccess').modal({backdrop: 'static', keyboard: false});
-			$('#orderSuccess').modal('show');
-
-		}
-	});
-
-	//function called after the button on the order sent modal was clicked
-	$('.success-acknowledged').on('click', function () {
-		resetCustomizations();
-		$('#orderSuccess').modal('hide');
-	});
-
-
-
-	//signal that an option was selected
-	$('.card-body a').on('click', function () {
-		console.log()
-		if ($(this).children('img').length) {
-			$(this).siblings().children('img').removeClass('button-selected');
-			$(this).children('img').addClass('button-selected');
-		} else {
-			$(this).siblings().removeClass('button-selected');
-			$(this).addClass('button-selected');
-		}
-	});
-
-
-});
 
 
 // initial data setup
@@ -199,6 +61,26 @@ function loadDefaultCustomizations() {
 		'messageVerticalOffset': 0,
 	};
 }
+loadDefaultCustomizations();
+
+//a set of 300 predetermined random rotations used on border instances
+var randomRotations = [];
+for (let i = 0; i < 300; i++) {
+	randomRotations.push(Math.random() * 2 * Math.PI);
+}
+
+//using WebFont to load Google fonts that will be used later to write on the cake
+WebFont.load({
+	google: {
+		families: ['Pacifico', 'Great Vibes', 'Dancing Script']
+	},
+	active: function () {
+		//after the fonts are loaded, init the 3d editor and start animating
+		init();
+		animate();
+	}
+});
+
 //init function to start loading the THREE objects used in the 3d editor
 function init() {
 	//Setup camera
@@ -711,6 +593,24 @@ function selectYourPhoto() {
 	}
 }
 
+//function to load the selected file into a ThreeJs texture
+$('#customFile').on('change', function (event) {
+	//the file selected
+	var userImage = event.target.files[0];
+	//set the options to signal that there is a custom photo selected
+	options.topPhotoName = 'custom '
+	options.baseMaterial.customImage = 'customFile';
+	//create an object url
+	var userImageURL = URL.createObjectURL(userImage);
+	//load the object url with the texture loader
+	textures['customFile'] = textureLoader.load(userImageURL);
+	textureLoader.setCrossOrigin("");
+	//update current step number
+	goToNextStep(10);
+	//update the materials and the scene to show the newly loaded image
+	updateMaterials();
+});
+
 
 //function to load a message on top of the cake
 function setMessageFont(materialName = null) {
@@ -751,6 +651,17 @@ function setMessageColor(color) {
 		updateMessageMaterial();
 	}
 }
+
+//event listener to update the message while typing in the input field of changing the message position
+$('#customSize, #customHorizontalMovement, #customVerticalMovement').on('input', function () {
+	//check if action is available based on current step
+	if (checkStep(10)) {
+		//update current step number
+		goToNextStep(11);
+		//update the material used for the message
+		updateMessageMaterial();
+	}
+});
 
 //calculate points for the top or bottom border based on cake type, size and the tier number
 function addBorderPoints(position, transform = null, instanceIndex = 0) {
@@ -1508,6 +1419,9 @@ function updateMessageMaterial() {
 	}
 }
 
+//function to update the custom message material while editing the input field
+$('#customMessage').on('keyup', updateMessageMaterial);
+
 //function to reset the controls of the camera
 function resetCamera() {
 	controls.reset();
@@ -1584,6 +1498,65 @@ function goToNextStep(step) {
 	$('.alert').alert('close');
 }
 
+//function to send order
+$('#send-order').on('click', function () {
+	//check if action is available based on current step
+	if (checkStep(11)) {
+		//update current step number
+		goToNextStep(11);
+
+		firstName = $('#firstName').val();
+		lastName = $('#lastName').val();
+		phone = $('#phone').val();
+		email = $('#email').val();
+
+		//check that the first name was set
+		if (!firstName) {
+			showMessage("Please input a first name in order to finalize the order.", 11);
+			scrollToAnchor(11);
+			return false;
+		}
+		//check that the last name was set
+		if (!lastName) {
+			showMessage("Please input a last name in order to finalize the order.", 11);
+			scrollToAnchor(11);
+			return false;
+		}
+		//check that the phone number was set
+		if (!phone) {
+			showMessage("Please input a phone number in order to finalize the order.", 11);
+			scrollToAnchor(11);
+			return false;
+		}
+
+		//check that the email was set
+		if (!email) {
+			showMessage("Please input an email in order to finalize the order.", 11);
+			scrollToAnchor(11);
+			return false;
+		}
+		if (!validateEmail(email)) {
+			showMessage("Please input an email in the correct format.", 11);
+			scrollToAnchor(11);
+			return false;
+		}
+
+
+		//update the card display
+		$('#card12').addClass('card-done');
+
+		$('#orderSuccess').modal({backdrop: 'static', keyboard: false});
+		$('#orderSuccess').modal('show');
+
+	}
+});
+
+//function called after the button on the order sent modal was clicked
+$('.success-acknowledged').on('click', function () {
+	resetCustomizations();
+	$('#orderSuccess').modal('hide');
+});
+
 
 //function to load a string text as a texture
 function loadTextTexture(txt, size, horizontalOffset, verticalOffset, fontName, textureSize, stroke = null) {
@@ -1619,12 +1592,25 @@ function loadTextTexture(txt, size, horizontalOffset, verticalOffset, fontName, 
 	}
 }
 
+//signal that an option was selected
+$('.card-body a').on('click', function () {
+	console.log('trece');
+	if ($(this).children('img').length) {
+		$(this).siblings().children('img').removeClass('button-selected');
+		$(this).children('img').addClass('button-selected');
+	} else {
+		$(this).siblings().removeClass('button-selected');
+		$(this).addClass('button-selected');
+	}
+});
+
 //function to unselect options if current step is invalid
 function unselectOptions(step) {
 	cardId = "#card" + (step + 1).toString().padStart(2, '0');
 	$(cardId + ' a').removeClass('button-selected');
 	$(cardId + ' img').removeClass('button-selected');
 }
+
 
 //function to validate email
 function validateEmail(mail) {
