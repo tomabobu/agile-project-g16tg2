@@ -455,7 +455,11 @@ function setBorder(type, position) {
 			if (type == 'Type03') {
 				options.topBorderName = 'type 03'
 			}
-			$('#top-border-color').removeClass('display-hidden');
+			if (type == null) {
+				$('#top-border-color').addClass('display-hidden');
+			} else {
+				$('#top-border-color').removeClass('display-hidden');
+			}
 			//update current step number
 			options.topBorder = type;
 			goToNextStep(7);
@@ -474,7 +478,11 @@ function setBorder(type, position) {
 			if (type == 'Type03') {
 				options.bottomBorderName = 'type 03'
 			}
-			$('#bottom-border-color').removeClass('display-hidden');
+			if (type == null) {
+				$('#bottom-border-color').addClass('display-hidden');
+			} else {
+				$('#bottom-border-color').removeClass('display-hidden');
+			}
 			//update current step number
 			goToNextStep(8);
 			options.bottomBorder = type;
@@ -629,6 +637,8 @@ function setMessageFont(materialName = null) {
 			options.messageHorizontalOffset = parseInt($('#customHorizontalMovement').val());
 			options.messageVerticalOffset = parseInt($('#customVerticalMovement').val());
 		} else {
+			$('#custom-message-color').addClass('display-hidden');
+			$('#custom-message-position').addClass('display-hidden');
 			//remove the custom message options
 			options.customTopMessage = null;
 			options.baseMaterial.messageMaterial = null;
