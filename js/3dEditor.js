@@ -392,10 +392,10 @@ function getColorName(color) {
 			return 'red';
 			break;
 		case (0xff6d38):
-			return 'orange';
+			return 'burnt orange';
 			break;
 		case (0xff9429):
-			return 'orange yellow';
+			return 'orange';
 			break;
 		case (0xfff838):
 			return 'yellow';
@@ -404,19 +404,19 @@ function getColorName(color) {
 			return 'white';
 			break;
 		case (0x53ff0f):
-			return 'light green';
+			return 'bright green';
 			break;
 		case (0x2eff85):
-			return 'pale green';
+			return 'spring green';
 			break;
 		case (0x00cc8f):
-			return 'green';
+			return 'caribbean green';
 			break;
 		case (0x2e85ff):
 			return 'blue';
 			break;
 		case (0x4766ff):
-			return 'blue violet';
+			return 'neon blue';
 			break;
 		case (0xa857ff):
 			return 'violet';

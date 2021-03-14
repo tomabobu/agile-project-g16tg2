@@ -417,7 +417,7 @@ div#card01 h5{
 
 /* Index page */
 .header-text-box {
-	color: #777;
+	color: rgb(72, 72, 72);
 	background-color: white;
 	text-align: center;
 	padding: 50px 40px;
@@ -431,6 +431,18 @@ div#card01 h5{
 	background-position: center;
 	background-repeat: no-repeat;
 	background-size: cover;
+}
+.bgimg-1 > span, .bgimg-2 > span, .bgimg-3 > span, .bgimg-4 > span, .bgimg-5 > span, .bgimg-6 > span, .bgimg-7 > span, .bgimg-8 > span {
+	position: absolute;
+	bottom: 0px;
+	right: 0px;
+	color: rgb(228, 228, 228);
+	font-size: 16px;
+}
+.bgimg-1 > span a, .bgimg-2 > span a, .bgimg-3 > span a, .bgimg-4 > span a, .bgimg-5 > span a, .bgimg-6 > span a, .bgimg-7 > span a, .bgimg-8 > span a {
+	color: rgb(228, 228, 228);
+	font-size: 16px;
+	text-decoration: none;
 }
 
 .bgimg-1 {
@@ -491,9 +503,6 @@ div#card01 h5{
 	text-align: center;
 	color: #000;
 	line-height: 2.5;
-	/* font-size: 18px; */
-	/* line-height:40px; */
-	/* font-kerning: 5px; */
 }
 
 .bgimg-1 .caption {
@@ -516,8 +525,6 @@ div#card01 h5{
 	background-color: #111;
 	color: #fff;
 	padding: 18px;
-	/* font-size: 1.5625em; */
-	/* letter-spacing: 0.625em; */
 }
 
 
