@@ -392,10 +392,10 @@ function getColorName(color) {
 			return 'red';
 			break;
 		case (0xff6d38):
-			return 'orange';
+			return 'burnt orange';
 			break;
 		case (0xff9429):
-			return 'orange yellow';
+			return 'orange';
 			break;
 		case (0xfff838):
 			return 'yellow';
@@ -404,19 +404,19 @@ function getColorName(color) {
 			return 'white';
 			break;
 		case (0x53ff0f):
-			return 'light green';
+			return 'bright green';
 			break;
 		case (0x2eff85):
-			return 'pale green';
+			return 'spring green';
 			break;
 		case (0x00cc8f):
-			return 'green';
+			return 'caribbean green';
 			break;
 		case (0x2e85ff):
 			return 'blue';
 			break;
 		case (0x4766ff):
-			return 'blue violet';
+			return 'neon blue';
 			break;
 		case (0xa857ff):
 			return 'violet';
@@ -455,7 +455,11 @@ function setBorder(type, position) {
 			if (type == 'Type03') {
 				options.topBorderName = 'type 03'
 			}
-			$('#top-border-color').removeClass('display-hidden');
+			if (type == null) {
+				$('#top-border-color').addClass('display-hidden');
+			} else {
+				$('#top-border-color').removeClass('display-hidden');
+			}
 			//update current step number
 			options.topBorder = type;
 			goToNextStep(7);
@@ -474,7 +478,11 @@ function setBorder(type, position) {
 			if (type == 'Type03') {
 				options.bottomBorderName = 'type 03'
 			}
-			$('#bottom-border-color').removeClass('display-hidden');
+			if (type == null) {
+				$('#bottom-border-color').addClass('display-hidden');
+			} else {
+				$('#bottom-border-color').removeClass('display-hidden');
+			}
 			//update current step number
 			goToNextStep(8);
 			options.bottomBorder = type;
@@ -629,6 +637,8 @@ function setMessageFont(materialName = null) {
 			options.messageHorizontalOffset = parseInt($('#customHorizontalMovement').val());
 			options.messageVerticalOffset = parseInt($('#customVerticalMovement').val());
 		} else {
+			$('#custom-message-color').addClass('display-hidden');
+			$('#custom-message-position').addClass('display-hidden');
 			//remove the custom message options
 			options.customTopMessage = null;
 			options.baseMaterial.messageMaterial = null;
