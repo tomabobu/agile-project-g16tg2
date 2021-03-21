@@ -557,15 +557,15 @@
 							</div>
 							<div id="custom-message-position" class='display-hidden'>
 								<div class='form-group mb-3'>
-									<label for="customRange" class="form-label">Message Size</label>
+									<label for="customSize" class="form-label">Message Size</label>
 									<input type="range" class="form-range" min="50" max="150" id="customSize" value="100">
 								</div>
 								<div class='form-group mb-3'>
-									<label for="customRange" class="form-label">Message left/right movement</label>
+									<label for="customHorizontalMovement" class="form-label">Message left/right movement</label>
 									<input type="range" class="form-range" min="-300" max="300" id="customHorizontalMovement" value="0">
 								</div>
 								<div class='form-group mb-3'>
-									<label for="customRange" class="form-label">Message top/down movement</label>
+									<label for="customVerticalMovement" class="form-label">Message top/down movement</label>
 									<input type="range" class="form-range" min="-500" max="500" id="customVerticalMovement" value="0">
 								</div>
 							</div>
@@ -612,8 +612,8 @@
 									<input type="text" class="form-control" id="phone">
 								</div>
 								<div class="col-6">
-									<label for="email" class="form-label" pattern="/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/">Email</label>
-									<input type="text" class="form-control" id="email">
+									<label for="email" class="form-label" >Email</label>
+									<input type="text" class="form-control" id="email" pattern="/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/">
 								</div>
 							</div>
 							<div class="row">
@@ -652,7 +652,7 @@
 		<div class="modal-dialog  modal-dialog-centered" role="document">
 		  <div class="modal-content">
 			<div class="modal-header card-header">
-			  <h4 class="modal-title" id="exampleModalLabel">Order was sent successfully</h4>
+			  <h4 class="modal-title" id="orderSuccessLabel">Order was sent successfully</h4>
 			</div>
 			<div class="modal-body card-body">
 				<p>
